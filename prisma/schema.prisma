@@ -1,0 +1,271 @@
+// Elevate Coders — Prisma Schema
+// Target: PostgreSQL (deployable to Supabase via DATABASE_URL swap)
+// Prisma v7: DATABASE_URL configured in prisma.config.ts, not here.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url is configured in prisma.config.ts for Prisma v7
+}
+
+
+// ─────────────────────────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────────────────────────
+
+enum CampTrack {
+  COED
+  ALL_GIRLS
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  TRAVELING_PACKET_NEEDED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  ACH_ONLY
+  ACH_AND_CREDIT_CARD
+}
+
+enum ReferralStatus {
+  PENDING
+  APPLIED
+  EXPIRED
+}
+
+enum SeasonType {
+  SUMMER
+  FALL
+}
+
+// ─────────────────────────────────────────────────────────────────
+// PARENT — Legal billing identity + marketing data
+// ─────────────────────────────────────────────────────────────────
+
+model Parent {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Legal billing details
+  legalName     String
+  email         String   @unique
+  phone         String
+
+  // Marketing & retention flags
+  hasUsedReferralLink Boolean @default(false)
+  isAlumniFamily      Boolean @default(false)
+  marketingOptIn      Boolean @default(true)
+  photoMediaOptIn     Boolean @default(true)
+
+  // Referral system
+  referralCode        String   @unique @default(cuid())
+  referredByCode      String?  // code of the parent who referred this family
+  referredById        String?
+  referredBy          Parent?  @relation("ReferralNetwork", fields: [referredById], references: [id])
+  referrals           Parent[] @relation("ReferralNetwork")
+
+  // Relations
+  students        Student[]
+  registrations   Registration[]
+  referralLedger  ReferralLedger[] @relation("ReferrerLedger")
+  usedReferrals   ReferralLedger[] @relation("ReferredLedger")
+}
+
+// ─────────────────────────────────────────────────────────────────
+// STUDENT — Child profile
+// ─────────────────────────────────────────────────────────────────
+
+model Student {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  age         Int      // Computed at registration time, stored for marketing queries
+
+  allergies        String?
+  medicalNotes     String?
+
+  // Prerequisite tracking
+  completedBeginnerCourse Boolean @default(false)
+  beginnerCourseYear      Int?    // e.g. 2026
+  hasVerifiedOutsideExp   Boolean @default(false)
+  outsideExpDescription   String?
+
+  // Marketing cohort flags
+  track       CampTrack
+
+  parentId    String
+  parent      Parent @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  registrations Registration[]
+}
+
+// ─────────────────────────────────────────────────────────────────
+// WEEK BLOCK — Canonical program schedule definitions
+// ─────────────────────────────────────────────────────────────────
+
+model WeekBlock {
+  id              String     @id @default(cuid())
+  weekNumber      Int        // 1–8 for summer; 1–N for fall
+  season          SeasonType
+  year            Int        // 2026
+
+  // Summer: full week Mon–Fri
+  // Fall: recurring Thursday session
+  startDate       DateTime
+  endDate         DateTime
+  dayOfWeek       String?    // e.g. "Thursday" for fall sessions
+  startTime       String?    // e.g. "17:00" (5pm)
+  endTime         String?    // e.g. "18:00" (6pm)
+
+  curriculumLabel String     // e.g. "Scratch Foundations", "Python Exploration"
+  description     String?
+  track           CampTrack?  // null = applies to both tracks
+  pricePerUnit    Float      @default(200.00) // per week (summer) or per session (fall)
+  isActive        Boolean    @default(true)
+
+  // Beginner vs. advanced level (for prerequisite gating)
+  requiresPrerequisite Boolean @default(false)
+  level               String  @default("BEGINNER") // BEGINNER | INTERMEDIATE | ADVANCED
+
+  registrationWeeks RegistrationWeek[]
+}
+
+// ─────────────────────────────────────────────────────────────────
+// REGISTRATION — Core enrollment record
+// ─────────────────────────────────────────────────────────────────
+
+model Registration {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parentId    String
+  parent      Parent @relation(fields: [parentId], references: [id])
+
+  studentId   String
+  student     Student @relation(fields: [studentId], references: [id])
+
+  track             CampTrack
+  status            RegistrationStatus @default(PENDING)
+  paymentMethod     PaymentMethod      @default(ACH_ONLY)
+
+  // Pricing
+  baseTotal         Float   // weeks × $200 before any adjustments
+  proratedTotal     Float   // after vacation deductions
+  discountAmount    Float   @default(0)
+  finalTotal        Float   // proratedTotal - discountAmount
+
+  discountCodeId    String?
+  discountCode      DiscountCode? @relation(fields: [discountCodeId], references: [id])
+
+  // Policy compliance
+  policyAgreedAt    DateTime?
+  policyVersion     String   @default("2026-v1")
+
+  // Intake parsing metadata
+  rawIntakeText     String?  // Original pasted email text if via intake parser
+
+  selectedWeeks     RegistrationWeek[]
+  vacationDays      VacationException[]
+  invoicePayload    InvoicePayload?
+}
+
+// ─────────────────────────────────────────────────────────────────
+// REGISTRATION WEEK — Junction for selected weeks per registration
+// ─────────────────────────────────────────────────────────────────
+
+model RegistrationWeek {
+  id             String   @id @default(cuid())
+  registrationId String
+  registration   Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  weekBlockId    String
+  weekBlock      WeekBlock @relation(fields: [weekBlockId], references: [id])
+  adjustedPrice  Float    // Price after per-week proration (vacation impacts this week's cost)
+
+  @@unique([registrationId, weekBlockId])
+}
+
+// ─────────────────────────────────────────────────────────────────
+// VACATION EXCEPTION — Specific dates a student misses
+// ─────────────────────────────────────────────────────────────────
+
+model VacationException {
+  id             String   @id @default(cuid())
+  registrationId String
+  registration   Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  missedDate     DateTime  // Specific day the student is away
+  weekNumber     Int       // Which week this missed day falls in
+  proratedCredit Float     // $40/day (200 ÷ 5 days/week)
+  reason         String?   // e.g. "Traveling July 16 – July 30"
+}
+
+// ─────────────────────────────────────────────────────────────────
+// REFERRAL LEDGER — Track referral chain + credit status
+// ─────────────────────────────────────────────────────────────────
+
+model ReferralLedger {
+  id              String        @id @default(cuid())
+  createdAt       DateTime      @default(now())
+
+  referrerId      String
+  referrer        Parent        @relation("ReferrerLedger", fields: [referrerId], references: [id])
+
+  referredId      String
+  referred        Parent        @relation("ReferredLedger", fields: [referredId], references: [id])
+
+  creditAmount    Float         @default(25.00) // Default $25 referral credit
+  status          ReferralStatus @default(PENDING)
+  appliedAt       DateTime?
+  notes           String?
+}
+
+// ─────────────────────────────────────────────────────────────────
+// DISCOUNT CODE — Database-managed marketing codes
+// ─────────────────────────────────────────────────────────────────
+
+model DiscountCode {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+
+  code            String   @unique
+  description     String   // e.g. "Corporate Partner — Acme Corp 75% Off"
+  sponsorName     String?
+  discountPercent Float    // 0.0–100.0 (e.g. 75.0 = 75% off)
+
+  usageLimit      Int?     // null = unlimited
+  usedCount       Int      @default(0)
+  isActive        Boolean  @default(true)
+  expiresAt       DateTime?
+
+  registrations   Registration[]
+}
+
+// ─────────────────────────────────────────────────────────────────
+// INVOICE PAYLOAD — Gusto/Melio structured JSON record
+// ─────────────────────────────────────────────────────────────────
+
+model InvoicePayload {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+
+  registrationId  String   @unique
+  registration    Registration @relation(fields: [registrationId], references: [id])
+
+  externalId      String   @unique // e.g. "EC-2026-{registrationId}"
+  payload         Json     // Full Gusto/Melio JSON blob
+  deliveryStatus  String   @default("PENDING") // PENDING | SENT | FAILED
+  sentAt          DateTime?
+  errorMessage    String?
+}
