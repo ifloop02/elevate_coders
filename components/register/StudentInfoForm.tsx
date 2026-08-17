@@ -17,7 +17,7 @@ export default function StudentInfoForm({ data, onChange }: StudentInfoFormProps
         Student Information
       </h2>
       <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '28px' }}>
-        Tell us about your child. Age range for all camps is <strong>9–12 years old</strong>.
+        Tell us about your child. Age range for all programs is <strong>7–12 years old</strong>.
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px', maxWidth: '560px' }}>
@@ -53,12 +53,12 @@ export default function StudentInfoForm({ data, onChange }: StudentInfoFormProps
           type="date"
           value={data.dateOfBirth}
           onChange={(e) => set('dateOfBirth', e.target.value)}
-          max="2017-06-15"
-          min="2013-06-15"
+          max="2019-09-10"
+          min="2013-09-10"
           style={{ maxWidth: '220px' }}
         />
         <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-          Student must be 9–12 years old during Summer 2026.
+          Student must be 7–12 years old for Fall 2026.
         </div>
       </div>
 

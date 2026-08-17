@@ -46,14 +46,13 @@ export interface RegistrationState {
 const STEPS = ['Track', 'Weeks', 'Vacation', 'Your Info', 'Policies', 'Review']
 
 const WEEK_DATA = [
-  { id: 'summer-2026-week-1', weekNumber: 1, dates: 'Jun 15 – Jun 19', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-2', weekNumber: 2, dates: 'Jun 22 – Jun 26', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-3', weekNumber: 3, dates: 'Jun 29 – Jul 3', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-4', weekNumber: 4, dates: 'Jul 6 – Jul 10', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-5', weekNumber: 5, dates: 'Jul 13 – Jul 17', curriculum: 'Python Exploration', requiresPrerequisite: true },
-  { id: 'summer-2026-week-6', weekNumber: 6, dates: 'Jul 20 – Jul 24', curriculum: 'Python Exploration', requiresPrerequisite: true },
-  { id: 'summer-2026-week-7', weekNumber: 7, dates: 'Jul 27 – Jul 31', curriculum: 'Python Exploration', requiresPrerequisite: true },
-  { id: 'summer-2026-week-8', weekNumber: 8, dates: 'Aug 3 – Aug 7', curriculum: 'Python Exploration', requiresPrerequisite: true },
+  { id: 'fall-2026-week-1', weekNumber: 1, dates: 'Sep 10 (Thu)', curriculum: 'Scratch & Coding Basics', requiresPrerequisite: false },
+  { id: 'fall-2026-week-2', weekNumber: 2, dates: 'Sep 17 (Thu)', curriculum: 'Interactive Game Design', requiresPrerequisite: false },
+  { id: 'fall-2026-week-3', weekNumber: 3, dates: 'Sep 24 (Thu)', curriculum: 'Logic, Loops & Variables', requiresPrerequisite: false },
+  { id: 'fall-2026-week-4', weekNumber: 4, dates: 'Oct 1 (Thu)', curriculum: 'Animation & Graphics', requiresPrerequisite: false },
+  { id: 'fall-2026-week-5', weekNumber: 5, dates: 'Oct 8 (Thu)', curriculum: 'Python IDE & Core Syntax', requiresPrerequisite: true },
+  { id: 'fall-2026-week-6', weekNumber: 6, dates: 'Oct 15 (Thu)', curriculum: 'Algorithms & Data Logic', requiresPrerequisite: true },
+  { id: 'fall-2026-week-7', weekNumber: 7, dates: 'Oct 22 (Thu)', curriculum: 'Final Project Showcase', requiresPrerequisite: true },
 ]
 
 const emptyState: RegistrationState = {

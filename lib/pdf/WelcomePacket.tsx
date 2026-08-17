@@ -198,7 +198,7 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
             ⚡ Elevate <Text style={styles.headerAccent}>Coders</Text>
           </Text>
           <Text style={styles.headerSubtitle}>
-            Summer 2026 Welcome Packet — {track} Track
+            Fall 2026 Welcome Packet — {track} Track
           </Text>
         </View>
 
@@ -206,10 +206,10 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
           {/* Greeting */}
           <Text style={styles.greeting}>Welcome, {studentName}! 🎉</Text>
           <Text style={styles.paragraph}>
-            We&apos;re thrilled to have you joining the Elevate Coders Summer 2026 program!
+            We&apos;re thrilled to have you joining the Elevate Coders Fall 2026 program!
             This packet contains everything you need to get ready before your first day.
             Please follow the software installation steps below on the device your child
-            will bring to camp (Windows or Mac).
+            will bring to class (Windows or Mac).
           </Text>
 
           {/* Enrolled weeks */}

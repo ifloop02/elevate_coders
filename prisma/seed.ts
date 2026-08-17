@@ -104,15 +104,15 @@ async function main() {
   console.log('✅ Summer 2026 weeks seeded.')
 
   // ─────────────────────────────────────────────────
-  // FALL 2026 — Thursday Sessions (every week from Sep 10)
-  // Beginner:  5pm–6pm
-  // Next Level: 6pm–7pm (prerequisite required)
+  // FALL 2026 — 7 Thursday Sessions starting September 10th
+  // Class 1 (Beginner): 5:00 PM – 6:00 PM
+  // Class 2 (Next Level): 6:00 PM – 7:00 PM (Prerequisite required)
   // ─────────────────────────────────────────────────
   const fallStartDate = new Date('2026-09-10') // First Thursday
 
   const fallSessions = []
-  for (let i = 0; i < 16; i++) {
-    // 16 Thursday sessions (~4 months)
+  for (let i = 0; i < 7; i++) {
+    // 7 Thursday sessions
     const sessionDate = new Date(fallStartDate)
     sessionDate.setDate(fallStartDate.getDate() + i * 7)
 
@@ -129,11 +129,11 @@ async function main() {
       dayOfWeek: 'Thursday',
       startTime: '17:00',
       endTime: '18:00',
-      curriculumLabel: `Scratch Foundations — Session ${sessionNumber}`,
-      description: 'Thursday beginner coding class. Scratch visual programming.',
+      curriculumLabel: `Scratch & Coding Basics — Session ${sessionNumber}`,
+      description: 'Thursday beginner coding class (5:00 PM - 6:00 PM). Scratch visual programming.',
       requiresPrerequisite: false,
       level: 'BEGINNER',
-      pricePerUnit: 50.0, // Per session pricing for fall
+      pricePerUnit: 30.0,
       isActive: true,
       track: null,
     })
@@ -150,10 +150,10 @@ async function main() {
       startTime: '18:00',
       endTime: '19:00',
       curriculumLabel: `Python Exploration — Session ${sessionNumber}`,
-      description: 'Thursday advanced coding class. Python programming (prerequisite: Beginners Course).',
+      description: 'Thursday next-level coding class (6:00 PM - 7:00 PM). Python programming (prerequisite required).',
       requiresPrerequisite: true,
       level: 'INTERMEDIATE',
-      pricePerUnit: 50.0,
+      pricePerUnit: 30.0,
       isActive: true,
       track: null,
     })

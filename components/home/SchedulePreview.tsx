@@ -1,17 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { Calendar, Zap } from 'lucide-react'
+import { Calendar, Zap, Clock, BookOpen } from 'lucide-react'
 
 const weeks = [
-  { num: 1, dates: 'Jun 15 – Jun 19', curriculum: 'Scratch Foundations', phase: 'scratch' },
-  { num: 2, dates: 'Jun 22 – Jun 26', curriculum: 'Scratch Foundations', phase: 'scratch' },
-  { num: 3, dates: 'Jun 29 – Jul 3', curriculum: 'Scratch Foundations', phase: 'scratch' },
-  { num: 4, dates: 'Jul 6 – Jul 10', curriculum: 'Scratch Foundations', phase: 'scratch' },
-  { num: 5, dates: 'Jul 13 – Jul 17', curriculum: 'Python Exploration', phase: 'python' },
-  { num: 6, dates: 'Jul 20 – Jul 24', curriculum: 'Python Exploration', phase: 'python' },
-  { num: 7, dates: 'Jul 27 – Jul 31', curriculum: 'Python Exploration', phase: 'python' },
-  { num: 8, dates: 'Aug 3 – Aug 7', curriculum: 'Python Exploration', phase: 'python' },
+  { num: 1, dates: 'Sep 10', curriculum: 'Scratch & Coding Basics', phase: 'scratch' },
+  { num: 2, dates: 'Sep 17', curriculum: 'Interactive Game Design', phase: 'scratch' },
+  { num: 3, dates: 'Sep 24', curriculum: 'Logic, Loops & Variables', phase: 'scratch' },
+  { num: 4, dates: 'Oct 1', curriculum: 'Animation & Graphics', phase: 'scratch' },
+  { num: 5, dates: 'Oct 8', curriculum: 'Python IDE & Core Syntax', phase: 'python' },
+  { num: 6, dates: 'Oct 15', curriculum: 'Algorithms & Data Logic', phase: 'python' },
+  { num: 7, dates: 'Oct 22', curriculum: 'Final Project Showcase', phase: 'python' },
 ]
 
 const phaseColors = {
@@ -29,7 +28,23 @@ export default function SchedulePreview() {
     >
       <div className="container-app">
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <span
+            style={{
+              display: 'inline-block',
+              background: '#EDE9FE',
+              color: '#5B21B6',
+              fontSize: '12px',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              padding: '4px 12px',
+              borderRadius: 'var(--radius-full)',
+              marginBottom: '12px',
+            }}
+          >
+            Fall 2026 Schedule
+          </span>
           <h2
             style={{
               fontFamily: 'Outfit, sans-serif',
@@ -38,19 +53,71 @@ export default function SchedulePreview() {
               marginBottom: '12px',
             }}
           >
-            Summer 2026 Schedule
+            7-Week Fall Coding Program
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '16px' }}>
-            Select any combination of weeks. Curriculum builds cumulatively.
+          <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '600px', margin: '0 auto' }}>
+            Classes run <strong>every Thursday starting September 10th</strong>. Two 1-hour tracks are offered each Thursday.
           </p>
         </div>
 
-        {/* Week grid */}
+        {/* Thursday Class Slots Callout */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '16px',
+            marginBottom: '48px',
+          }}
+        >
+          {/* Beginner Slot */}
+          <div
+            style={{
+              padding: '24px',
+              background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
+              border: '1px solid #A7F3D0',
+              borderRadius: 'var(--radius-lg)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#065F46' }}>
+              <Clock size={18} />
+              <span style={{ fontWeight: 700, fontSize: '15px' }}>Thursday Class 1 — 5:00 PM to 6:00 PM</span>
+            </div>
+            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 700, color: '#065F46', marginBottom: '4px' }}>
+              Beginner Coding Class
+            </h3>
+            <p style={{ fontSize: '14px', color: '#047857', lineHeight: 1.5, margin: 0 }}>
+              Designed for new students (ages 7–12). Learn visual block-based programming with Scratch and foundational computational thinking.
+            </p>
+          </div>
+
+          {/* Next Level Slot */}
+          <div
+            style={{
+              padding: '24px',
+              background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)',
+              border: '1px solid #DDD6FE',
+              borderRadius: 'var(--radius-lg)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#5B21B6' }}>
+              <Clock size={18} />
+              <span style={{ fontWeight: 700, fontSize: '15px' }}>Thursday Class 2 — 6:00 PM to 7:00 PM</span>
+            </div>
+            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 700, color: '#5B21B6', marginBottom: '4px' }}>
+              Next-Level Class (Alumni & Advanced)
+            </h3>
+            <p style={{ fontSize: '14px', color: '#6D28D9', lineHeight: 1.5, margin: 0 }}>
+              For students who completed the Beginners Course or possess verified outside coding experience. Covers Python syntax and project building.
+            </p>
+          </div>
+        </div>
+
+        {/* 7 Week Grid */}
         <div
           className="stagger-children"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
             gap: '16px',
             marginBottom: '48px',
           }}
@@ -78,7 +145,7 @@ export default function SchedulePreview() {
                     Week {week.num}
                   </span>
                   <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                    $200
+                    Thursday
                   </span>
                 </div>
 
@@ -114,47 +181,8 @@ export default function SchedulePreview() {
         <div style={{ textAlign: 'center' }}>
           <Link href="/register" className="btn btn-primary btn-lg">
             <Zap size={17} />
-            Start Registration
+            Register for Fall Program
           </Link>
-        </div>
-
-        {/* Fall schedule note */}
-        <div
-          style={{
-            marginTop: '52px',
-            padding: '20px 28px',
-            background: 'var(--bg-subtle)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-purple)',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '14px',
-          }}
-        >
-          <div
-            style={{
-              minWidth: '36px',
-              height: '36px',
-              borderRadius: '10px',
-              background: 'var(--brand-purple)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Calendar size={16} color="white" />
-          </div>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '4px' }}>
-              Fall 2026 — Thursday Sessions
-            </div>
-            <div style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6 }}>
-              Starting <strong>September 10th</strong>, every Thursday.{' '}
-              <strong>Beginner class: 5:00 PM – 6:00 PM.</strong>{' '}
-              <strong>Next-level class (prerequisite required): 6:00 PM – 7:00 PM.</strong>{' '}
-              Fall registration opens after summer camp concludes.
-            </div>
-          </div>
         </div>
       </div>
     </section>

@@ -24,21 +24,19 @@ interface VacationTrackerProps {
   onChange: (dates: VacationDate[]) => void
 }
 
-// Generate Mon-Fri for a given week based on its date range string
-// Format: "Jun 15 – Jun 19" → we generate 5 specific dates
+// Fall 2026 — Thursdays for 7 weeks starting Sept 10
 const WEEK_DATES: Record<number, string[]> = {
-  1: ['2026-06-15', '2026-06-16', '2026-06-17', '2026-06-18', '2026-06-19'],
-  2: ['2026-06-22', '2026-06-23', '2026-06-24', '2026-06-25', '2026-06-26'],
-  3: ['2026-06-29', '2026-06-30', '2026-07-01', '2026-07-02', '2026-07-03'],
-  4: ['2026-07-06', '2026-07-07', '2026-07-08', '2026-07-09', '2026-07-10'],
-  5: ['2026-07-13', '2026-07-14', '2026-07-15', '2026-07-16', '2026-07-17'],
-  6: ['2026-07-20', '2026-07-21', '2026-07-22', '2026-07-23', '2026-07-24'],
-  7: ['2026-07-27', '2026-07-28', '2026-07-29', '2026-07-30', '2026-07-31'],
-  8: ['2026-08-03', '2026-08-04', '2026-08-05', '2026-08-06', '2026-08-07'],
+  1: ['2026-09-10'],
+  2: ['2026-09-17'],
+  3: ['2026-09-24'],
+  4: ['2026-10-01'],
+  5: ['2026-10-08'],
+  6: ['2026-10-15'],
+  7: ['2026-10-22'],
 }
 
-const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
-const CREDIT_PER_DAY = 40 // $200 / 5 days
+const DAY_LABELS = ['Thu']
+const CREDIT_PER_DAY = 30
 
 export default function VacationTracker({ weeks, vacationDates, onChange }: VacationTrackerProps) {
   const [reason, setReason] = useState('')
