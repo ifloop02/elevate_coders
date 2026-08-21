@@ -1,6 +1,15 @@
+import dotenv from 'dotenv'
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient, SeasonType, CampTrack } from '@prisma/client'
 
-const prisma = new PrismaClient()
+dotenv.config({ path: '.env.local' })
+dotenv.config()
+
+const connectionString = process.env.DATABASE_URL
+const pool = new Pool({ connectionString })
+const adapter = new PrismaPg(pool)
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
   console.log('🌱 Seeding Elevate Coders database...')
