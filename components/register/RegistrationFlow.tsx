@@ -46,13 +46,13 @@ export interface RegistrationState {
 const STEPS = ['Track', 'Weeks', 'Vacation', 'Your Info', 'Policies', 'Review']
 
 const WEEK_DATA = [
-  { id: 'fall-2026-week-1', weekNumber: 1, dates: 'Sep 10 (Thu)', curriculum: 'Scratch & Coding Basics', requiresPrerequisite: false },
-  { id: 'fall-2026-week-2', weekNumber: 2, dates: 'Sep 17 (Thu)', curriculum: 'Interactive Game Design', requiresPrerequisite: false },
-  { id: 'fall-2026-week-3', weekNumber: 3, dates: 'Sep 24 (Thu)', curriculum: 'Logic, Loops & Variables', requiresPrerequisite: false },
-  { id: 'fall-2026-week-4', weekNumber: 4, dates: 'Oct 1 (Thu)', curriculum: 'Animation & Graphics', requiresPrerequisite: false },
-  { id: 'fall-2026-week-5', weekNumber: 5, dates: 'Oct 8 (Thu)', curriculum: 'Python IDE & Core Syntax', requiresPrerequisite: true },
-  { id: 'fall-2026-week-6', weekNumber: 6, dates: 'Oct 15 (Thu)', curriculum: 'Algorithms & Data Logic', requiresPrerequisite: true },
-  { id: 'fall-2026-week-7', weekNumber: 7, dates: 'Oct 22 (Thu)', curriculum: 'Final Project Showcase', requiresPrerequisite: true },
+  { id: 'fall-2026-week-1', weekNumber: 1, dates: 'Oct 8 (Thu)', curriculum: 'Scratch & Coding Foundations', requiresPrerequisite: false },
+  { id: 'fall-2026-week-2', weekNumber: 2, dates: 'Oct 15 (Thu)', curriculum: 'Interactive Game & Animation', requiresPrerequisite: false },
+  { id: 'fall-2026-week-3', weekNumber: 3, dates: 'Oct 22 (Thu)', curriculum: 'Logic, Loops & Conditionals', requiresPrerequisite: false },
+  { id: 'fall-2026-week-4', weekNumber: 4, dates: 'Oct 29 (Thu)', curriculum: 'Custom Blocks & Cloning', requiresPrerequisite: false },
+  { id: 'fall-2026-week-5', weekNumber: 5, dates: 'Nov 5 (Thu)', curriculum: 'Python IDE & Variables (Level 2)', requiresPrerequisite: true },
+  { id: 'fall-2026-week-6', weekNumber: 6, dates: 'Nov 12 (Thu)', curriculum: 'Control Flow & Data Logic (Level 2)', requiresPrerequisite: true },
+  { id: 'fall-2026-week-7', weekNumber: 7, dates: 'Nov 19 (Thu)', curriculum: 'Final Portfolio & Showcase (Level 2)', requiresPrerequisite: true },
 ]
 
 const emptyState: RegistrationState = {

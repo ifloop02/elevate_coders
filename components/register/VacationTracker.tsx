@@ -24,15 +24,15 @@ interface VacationTrackerProps {
   onChange: (dates: VacationDate[]) => void
 }
 
-// Fall 2026 — Thursdays for 7 weeks starting Sept 10
+// Fall 2026 — Thursdays for 7 weeks starting Oct 8
 const WEEK_DATES: Record<number, string[]> = {
-  1: ['2026-09-10'],
-  2: ['2026-09-17'],
-  3: ['2026-09-24'],
-  4: ['2026-10-01'],
-  5: ['2026-10-08'],
-  6: ['2026-10-15'],
-  7: ['2026-10-22'],
+  1: ['2026-10-08'],
+  2: ['2026-10-15'],
+  3: ['2026-10-22'],
+  4: ['2026-10-29'],
+  5: ['2026-11-05'],
+  6: ['2026-11-12'],
+  7: ['2026-11-19'],
 }
 
 const DAY_LABELS = ['Thu']

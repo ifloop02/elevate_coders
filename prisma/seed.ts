@@ -113,11 +113,11 @@ async function main() {
   console.log('✅ Summer 2026 weeks seeded.')
 
   // ─────────────────────────────────────────────────
-  // FALL 2026 — 7 Thursday Sessions starting September 10th
+  // FALL 2026 — 7 Thursday Sessions starting October 8th
   // Class 1 (Beginner): 5:00 PM – 6:00 PM
-  // Class 2 (Next Level): 6:00 PM – 7:00 PM (Prerequisite required)
+  // Class 2 (Level 2): 7:00 PM – 8:00 PM (Prerequisite required)
   // ─────────────────────────────────────────────────
-  const fallStartDate = new Date('2026-09-10') // First Thursday
+  const fallStartDate = new Date('2026-10-08') // First Thursday
 
   const fallSessions = []
   for (let i = 0; i < 7; i++) {
@@ -138,16 +138,16 @@ async function main() {
       dayOfWeek: 'Thursday',
       startTime: '17:00',
       endTime: '18:00',
-      curriculumLabel: `Scratch & Coding Basics — Session ${sessionNumber}`,
+      curriculumLabel: `Scratch & Coding Foundations — Session ${sessionNumber}`,
       description: 'Thursday beginner coding class (5:00 PM - 6:00 PM). Scratch visual programming.',
       requiresPrerequisite: false,
       level: 'BEGINNER',
-      pricePerUnit: 30.0,
+      pricePerUnit: 28.57,
       isActive: true,
       track: null,
     })
 
-    // Next-level session (6pm–7pm)
+    // Level 2 session (7pm–8pm)
     fallSessions.push({
       id: `fall-2026-advanced-session-${sessionNumber}`,
       weekNumber: sessionNumber,
@@ -156,13 +156,13 @@ async function main() {
       startDate: sessionDate,
       endDate: sessionDate,
       dayOfWeek: 'Thursday',
-      startTime: '18:00',
-      endTime: '19:00',
-      curriculumLabel: `Python Exploration — Session ${sessionNumber}`,
-      description: 'Thursday next-level coding class (6:00 PM - 7:00 PM). Python programming (prerequisite required).',
+      startTime: '19:00',
+      endTime: '20:00',
+      curriculumLabel: `Python & Data Logic (Level 2) — Session ${sessionNumber}`,
+      description: 'Thursday Level 2 coding class (7:00 PM - 8:00 PM). Python programming (prerequisite required).',
       requiresPrerequisite: true,
       level: 'INTERMEDIATE',
-      pricePerUnit: 30.0,
+      pricePerUnit: 28.57,
       isActive: true,
       track: null,
     })
