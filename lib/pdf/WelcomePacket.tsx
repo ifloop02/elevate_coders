@@ -13,174 +13,200 @@ interface WelcomePacketPDFProps {
   weeks: { weekNumber: number; dates: string; curriculum: string }[]
 }
 
-// react-pdf includes Helvetica, Courier, and Times built-in.
-// No remote Font.register needed — avoids network calls at render time.
-
 const purple = '#7C3AED'
 const darkPurple = '#1E1B4B'
-const green = '#10B981'
+const green = '#059669'
 const lightGray = '#F9FAFB'
-const gray = '#6B7280'
+const gray = '#4B5563'
 const border = '#E5E7EB'
 
+// Clean, explicit numeric styles for @react-pdf/renderer (NO invalid string shorthands)
 const styles = StyleSheet.create({
   page: {
     fontFamily: 'Helvetica',
     backgroundColor: '#FFFFFF',
-    padding: 0,
+    paddingTop: 0,
+    paddingBottom: 44,
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   header: {
     backgroundColor: darkPurple,
-    padding: '32 40',
-    marginBottom: 0,
+    paddingTop: 28,
+    paddingBottom: 28,
+    paddingLeft: 36,
+    paddingRight: 36,
   },
-  headerTitle: {
-    fontSize: 24,
+  headerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  headerTitleText: {
+    fontSize: 22,
     fontWeight: 700,
     color: '#FFFFFF',
-    marginBottom: 4,
   },
-  headerSubtitle: {
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.65)',
-  },
-  headerAccent: {
+  headerAccentText: {
+    fontSize: 22,
+    fontWeight: 700,
     color: '#A78BFA',
   },
+  headerSubtitle: {
+    fontSize: 12,
+    color: '#D1D5DB',
+  },
   body: {
-    padding: '28 40',
+    paddingTop: 24,
+    paddingBottom: 24,
+    paddingLeft: 36,
+    paddingRight: 36,
   },
   greeting: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 700,
     color: darkPurple,
     marginBottom: 8,
   },
   paragraph: {
-    fontSize: 11,
+    fontSize: 10.5,
     color: gray,
-    lineHeight: 1.7,
-    marginBottom: 16,
+    lineHeight: 1.5,
+    marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 700,
     color: darkPurple,
-    marginTop: 20,
+    marginTop: 14,
     marginBottom: 10,
-    paddingBottom: 6,
-    borderBottom: `1 solid ${border}`,
+    paddingBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: border,
+    borderBottomStyle: 'solid',
   },
   infoBox: {
     backgroundColor: lightGray,
-    borderRadius: 8,
-    padding: '14 16',
-    marginBottom: 16,
-    borderLeft: `3 solid ${purple}`,
+    borderRadius: 6,
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 14,
+    paddingRight: 14,
+    marginBottom: 14,
+    borderLeftWidth: 4,
+    borderLeftColor: purple,
+    borderLeftStyle: 'solid',
   },
   infoBoxTitle: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: 700,
     color: purple,
     marginBottom: 4,
   },
   infoBoxText: {
-    fontSize: 11,
+    fontSize: 10,
     color: gray,
-    lineHeight: 1.6,
+    lineHeight: 1.5,
   },
   weekRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '8 12',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 12,
+    paddingRight: 12,
     backgroundColor: '#F5F3FF',
     borderRadius: 6,
     marginBottom: 6,
   },
   weekBadge: {
     backgroundColor: purple,
-    borderRadius: 100,
-    padding: '2 8',
+    borderRadius: 12,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 8,
+    paddingRight: 8,
     fontSize: 9,
     fontWeight: 700,
     color: '#FFFFFF',
+    width: 60,
+    textAlign: 'center',
   },
   weekText: {
-    fontSize: 11,
+    fontSize: 10,
     color: darkPurple,
+    fontWeight: 700,
     flex: 1,
     marginLeft: 10,
   },
   weekDates: {
-    fontSize: 10,
+    fontSize: 9.5,
     color: gray,
-  },
-  stepNumber: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: purple,
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: 700,
-    textAlign: 'center',
-    lineHeight: 1.8,
-    marginRight: 10,
-    flexShrink: 0,
   },
   stepRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 12,
   },
+  stepBadge: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: purple,
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 700,
+    textAlign: 'center',
+    paddingTop: 4,
+    marginRight: 10,
+    flexShrink: 0,
+  },
   stepContent: {
     flex: 1,
   },
   stepTitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 700,
     color: darkPurple,
-    marginBottom: 3,
+    marginBottom: 4,
   },
-  stepText: {
-    fontSize: 10,
+  stepItemText: {
+    fontSize: 9.5,
     color: gray,
-    lineHeight: 1.6,
+    lineHeight: 1.45,
+    marginBottom: 2,
   },
   codeBlock: {
     backgroundColor: '#1E1B4B',
     borderRadius: 6,
-    padding: '10 14',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 12,
+    paddingRight: 12,
     marginTop: 6,
     marginBottom: 8,
   },
   code: {
-    fontSize: 10,
+    fontSize: 9.5,
     color: '#A78BFA',
     fontFamily: 'Courier',
+    lineHeight: 1.4,
   },
   footer: {
     position: 'absolute',
-    bottom: 24,
-    left: 40,
-    right: 40,
+    bottom: 16,
+    left: 36,
+    right: 36,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderTop: `1 solid ${border}`,
-    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: border,
+    borderTopStyle: 'solid',
+    paddingTop: 8,
   },
   footerText: {
-    fontSize: 9,
+    fontSize: 8.5,
     color: '#9CA3AF',
-  },
-  tag: {
-    backgroundColor: '#D1FAE5',
-    borderRadius: 4,
-    padding: '2 6',
-    fontSize: 9,
-    fontWeight: 700,
-    color: '#065F46',
   },
 })
 
@@ -188,17 +214,18 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
   return (
     <Document
       title={`Elevate Coders Welcome Packet — ${studentName}`}
-      author="Elevate Coders / TeamCoders"
-      subject="Summer 2026 Camp Welcome Packet"
+      author="Elevate Coders"
+      subject="Fall 2026 Welcome Packet"
     >
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>
-            ⚡ Elevate <Text style={styles.headerAccent}>Coders</Text>
-          </Text>
+          <View style={styles.headerTitleRow}>
+            <Text style={styles.headerTitleText}>Elevate </Text>
+            <Text style={styles.headerAccentText}>Coders</Text>
+          </View>
           <Text style={styles.headerSubtitle}>
-            Fall 2026 Welcome Packet — {track} Track
+            Fall 2026 Welcome Packet &amp; Setup Guide — {track} Track
           </Text>
         </View>
 
@@ -207,145 +234,112 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
           <Text style={styles.greeting}>Welcome, {studentName}! 🎉</Text>
           <Text style={styles.paragraph}>
             We&apos;re thrilled to have you joining the Elevate Coders Fall 2026 program!
-            This packet contains everything you need to get ready before your first day.
-            Please follow the software installation steps below on the device your child
-            will bring to class (Windows or Mac).
+            This packet contains your setup guide. Please follow the installation steps below
+            on the laptop your child will bring to class (Windows or Mac).
           </Text>
 
           {/* Enrolled weeks */}
           {weeks.length > 0 && (
-            <>
-              <Text style={styles.sectionTitle}>Your Enrolled Weeks</Text>
-              {weeks.map((week) => (
-                <View key={week.weekNumber} style={styles.weekRow}>
-                  <Text style={styles.weekBadge}>Week {week.weekNumber}</Text>
-                  <Text style={styles.weekText}>{week.curriculum}</Text>
-                  <Text style={styles.weekDates}>{week.dates}</Text>
+            <View style={{ marginBottom: 10 }}>
+              <Text style={styles.sectionTitle}>Your Enrolled Sessions</Text>
+              {weeks.map((w) => (
+                <View key={w.weekNumber} style={styles.weekRow}>
+                  <Text style={styles.weekBadge}>Week {w.weekNumber}</Text>
+                  <Text style={styles.weekText}>{w.curriculum}</Text>
+                  <Text style={styles.weekDates}>{w.dates}</Text>
                 </View>
               ))}
-            </>
+            </View>
           )}
 
-          {/* Install Section 1 — Scratch */}
+          {/* Step 1 — Install Scratch Desktop */}
           <Text style={styles.sectionTitle}>Step 1 — Install Scratch Desktop</Text>
           <Text style={styles.paragraph}>
-            Scratch Desktop lets your child create and run Scratch projects without an
-            internet connection. This is required for Weeks 1–4.
+            Scratch Desktop lets your child create and run Scratch projects offline.
           </Text>
 
-          {/* Windows */}
+          {/* Windows Scratch */}
           <View style={styles.stepRow}>
-            <Text style={styles.stepNumber}>W</Text>
+            <Text style={styles.stepBadge}>W</Text>
             <View style={styles.stepContent}>
               <Text style={styles.stepTitle}>Windows Installation</Text>
-              <Text style={styles.stepText}>
-                1. Open your web browser and go to: scratch.mit.edu/download{'\n'}
-                2. Click "Download for Windows" and save the .exe installer{'\n'}
-                3. Open your Downloads folder and double-click Scratch Desktop Setup.exe{'\n'}
-                4. Follow the install wizard — click Next → Install → Finish{'\n'}
-                5. Look for the Scratch cat icon on your Desktop and double-click to launch
-              </Text>
+              <Text style={styles.stepItemText}>1. Go to: scratch.mit.edu/download</Text>
+              <Text style={styles.stepItemText}>2. Click &quot;Download for Windows&quot; and save the .exe installer</Text>
+              <Text style={styles.stepItemText}>3. Open your Downloads folder and double-click Scratch Desktop Setup.exe</Text>
+              <Text style={styles.stepItemText}>4. Follow the install wizard — click Next → Install → Finish</Text>
+              <Text style={styles.stepItemText}>5. Look for the Scratch cat icon on your Desktop and double-click to launch</Text>
             </View>
           </View>
 
-          {/* Mac */}
+          {/* Mac Scratch */}
           <View style={styles.stepRow}>
-            <Text style={styles.stepNumber}>M</Text>
+            <Text style={styles.stepBadge}>M</Text>
             <View style={styles.stepContent}>
               <Text style={styles.stepTitle}>macOS Installation</Text>
-              <Text style={styles.stepText}>
-                1. Open Safari or Chrome and go to: scratch.mit.edu/download{'\n'}
-                2. Click "Download for macOS" — a .dmg file will download{'\n'}
-                3. Open the .dmg file from your Downloads folder{'\n'}
-                4. Drag the Scratch Desktop app to your Applications folder{'\n'}
-                5. Open Applications, find Scratch Desktop, and double-click to launch{'\n'}
-                Note: If macOS blocks the app, go to System Settings → Privacy & Security → Open Anyway
-              </Text>
+              <Text style={styles.stepItemText}>1. Go to: scratch.mit.edu/download</Text>
+              <Text style={styles.stepItemText}>2. Click &quot;Download for macOS&quot; — a .dmg file will download</Text>
+              <Text style={styles.stepItemText}>3. Open the .dmg file from your Downloads folder</Text>
+              <Text style={styles.stepItemText}>4. Drag the Scratch Desktop app to your Applications folder</Text>
+              <Text style={styles.stepItemText}>5. Open Applications, find Scratch Desktop, and double-click to launch</Text>
             </View>
           </View>
 
           <View style={styles.infoBox}>
             <Text style={styles.infoBoxTitle}>✓ Test: Create a new project in Scratch Desktop</Text>
             <Text style={styles.infoBoxText}>
-              When Scratch opens, you should see an orange cat sprite on a white stage. Click the
-              green flag ▶ button. If the cat responds, you&apos;re all set!
+              When Scratch opens, you should see an orange cat sprite on a white stage. Click the green flag ▶ button to test!
             </Text>
           </View>
 
-          {/* Install Section 2 — Thonny */}
-          <Text style={styles.sectionTitle}>Step 2 — Install Thonny Python IDE</Text>
-          <Text style={styles.paragraph}>
-            Thonny is a beginner-friendly Python development environment. This is required
-            for Weeks 5–8 (Python Exploration). Students who completed the beginners course
-            may already have this installed.
-          </Text>
+          {/* Step 2 — Install Thonny Python IDE */}
+          <Text style={styles.sectionTitle}>Step 2 — Install Thonny Python IDE (Level 2)</Text>
 
-          {/* Windows */}
+          {/* Windows Thonny */}
           <View style={styles.stepRow}>
-            <Text style={styles.stepNumber}>W</Text>
+            <Text style={styles.stepBadge}>W</Text>
             <View style={styles.stepContent}>
               <Text style={styles.stepTitle}>Windows Installation</Text>
-              <Text style={styles.stepText}>
-                1. Go to: thonny.org{'\n'}
-                2. Click the Windows download button — save the .exe installer{'\n'}
-                3. Run the installer and select "Install for me only" (no admin needed){'\n'}
-                4. Click Next through the setup — keep all default options{'\n'}
-                5. Launch Thonny from the Start Menu or Desktop shortcut
-              </Text>
-              <View style={styles.codeBlock}>
-                <Text style={styles.code}>{`# Quick test — type this in Thonny's Shell panel:`}</Text>
-                <Text style={styles.code}>{`print("Hello, TeamCoders!")`}</Text>
-                <Text style={styles.code}>{`# Press Enter — you should see: Hello, TeamCoders!`}</Text>
-              </View>
+              <Text style={styles.stepItemText}>1. Go to: thonny.org</Text>
+              <Text style={styles.stepItemText}>2. Click the Windows download button — save the .exe installer</Text>
+              <Text style={styles.stepItemText}>3. Run the installer and select &quot;Install for me only&quot;</Text>
+              <Text style={styles.stepItemText}>4. Click Next through setup — keep all default options</Text>
+              <Text style={styles.stepItemText}>5. Launch Thonny from the Start Menu or Desktop shortcut</Text>
             </View>
           </View>
 
-          {/* Mac */}
+          {/* Mac Thonny */}
           <View style={styles.stepRow}>
-            <Text style={styles.stepNumber}>M</Text>
+            <Text style={styles.stepBadge}>M</Text>
             <View style={styles.stepContent}>
               <Text style={styles.stepTitle}>macOS Installation</Text>
-              <Text style={styles.stepText}>
-                1. Go to: thonny.org and click the macOS download (.pkg){'\n'}
-                2. Open the downloaded .pkg file from Downloads{'\n'}
-                3. Follow the installer — click Continue → Install{'\n'}
-                4. Find Thonny in your Applications folder and launch it{'\n'}
-                5. On first launch, choose "Standard" mode when prompted
-              </Text>
-              <View style={styles.codeBlock}>
-                <Text style={styles.code}>{`# Quick test — type this in Thonny's Shell:`}</Text>
-                <Text style={styles.code}>{`name = "TeamCoder"`}</Text>
-                <Text style={styles.code}>{`print(f"Welcome, {name}!")`}</Text>
-              </View>
+              <Text style={styles.stepItemText}>1. Go to: thonny.org and click the macOS download (.pkg)</Text>
+              <Text style={styles.stepItemText}>2. Open the downloaded .pkg file from Downloads</Text>
+              <Text style={styles.stepItemText}>3. Follow the installer — click Continue → Install</Text>
+              <Text style={styles.stepItemText}>4. Find Thonny in your Applications folder and launch it</Text>
             </View>
           </View>
 
-          {/* What to bring */}
-          <Text style={styles.sectionTitle}>What to Bring to Camp</Text>
+          {/* Checklist */}
+          <Text style={styles.sectionTitle}>Checklist for Day 1</Text>
           <View style={styles.infoBox}>
-            <Text style={styles.infoBoxTitle}>Checklist for Day 1</Text>
-            <Text style={styles.infoBoxText}>
-              ☐  Laptop or Chromebook with Scratch Desktop + Thonny installed{'\n'}
-              ☐  Laptop charger{'\n'}
-              ☐  Water bottle (labeled with your name){'\n'}
-              ☐  Snack (nut-free if possible){'\n'}
-              ☐  Excitement and curiosity! 🚀
-            </Text>
+            <Text style={styles.infoBoxText}>☐  Laptop with Scratch Desktop + Thonny installed</Text>
+            <Text style={styles.infoBoxText}>☐  Laptop charger</Text>
+            <Text style={styles.infoBoxText}>☐  Water bottle (labeled with student name)</Text>
+            <Text style={styles.infoBoxText}>☐  Snack (nut-free)</Text>
           </View>
 
           {/* Contact */}
-          <View style={[styles.infoBox, { borderLeft: `3 solid ${green}` }]}>
+          <View style={[styles.infoBox, { borderLeftColor: green, backgroundColor: '#F0FDF4' }]}>
             <Text style={[styles.infoBoxTitle, { color: '#065F46' }]}>Questions? We&apos;re here to help.</Text>
-            <Text style={styles.infoBoxText}>
-              Email us any time at: team.elevate@gwelevate.com{'\n'}
-              California Educational Services — 0% Sales Tax (Cal. Rev. & Tax. Code §6361)
+            <Text style={[styles.infoBoxText, { color: '#047857' }]}>
+              Email: team.elevate@gwelevate.com | California Educational Services — 0% Sales Tax
             </Text>
           </View>
         </View>
 
         {/* Footer */}
         <View style={styles.footer} fixed>
-          <Text style={styles.footerText}>© 2026 Elevate Coders / TeamCoders — Summer Welcome Packet</Text>
+          <Text style={styles.footerText}>© 2026 Elevate Coders — Fall Welcome Packet</Text>
           <Text style={styles.footerText}>elevatecoders.com</Text>
         </View>
       </Page>
