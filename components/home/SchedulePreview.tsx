@@ -8,10 +8,49 @@ const weeks = [
   { num: 2, dates: 'Oct 15 (Thu)', curriculum: 'Interactive Game & Animation', phase: 'scratch' },
   { num: 3, dates: 'Oct 22 (Thu)', curriculum: 'Logic, Loops & Conditionals', phase: 'scratch' },
   { num: 4, dates: 'Oct 29 (Thu)', curriculum: 'Custom Blocks & Cloning', phase: 'scratch' },
-  { num: 5, dates: 'Nov 5 (Thu)', curriculum: 'Python IDE & Variables', phase: 'python' },
-  { num: 6, dates: 'Nov 12 (Thu)', curriculum: 'Control Flow & Data Logic', phase: 'python' },
-  { num: 7, dates: 'Nov 19 (Thu)', curriculum: 'Final Portfolio & Showcase', phase: 'python' },
+  { num: 5, dates: 'Nov 5 (Thu)', curriculum: 'Python IDE & Variables (Level 2)', phase: 'python' },
+  { num: 6, dates: 'Nov 12 (Thu)', curriculum: 'Control Flow & Data Logic (Level 2)', phase: 'python' },
+  { num: 7, dates: 'Nov 19 (Thu)', curriculum: 'Final Portfolio & Showcase (Level 2)', phase: 'python' },
 ]
+
+function VerticalLevelDots({ filledCount, color, label }: { filledCount: number; color: string; label: string }) {
+  // 10 vertical dots stacked top to bottom.
+  // Filling starts from the bottom: index >= 10 - filledCount
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '5px',
+        paddingTop: '2px',
+        flexShrink: 0,
+      }}
+      title={`${label} (${filledCount} out of 10 level dots filled from bottom)`}
+    >
+      <span style={{ fontSize: '9px', fontWeight: 800, color, marginBottom: '2px' }}>{label}</span>
+      {Array.from({ length: 10 }).map((_, index) => {
+        // Bottom-up filling: for filledCount=1, index 9 is filled (bottom dot)
+        // For filledCount=2, index 8 and 9 are filled (bottom 2 dots)
+        const isFilled = index >= 10 - filledCount
+        return (
+          <div
+            key={index}
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: isFilled ? color : 'transparent',
+              border: isFilled ? 'none' : `1.5px solid ${color}50`,
+              boxShadow: isFilled ? `0 0 6px ${color}60` : 'none',
+              transition: 'all 300ms ease',
+            }}
+          />
+        )
+      })}
+    </div>
+  )
+}
 
 export default function SchedulePreview() {
   return (
@@ -64,29 +103,35 @@ export default function SchedulePreview() {
             marginBottom: '48px',
           }}
         >
-          {/* Class 1 — Beginner */}
+          {/* Class 1 — Beginner (Level 1: 1 dot filled from bottom) */}
           <div
             style={{
               padding: '28px',
               background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
               border: '1px solid #A7F3D0',
               borderRadius: 'var(--radius-lg)',
-              position: 'relative',
+              display: 'flex',
+              gap: '20px',
+              alignItems: 'flex-start',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#065F46' }}>
-              <Clock size={18} />
-              <span style={{ fontWeight: 700, fontSize: '15px' }}>5:00 PM – 6:00 PM (Every Thursday)</span>
+            <VerticalLevelDots filledCount={1} color="#059669" label="LVL 1" />
+
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#065F46' }}>
+                <Clock size={18} />
+                <span style={{ fontWeight: 700, fontSize: '15px' }}>5:00 PM – 6:00 PM (Every Thursday)</span>
+              </div>
+              <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#065F46', marginBottom: '8px' }}>
+                Beginner Coding Class
+              </h3>
+              <p style={{ fontSize: '14px', color: '#047857', lineHeight: 1.6, margin: 0 }}>
+                Designed for new students (ages 7–12). Learn Scratch block coding, computational thinking, and game mechanics in a hands-on environment.
+              </p>
             </div>
-            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#065F46', marginBottom: '8px' }}>
-              Beginner Coding Class
-            </h3>
-            <p style={{ fontSize: '14px', color: '#047857', lineHeight: 1.6, margin: 0 }}>
-              Designed for new students (ages 7–12). Learn Scratch block coding, computational thinking, and game mechanics in a hands-on environment.
-            </p>
           </div>
 
-          {/* Class 2 — Level 2 (With Vertical Purple Dots) */}
+          {/* Class 2 — Level 2 (Level 2: 2 dots filled from bottom) */}
           <div
             style={{
               padding: '28px',
@@ -98,36 +143,7 @@ export default function SchedulePreview() {
               alignItems: 'flex-start',
             }}
           >
-            {/* Level 2 Vertical Purple Dots Indicator (2 out of 10 filled) */}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '5px',
-                paddingTop: '4px',
-              }}
-              title="Level 2 (2 out of 10 level dots)"
-            >
-              {Array.from({ length: 10 }).map((_, index) => {
-                // Fill 2 dots out of 10 (top to bottom: first 2 filled, rest outlined)
-                const isFilled = index < 2
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      background: isFilled ? '#7C3AED' : 'transparent',
-                      border: isFilled ? 'none' : '1.5px solid #A78BFA',
-                      boxShadow: isFilled ? '0 0 6px rgba(124,58,237,0.4)' : 'none',
-                    }}
-                  />
-                )
-              })}
-              <span style={{ fontSize: '9px', fontWeight: 800, color: '#7C3AED', marginTop: '4px' }}>LVL 2</span>
-            </div>
+            <VerticalLevelDots filledCount={2} color="#7C3AED" label="LVL 2" />
 
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#5B21B6' }}>
