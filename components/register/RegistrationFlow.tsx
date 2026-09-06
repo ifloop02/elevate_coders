@@ -115,6 +115,7 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
     state.discountPercent
   )
 
+
   const canAdvanceFromWeeks = () => {
     if (state.selectedWeekIds.length === 0) {
       showToast('Select at least one week to continue')
