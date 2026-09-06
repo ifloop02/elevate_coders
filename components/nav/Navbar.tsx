@@ -57,7 +57,7 @@ export default function Navbar() {
             style={{ borderRadius: '8px', objectFit: 'contain' }}
             onError={(e) => {
               // Fallback: hide broken image and show text only
-              ;(e.target as HTMLImageElement).style.display = 'none'
+              ; (e.target as HTMLImageElement).style.display = 'none'
             }}
           />
           <span
@@ -69,7 +69,7 @@ export default function Navbar() {
             }}
           >
             Elevate{' '}
-            <span style={{ color: 'var(--brand-purple)' }}>Coders</span>
+            <span style={{ color: 'var(--brand-purple)' }}>Coders Academy</span>
           </span>
         </Link>
 

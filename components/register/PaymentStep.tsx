@@ -18,10 +18,12 @@ const stripePromise = loadStripe(
 // ── Inner form that has access to Stripe hooks ──────────────────────
 function CheckoutForm({
   finalTotal,
+  parentEmail,
   onSuccess,
   onError,
 }: {
   finalTotal: number
+  parentEmail: string
   onSuccess: () => void
   onError: (msg: string) => void
 }) {
@@ -40,10 +42,14 @@ function CheckoutForm({
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Return URL is required by Stripe but we handle success in-flow via onSuccess
         return_url: `${window.location.origin}/register/confirmation`,
+        payment_method_data: {
+          billing_details: {
+            email: parentEmail,
+          },
+        },
       },
-      redirect: 'if_required', // Only redirect for bank auth flows; cards stay in-page
+      redirect: 'if_required',
     })
 
     if (error) {
@@ -266,6 +272,7 @@ export default function PaymentStep({
         >
           <CheckoutForm
             finalTotal={finalTotal}
+            parentEmail={parentEmail}
             onSuccess={onSuccess}
             onError={setPayError}
           />
