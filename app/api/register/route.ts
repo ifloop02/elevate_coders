@@ -4,6 +4,7 @@ import { RegistrationSubmitSchema } from '@/lib/validation'
 import { calculatePricing } from '@/lib/proration'
 import { buildInvoicePayload } from '@/lib/invoice'
 import { sendRegistrationAlert } from '@/lib/email'
+import type { WeekBlock } from '@prisma/client'
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     if (weekBlocks.length !== weekSelection.weekBlockIds.length) {
       // Fallback construction for unseeded or dynamic week IDs
-      weekBlocks = weekSelection.weekBlockIds.map((id, index) => {
+      weekBlocks = weekSelection.weekBlockIds.map((id, index): WeekBlock => {
         const isLevel2 = id.includes('lvl2') || id.includes('advanced')
         const weekNum = parseInt(id.replace(/\D/g, '')) || (index + 1)
         return {
@@ -47,8 +48,6 @@ export async function POST(request: NextRequest) {
           pricePerUnit: 28.57,
           isActive: true,
           track: null,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         }
       })
     }
