@@ -128,8 +128,34 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
     return true
   }
 
+  const canAdvanceFromInfo = () => {
+    const { legalName, email, phone } = state.parent
+    if (!legalName.trim()) {
+      showToast('Please enter your legal billing name to continue')
+      return false
+    }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('Please enter a valid email address to continue')
+      return false
+    }
+    if (!phone.trim()) {
+      showToast('Please enter your billing phone number to continue')
+      return false
+    }
+    if (
+      state.ageStatus === null ||
+      (state.ageStatus === 'too_young' && state.youngChildOption === null) ||
+      (state.ageStatus === 'too_old' && !state.olderChildAcknowledged)
+    ) {
+      showToast("Please complete your child's information to continue")
+      return false
+    }
+    return true
+  }
+
   const handleNext = () => {
     if (step === 1 && !canAdvanceFromWeeks()) return
+    if (step === 3 && !canAdvanceFromInfo()) return
     setStep((s) => Math.min(s + 1, STEPS.length - 1))
   }
 
@@ -286,16 +312,10 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
                       className="btn btn-primary"
                       disabled={
                         (step === 0 && !state.track) ||
-                        (step === 3 && (
-                          state.ageStatus === null ||
-                          (state.ageStatus === 'too_young' && state.youngChildOption === null) ||
-                          (state.ageStatus === 'too_old' && !state.olderChildAcknowledged)
-                        )) ||
                         (step === 4 && !state.policyAgreed)
                       }
                       style={{
                         opacity: (
-                          (step === 3 && (state.ageStatus === null || (state.ageStatus === 'too_young' && state.youngChildOption === null) || (state.ageStatus === 'too_old' && !state.olderChildAcknowledged))) ||
                           (step === 4 && !state.policyAgreed)
                         ) ? 0.5 : 1
                       }}
