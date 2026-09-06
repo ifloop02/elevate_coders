@@ -117,82 +117,73 @@ async function main() {
   // Class 1 (Beginner): 5:00 PM – 6:00 PM
   // Class 2 (Level 2): 7:00 PM – 8:00 PM (Prerequisite required)
   // ─────────────────────────────────────────────────
-  const fallStartDate = new Date('2026-10-08') // First Thursday
+  const { ALL_FALL_SESSIONS } = await import('../lib/curriculum')
 
-  const fallSessions = []
-  for (let i = 0; i < 7; i++) {
-    // 7 Thursday sessions
-    const sessionDate = new Date(fallStartDate)
-    sessionDate.setDate(fallStartDate.getDate() + i * 7)
-
-    const sessionNumber = i + 1
-
-    // Beginner session (5pm–6pm)
-    fallSessions.push({
-      id: `fall-2026-beg-${sessionNumber}`,
-      weekNumber: sessionNumber,
-      season: SeasonType.FALL,
-      year: 2026,
-      startDate: sessionDate,
-      endDate: sessionDate,
-      dayOfWeek: 'Thursday',
-      startTime: '17:00',
-      endTime: '18:00',
-      curriculumLabel: `Scratch & Coding Foundations — Session ${sessionNumber}`,
-      description: 'Thursday beginner coding class (5:00 PM - 6:00 PM). Scratch visual programming.',
-      requiresPrerequisite: false,
-      level: 'BEGINNER',
-      pricePerUnit: 28.57,
-      isActive: true,
-      track: null,
-    })
-
-    // Level 2 session (7pm–8pm)
-    fallSessions.push({
-      id: `fall-2026-lvl2-${sessionNumber}`,
-      weekNumber: sessionNumber,
-      season: SeasonType.FALL,
-      year: 2026,
-      startDate: sessionDate,
-      endDate: sessionDate,
-      dayOfWeek: 'Thursday',
-      startTime: '19:00',
-      endTime: '20:00',
-      curriculumLabel: `Python & Data Logic (Level 2) — Session ${sessionNumber}`,
-      description: 'Thursday Level 2 coding class (7:00 PM - 8:00 PM). Advanced game engines & AI pathfinding.',
-      requiresPrerequisite: true,
-      level: 'INTERMEDIATE',
-      pricePerUnit: 28.57,
-      isActive: true,
-      track: null,
-    })
-  }
-
-  for (const session of fallSessions) {
+  for (const s of ALL_FALL_SESSIONS) {
+    const sessionDate = new Date(s.date)
     await prisma.weekBlock.upsert({
-      where: { id: session.id },
-      create: session,
+      where: { id: s.id },
+      create: {
+        id: s.id,
+        weekNumber: s.weekNumber,
+        season: SeasonType.FALL,
+        year: 2026,
+        startDate: sessionDate,
+        endDate: sessionDate,
+        dayOfWeek: s.dayOfWeek,
+        startTime: s.startTime,
+        endTime: s.endTime,
+        curriculumLabel: s.title,
+        description: s.project || s.concept,
+        requiresPrerequisite: s.requiresPrerequisite,
+        level: s.level === 'LEVEL_2' ? 'INTERMEDIATE' : 'BEGINNER',
+        pricePerUnit: s.pricePerUnit,
+        isActive: true,
+        track: null,
+      },
       update: {
-        curriculumLabel: session.curriculumLabel,
-        description: session.description,
-        isActive: session.isActive,
+        curriculumLabel: s.title,
+        description: s.project || s.concept,
+        weekNumber: s.weekNumber,
+        isActive: true,
       },
     })
   }
+
+  console.log('✅ Fall 2026 Thursday sessions seeded with full weekly curriculum titles.')
 
   console.log('✅ Fall 2026 Thursday sessions seeded.')
 
   // ─────────────────────────────────────────────────
   // DISCOUNT CODES
   // ─────────────────────────────────────────────────
+  console.log('🔄 Cleaning up old discount codes...')
+  // Safely decouple any registrations referencing old discounts
+  await prisma.registration.updateMany({
+    where: { discountCodeId: { not: null } },
+    data: { discountCodeId: null },
+  })
+  await prisma.discountCode.deleteMany({})
+
   const discountCodes = [
     {
-      id: 'discount-partner75',
-      code: 'PARTNER75',
-      description: 'Corporate Partner Scholarship — 75% off all weeks',
-      sponsorName: 'Corporate Partner',
-      discountPercent: 75.0,
-      usageLimit: 10,
+      id: 'discount-fallfirst2',
+      code: 'FALLFIRST2',
+      description: 'Early Bird Registers — 20% off',
+      sponsorName: null,
+      discountPercent: 20.0,
+      usageLimit: 2,
+      usedCount: 0,
+      isActive: true,
+    },
+    {
+      id: 'discount-fall50',
+      code: 'FALL50',
+      description: 'Fall Special 50% Off for Team Elevate',
+      sponsorName: 'Team Elevate',
+      discountPercent: 50.0,
+      usageLimit: 3,
+      usedCount: 0,
       isActive: true,
     },
     {
@@ -201,29 +192,39 @@ async function main() {
       description: 'Returning Alumni Family — 10% loyalty discount',
       sponsorName: null,
       discountPercent: 10.0,
-      usageLimit: null,
+      usageLimit: 5,
+      usedCount: 0,
       isActive: true,
     },
     {
-      id: 'discount-earlybird20',
-      code: 'EARLYBIRD20',
-      description: 'Early Bird Registration — 20% off (first 20 families)',
-      sponsorName: null,
-      discountPercent: 20.0,
-      usageLimit: 20,
+      id: 'discount-gscs15',
+      code: 'GSCS15',
+      description: 'School Discount — 15% off',
+      sponsorName: 'GSCS',
+      discountPercent: 15.0,
+      usageLimit: 5,
+      usedCount: 0,
+      isActive: true,
+    },
+    {
+      id: 'discount-elev8academy',
+      code: 'ELEV8ACADEMY',
+      description: 'Team Special — 70% off',
+      sponsorName: 'Team Special',
+      discountPercent: 70.0,
+      usageLimit: 2,
+      usedCount: 0,
       isActive: true,
     },
   ]
 
   for (const code of discountCodes) {
-    await prisma.discountCode.upsert({
-      where: { id: code.id },
-      create: { ...code, usedCount: 0 },
-      update: { description: code.description, isActive: code.isActive },
+    await prisma.discountCode.create({
+      data: code,
     })
   }
 
-  console.log('✅ Discount codes seeded.')
+  console.log('✅ 4 new discount codes created (FALLFIRST2, FALL50, ALUMNI10, GSCS15).')
   console.log('🎉 Database seeding complete!')
 }
 

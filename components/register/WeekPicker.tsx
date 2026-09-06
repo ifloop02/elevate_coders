@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Calendar, Lock, CheckCircle2, Clock, Lightbulb } from 'lucide-react'
+import { PROGRAM_TOTAL_TUITION, PRICE_PER_SESSION, formatCurrency } from '@/lib/proration'
 
 export interface WeekData {
   id: string
@@ -369,7 +370,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
                     <Lock size={13} color="var(--text-muted)" />
                   )}
                   <span style={{ fontSize: '12px', fontWeight: 700, color: isLevel2 ? '#5B21B6' : '#065F46' }}>
-                    {isSelected ? '✓ Enrolled' : 'Included in $200 Package'}
+                    {isSelected ? '✓ Enrolled' : `${formatCurrency(PRICE_PER_SESSION)}/session`}
                   </span>
                 </div>
               </div>
@@ -417,9 +418,16 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
               </div>
             )}
           </div>
-          <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '20px', color: activeLevel === 'BEGINNER' ? '#065F46' : '#5B21B6' }}>
-            $200.00 <span style={{ fontSize: '12px', fontWeight: 400 }}>flat tuition</span>
-          </span>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: '20px', color: activeLevel === 'BEGINNER' ? '#065F46' : '#5B21B6' }}>
+              {isAllSelected
+                ? `${formatCurrency(PROGRAM_TOTAL_TUITION)}`
+                : formatCurrency(selectedIds.length * PRICE_PER_SESSION)}
+            </span>
+            <div style={{ fontSize: '11px', fontWeight: 400, color: 'var(--text-muted)', marginTop: '2px' }}>
+              {isAllSelected ? 'full program — best value' : `${selectedIds.length} × ${formatCurrency(PRICE_PER_SESSION)}/session — prorated`}
+            </div>
+          </div>
         </div>
       )}
     </div>

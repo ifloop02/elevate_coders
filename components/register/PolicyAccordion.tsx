@@ -13,6 +13,8 @@ interface PolicyAccordionProps {
   onDiscountCodeChange: (code: string) => void
   discountPercent: number
   onDiscountResolved: (pct: number) => void
+  selectedWeekCount: number
+  onAddAllWeeks: () => void
 }
 
 export default function PolicyAccordion({
@@ -20,7 +22,10 @@ export default function PolicyAccordion({
   paymentMethod, onPaymentMethodChange,
   discountCode, onDiscountCodeChange,
   discountPercent, onDiscountResolved,
+  selectedWeekCount,
+  onAddAllWeeks,
 }: PolicyAccordionProps) {
+  const isFullProgram = selectedWeekCount >= 7
   const [checkingCode, setCheckingCode] = useState(false)
   const [codeError, setCodeError] = useState<string | null>(null)
   const [codeValid, setCodeValid] = useState(false)
@@ -154,35 +159,60 @@ export default function PolicyAccordion({
         </div>
       </div>
 
-      {/* Discount code */}
+      {/* Discount code — only available for full 7-week enrollment */}
       <div style={{ marginBottom: '28px' }}>
         <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Tag size={15} color="var(--brand-purple)" />
+          <Tag size={15} color={isFullProgram ? 'var(--brand-purple)' : 'var(--text-muted)'} />
           Discount / Partner Code
         </div>
-        <div style={{ display: 'flex', gap: '10px', maxWidth: '400px' }}>
-          <input
-            id="discount-code"
-            className={`form-input ${codeError ? 'error' : ''}`}
-            type="text"
-            placeholder="e.g. PARTNER75"
-            value={discountCode}
-            onChange={(e) => { onDiscountCodeChange(e.target.value.toUpperCase()); setCodeValid(false); setCodeError(null); onDiscountResolved(0) }}
-            style={{ flex: 1 }}
-          />
-          <button
-            onClick={applyDiscount}
-            className="btn btn-secondary btn-sm"
-            disabled={!discountCode.trim() || checkingCode}
-          >
-            {checkingCode ? <Loader2 size={14} className="animate-spin" /> : 'Apply'}
-          </button>
-        </div>
-        {codeError && <div className="form-error">{codeError}</div>}
-        {codeValid && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '13px', color: '#10B981' }}>
-            <CheckCircle size={14} />
-            {discountPercent}% discount applied!
+        {isFullProgram ? (
+          <>
+            <div style={{ display: 'flex', gap: '10px', maxWidth: '400px' }}>
+              <input
+                id="discount-code"
+                className={`form-input ${codeError ? 'error' : ''}`}
+                type="text"
+                placeholder="e.g. PARTNER75"
+                value={discountCode}
+                onChange={(e) => { onDiscountCodeChange(e.target.value.toUpperCase()); setCodeValid(false); setCodeError(null); onDiscountResolved(0) }}
+                style={{ flex: 1 }}
+              />
+              <button
+                onClick={applyDiscount}
+                className="btn btn-secondary btn-sm"
+                disabled={!discountCode.trim() || checkingCode}
+              >
+                {checkingCode ? <Loader2 size={14} className="animate-spin" /> : 'Apply'}
+              </button>
+            </div>
+            {codeError && <div className="form-error">{codeError}</div>}
+            {codeValid && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '13px', color: '#10B981' }}>
+                <CheckCircle size={14} />
+                {discountPercent}% discount applied!
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{
+            padding: '12px 16px',
+            background: '#F9FAFB',
+            border: '1.5px solid var(--border-light)',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '13px',
+            color: 'var(--text-muted)',
+            maxWidth: '400px',
+            lineHeight: 1.6,
+          }}>
+            Discount and partner codes are only available for the full 7-week program.{' '}
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); onAddAllWeeks() }}
+              style={{ color: 'var(--brand-purple)', fontWeight: 600, textDecoration: 'none' }}
+            >
+              Add all 7 weeks
+            </a>
+            {' '}to unlock this field.
           </div>
         )}
       </div>

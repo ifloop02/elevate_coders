@@ -4,6 +4,7 @@ import { RegistrationSubmitSchema } from '@/lib/validation'
 import { calculatePricing } from '@/lib/proration'
 import { buildInvoicePayload } from '@/lib/invoice'
 import { sendRegistrationAlert } from '@/lib/email'
+import { getSessionById } from '@/lib/curriculum'
 import type { WeekBlock } from '@prisma/client'
 
 export async function POST(request: NextRequest) {
@@ -21,35 +22,42 @@ export async function POST(request: NextRequest) {
 
     const { parent, student, weekSelection, paymentMethod, discountCode, policyAgreed } = parsed.data
 
-    // ─── 2. Resolve week blocks ───────────────────────────────────
-    let weekBlocks = await prisma.weekBlock.findMany({
-      where: { id: { in: weekSelection.weekBlockIds } },
-    })
+    // ─── 2. Resolve and ensure week blocks ─────────────────────────
+    const weekBlocks: WeekBlock[] = []
+    for (const id of weekSelection.weekBlockIds) {
+      const session = getSessionById(id)
+      const isLevel2 = id.includes('lvl2') || id.includes('advanced')
+      const weekNum = session?.weekNumber ?? (parseInt(id.split('-').pop() || '1') || 1)
+      const title = session?.title ?? (isLevel2 ? `Level 2 Session ${weekNum}` : `Beginner Session ${weekNum}`)
+      const date = session ? new Date(session.date) : new Date('2026-10-08')
 
-    if (weekBlocks.length !== weekSelection.weekBlockIds.length) {
-      // Fallback construction for unseeded or dynamic week IDs
-      weekBlocks = weekSelection.weekBlockIds.map((id, index): WeekBlock => {
-        const isLevel2 = id.includes('lvl2') || id.includes('advanced')
-        const weekNum = parseInt(id.replace(/\D/g, '')) || (index + 1)
-        return {
+      const block = await prisma.weekBlock.upsert({
+        where: { id },
+        create: {
           id,
           weekNumber: weekNum,
-          season: 'FALL' as const,
+          season: 'FALL',
           year: 2026,
-          startDate: new Date('2026-10-08'),
-          endDate: new Date('2026-10-08'),
+          startDate: date,
+          endDate: date,
           dayOfWeek: 'Thursday',
-          startTime: isLevel2 ? '19:00' : '17:00',
-          endTime: isLevel2 ? '20:00' : '18:00',
-          curriculumLabel: isLevel2 ? `Level 2 Advanced Session ${weekNum}` : `Level 1 Beginner Session ${weekNum}`,
-          description: isLevel2 ? 'Level 2 Advanced Thursday Class' : 'Level 1 Beginner Thursday Class',
+          startTime: session?.startTime ?? (isLevel2 ? '19:00' : '17:00'),
+          endTime: session?.endTime ?? (isLevel2 ? '20:00' : '18:00'),
+          curriculumLabel: title,
+          description: session?.project ?? session?.concept ?? '',
           requiresPrerequisite: isLevel2,
-          level: isLevel2 ? ('INTERMEDIATE' as const) : ('BEGINNER' as const),
-          pricePerUnit: 28.57,
+          level: isLevel2 ? 'INTERMEDIATE' : 'BEGINNER',
+          pricePerUnit: session?.pricePerUnit ?? 28.57,
           isActive: true,
           track: null,
-        }
+        },
+        update: {
+          curriculumLabel: title,
+          weekNumber: weekNum,
+          description: session?.project ?? session?.concept ?? '',
+        },
       })
+      weekBlocks.push(block)
     }
 
     // ─── 3. Prerequisite check ────────────────────────────────────
@@ -272,9 +280,14 @@ export async function POST(request: NextRequest) {
       confirmationUrl: `${process.env.NEXT_PUBLIC_APP_URL}/register/confirmation?id=${registration.id}`,
     })
   } catch (error) {
+    const isDev = process.env.NODE_ENV === 'development'
     console.error('Registration error:', error)
     return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again or contact support.' },
+      {
+        error: isDev
+          ? `Registration failed: ${error instanceof Error ? error.message : String(error)}`
+          : 'An unexpected error occurred. Please try again or contact support.',
+      },
       { status: 500 }
     )
   }

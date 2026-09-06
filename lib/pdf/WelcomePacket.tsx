@@ -7,10 +7,18 @@ import {
   StyleSheet,
 } from '@react-pdf/renderer'
 
-interface WelcomePacketPDFProps {
+export interface PDFWeekItem {
+  weekNumber: number
+  dates: string
+  curriculum: string
+}
+
+export interface WelcomePacketPDFProps {
   studentName: string
   track: string
-  weeks: { weekNumber: number; dates: string; curriculum: string }[]
+  levelName?: string
+  isLevel2?: boolean
+  weeks: PDFWeekItem[]
 }
 
 const purple = '#7C3AED'
@@ -20,7 +28,6 @@ const lightGray = '#F9FAFB'
 const gray = '#4B5563'
 const border = '#E5E7EB'
 
-// Clean, explicit numeric styles for @react-pdf/renderer (NO invalid string shorthands)
 const styles = StyleSheet.create({
   page: {
     fontFamily: 'Helvetica',
@@ -32,15 +39,15 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: darkPurple,
-    paddingTop: 28,
-    paddingBottom: 28,
+    paddingTop: 24,
+    paddingBottom: 24,
     paddingLeft: 36,
     paddingRight: 36,
   },
   headerTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   headerTitleText: {
     fontSize: 22,
@@ -53,34 +60,35 @@ const styles = StyleSheet.create({
     color: '#A78BFA',
   },
   headerSubtitle: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#D1D5DB',
+    lineHeight: 1.4,
   },
   body: {
-    paddingTop: 24,
-    paddingBottom: 24,
+    paddingTop: 20,
+    paddingBottom: 20,
     paddingLeft: 36,
     paddingRight: 36,
   },
   greeting: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: 700,
     color: darkPurple,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   paragraph: {
-    fontSize: 10.5,
+    fontSize: 9.5,
     color: gray,
-    lineHeight: 1.5,
-    marginBottom: 14,
+    lineHeight: 1.45,
+    marginBottom: 10,
   },
   sectionTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 700,
     color: darkPurple,
-    marginTop: 14,
-    marginBottom: 10,
-    paddingBottom: 4,
+    marginTop: 10,
+    marginBottom: 8,
+    paddingBottom: 3,
     borderBottomWidth: 1,
     borderBottomColor: border,
     borderBottomStyle: 'solid',
@@ -88,113 +96,104 @@ const styles = StyleSheet.create({
   infoBox: {
     backgroundColor: lightGray,
     borderRadius: 6,
-    paddingTop: 12,
-    paddingBottom: 12,
-    paddingLeft: 14,
-    paddingRight: 14,
-    marginBottom: 14,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 12,
+    paddingRight: 12,
+    marginBottom: 10,
     borderLeftWidth: 4,
     borderLeftColor: purple,
     borderLeftStyle: 'solid',
   },
   infoBoxTitle: {
-    fontSize: 10.5,
+    fontSize: 9.5,
     fontWeight: 700,
     color: purple,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   infoBoxText: {
-    fontSize: 10,
+    fontSize: 9,
     color: gray,
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   },
   weekRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 8,
-    paddingBottom: 8,
+    justifyContent: 'space-between',
+    paddingTop: 6,
+    paddingBottom: 6,
     paddingLeft: 12,
     paddingRight: 12,
     backgroundColor: '#F5F3FF',
     borderRadius: 6,
-    marginBottom: 6,
+    marginBottom: 5,
+  },
+  weekLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   weekBadge: {
     backgroundColor: purple,
-    borderRadius: 12,
-    paddingTop: 3,
-    paddingBottom: 3,
+    borderRadius: 10,
+    paddingTop: 2.5,
+    paddingBottom: 2.5,
     paddingLeft: 8,
     paddingRight: 8,
     fontSize: 9,
     fontWeight: 700,
     color: '#FFFFFF',
-    width: 60,
+    width: 54,
     textAlign: 'center',
   },
   weekText: {
-    fontSize: 10,
+    fontSize: 9.5,
     color: darkPurple,
     fontWeight: 700,
-    flex: 1,
     marginLeft: 10,
   },
   weekDates: {
-    fontSize: 9.5,
+    fontSize: 9,
     color: gray,
+    fontWeight: 700,
+    marginLeft: 12,
   },
   stepRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   stepBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: purple,
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: 700,
     textAlign: 'center',
-    paddingTop: 4,
-    marginRight: 10,
+    paddingTop: 3.5,
+    marginRight: 8,
     flexShrink: 0,
   },
   stepContent: {
     flex: 1,
   },
   stepTitle: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: 700,
     color: darkPurple,
-    marginBottom: 4,
-  },
-  stepItemText: {
-    fontSize: 9.5,
-    color: gray,
-    lineHeight: 1.45,
     marginBottom: 2,
   },
-  codeBlock: {
-    backgroundColor: '#1E1B4B',
-    borderRadius: 6,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 12,
-    paddingRight: 12,
-    marginTop: 6,
-    marginBottom: 8,
-  },
-  code: {
-    fontSize: 9.5,
-    color: '#A78BFA',
-    fontFamily: 'Courier',
+  stepItemText: {
+    fontSize: 8.5,
+    color: gray,
     lineHeight: 1.4,
+    marginBottom: 1.5,
   },
   footer: {
     position: 'absolute',
-    bottom: 16,
+    bottom: 14,
     left: 36,
     right: 36,
     flexDirection: 'row',
@@ -202,15 +201,21 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: border,
     borderTopStyle: 'solid',
-    paddingTop: 8,
+    paddingTop: 6,
   },
   footerText: {
-    fontSize: 8.5,
+    fontSize: 8,
     color: '#9CA3AF',
   },
 })
 
-export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomePacketPDFProps) {
+export default function WelcomePacketPDF({
+  studentName,
+  track,
+  levelName,
+  isLevel2 = false,
+  weeks,
+}: WelcomePacketPDFProps) {
   return (
     <Document
       title={`Elevate Coders Welcome Packet — ${studentName}`}
@@ -225,7 +230,7 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
             <Text style={styles.headerAccentText}>Coders</Text>
           </View>
           <Text style={styles.headerSubtitle}>
-            Fall 2026 Welcome Packet &amp; Setup Guide — {track} Track
+            Fall 2026 Welcome Packet &amp; Setup Guide — {track} Track{levelName ? ` (${levelName})` : ''}
           </Text>
         </View>
 
@@ -234,18 +239,19 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
           <Text style={styles.greeting}>Welcome, {studentName}! 🎉</Text>
           <Text style={styles.paragraph}>
             We&apos;re thrilled to have you joining the Elevate Coders Fall 2026 program!
-            This packet contains your setup guide. Please follow the installation steps below
-            on the laptop your child will bring to class (Windows or Mac).
+            Please follow the software setup steps below on the laptop your child will bring to class (Windows or Mac).
           </Text>
 
           {/* Enrolled weeks */}
           {weeks.length > 0 && (
             <View style={{ marginBottom: 10 }}>
-              <Text style={styles.sectionTitle}>Your Enrolled Sessions</Text>
+              <Text style={styles.sectionTitle}>Your Enrolled Sessions ({weeks.length} Total)</Text>
               {weeks.map((w) => (
                 <View key={w.weekNumber} style={styles.weekRow}>
-                  <Text style={styles.weekBadge}>Week {w.weekNumber}</Text>
-                  <Text style={styles.weekText}>{w.curriculum}</Text>
+                  <View style={styles.weekLeft}>
+                    <Text style={styles.weekBadge}>Week {w.weekNumber}</Text>
+                    <Text style={styles.weekText}>{w.curriculum}</Text>
+                  </View>
                   <Text style={styles.weekDates}>{w.dates}</Text>
                 </View>
               ))}
@@ -253,9 +259,11 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
           )}
 
           {/* Step 1 — Install Scratch Desktop */}
-          <Text style={styles.sectionTitle}>Step 1 — Install Scratch Desktop</Text>
+          <Text style={styles.sectionTitle}>
+            Step 1 — Install Scratch Desktop {isLevel2 ? '(Module Foundations)' : '(Required for All Beginner Sessions)'}
+          </Text>
           <Text style={styles.paragraph}>
-            Scratch Desktop lets your child create and run Scratch projects offline.
+            Scratch Desktop lets your child create and run Scratch projects offline during class.
           </Text>
 
           {/* Windows Scratch */}
@@ -263,11 +271,9 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
             <Text style={styles.stepBadge}>W</Text>
             <View style={styles.stepContent}>
               <Text style={styles.stepTitle}>Windows Installation</Text>
-              <Text style={styles.stepItemText}>1. Go to: scratch.mit.edu/download</Text>
-              <Text style={styles.stepItemText}>2. Click &quot;Download for Windows&quot; and save the .exe installer</Text>
-              <Text style={styles.stepItemText}>3. Open your Downloads folder and double-click Scratch Desktop Setup.exe</Text>
-              <Text style={styles.stepItemText}>4. Follow the install wizard — click Next → Install → Finish</Text>
-              <Text style={styles.stepItemText}>5. Look for the Scratch cat icon on your Desktop and double-click to launch</Text>
+              <Text style={styles.stepItemText}>1. Visit: scratch.mit.edu/download</Text>
+              <Text style={styles.stepItemText}>2. Click &quot;Download for Windows&quot; and open the .exe installer</Text>
+              <Text style={styles.stepItemText}>3. Follow the installation wizard and launch Scratch from the Desktop</Text>
             </View>
           </View>
 
@@ -276,34 +282,29 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
             <Text style={styles.stepBadge}>M</Text>
             <View style={styles.stepContent}>
               <Text style={styles.stepTitle}>macOS Installation</Text>
-              <Text style={styles.stepItemText}>1. Go to: scratch.mit.edu/download</Text>
-              <Text style={styles.stepItemText}>2. Click &quot;Download for macOS&quot; — a .dmg file will download</Text>
-              <Text style={styles.stepItemText}>3. Open the .dmg file from your Downloads folder</Text>
-              <Text style={styles.stepItemText}>4. Drag the Scratch Desktop app to your Applications folder</Text>
-              <Text style={styles.stepItemText}>5. Open Applications, find Scratch Desktop, and double-click to launch</Text>
+              <Text style={styles.stepItemText}>1. Visit: scratch.mit.edu/download and click &quot;Download for macOS&quot;</Text>
+              <Text style={styles.stepItemText}>2. Open the downloaded .dmg and drag Scratch to your Applications folder</Text>
+              <Text style={styles.stepItemText}>3. Launch Scratch Desktop from Applications to verify the cat sprite appears</Text>
             </View>
           </View>
 
-          <View style={styles.infoBox}>
-            <Text style={styles.infoBoxTitle}>✓ Test: Create a new project in Scratch Desktop</Text>
-            <Text style={styles.infoBoxText}>
-              When Scratch opens, you should see an orange cat sprite on a white stage. Click the green flag ▶ button to test!
-            </Text>
-          </View>
-
           {/* Step 2 — Install Thonny Python IDE */}
-          <Text style={styles.sectionTitle}>Step 2 — Install Thonny Python IDE (Level 2)</Text>
+          <Text style={styles.sectionTitle}>
+            Step 2 — Install Thonny Python IDE {isLevel2 ? '(Required for Level 2 Class)' : '(Optional — Level 2 only)'}
+          </Text>
+          <Text style={styles.paragraph}>
+            {isLevel2
+              ? 'Required for Level 2 Thursday sessions. Thonny is an easy-to-use Python IDE with a built-in interpreter.'
+              : 'Only required if enrolled in Level 2 sessions or Python modules. Beginners do not need to install this yet.'}
+          </Text>
 
           {/* Windows Thonny */}
           <View style={styles.stepRow}>
             <Text style={styles.stepBadge}>W</Text>
             <View style={styles.stepContent}>
-              <Text style={styles.stepTitle}>Windows Installation</Text>
-              <Text style={styles.stepItemText}>1. Go to: thonny.org</Text>
-              <Text style={styles.stepItemText}>2. Click the Windows download button — save the .exe installer</Text>
-              <Text style={styles.stepItemText}>3. Run the installer and select &quot;Install for me only&quot;</Text>
-              <Text style={styles.stepItemText}>4. Click Next through setup — keep all default options</Text>
-              <Text style={styles.stepItemText}>5. Launch Thonny from the Start Menu or Desktop shortcut</Text>
+              <Text style={styles.stepTitle}>Windows Installation (Thonny)</Text>
+              <Text style={styles.stepItemText}>1. Visit: thonny.org and click the Windows download link</Text>
+              <Text style={styles.stepItemText}>2. Run the installer and launch Thonny to verify the Python shell starts</Text>
             </View>
           </View>
 
@@ -311,35 +312,33 @@ export default function WelcomePacketPDF({ studentName, track, weeks }: WelcomeP
           <View style={styles.stepRow}>
             <Text style={styles.stepBadge}>M</Text>
             <View style={styles.stepContent}>
-              <Text style={styles.stepTitle}>macOS Installation</Text>
-              <Text style={styles.stepItemText}>1. Go to: thonny.org and click the macOS download (.pkg)</Text>
-              <Text style={styles.stepItemText}>2. Open the downloaded .pkg file from Downloads</Text>
-              <Text style={styles.stepItemText}>3. Follow the installer — click Continue → Install</Text>
-              <Text style={styles.stepItemText}>4. Find Thonny in your Applications folder and launch it</Text>
+              <Text style={styles.stepTitle}>macOS Installation (Thonny)</Text>
+              <Text style={styles.stepItemText}>1. Visit: thonny.org and download the macOS .pkg package</Text>
+              <Text style={styles.stepItemText}>2. Run the installer package and launch Thonny from Applications</Text>
             </View>
           </View>
 
           {/* Checklist */}
           <Text style={styles.sectionTitle}>Checklist for Day 1</Text>
           <View style={styles.infoBox}>
-            <Text style={styles.infoBoxText}>☐  Laptop with Scratch Desktop + Thonny installed</Text>
-            <Text style={styles.infoBoxText}>☐  Laptop charger</Text>
+            <Text style={styles.infoBoxText}>☐  Laptop with {isLevel2 ? 'Scratch Desktop and Thonny' : 'Scratch Desktop'} installed</Text>
+            <Text style={styles.infoBoxText}>☐  Laptop charger / power cable</Text>
             <Text style={styles.infoBoxText}>☐  Water bottle (labeled with student name)</Text>
-            <Text style={styles.infoBoxText}>☐  Snack (nut-free)</Text>
+            <Text style={styles.infoBoxText}>☐  Nut-free snack</Text>
           </View>
 
           {/* Contact */}
           <View style={[styles.infoBox, { borderLeftColor: green, backgroundColor: '#F0FDF4' }]}>
             <Text style={[styles.infoBoxTitle, { color: '#065F46' }]}>Questions? We&apos;re here to help.</Text>
             <Text style={[styles.infoBoxText, { color: '#047857' }]}>
-              Email: team.elevate@gwelevate.com | California Educational Services — 0% Sales Tax
+              Email: team.elevate@gwelevate.com | Elevate Coders Academy — 0% Sales Tax (CA Educational Services)
             </Text>
           </View>
         </View>
 
         {/* Footer */}
         <View style={styles.footer} fixed>
-          <Text style={styles.footerText}>© 2026 Elevate Coders — Fall Welcome Packet</Text>
+          <Text style={styles.footerText}>© 2026 Elevate Coders Academy — Fall Welcome Packet</Text>
           <Text style={styles.footerText}>elevatecoders.com</Text>
         </View>
       </Page>

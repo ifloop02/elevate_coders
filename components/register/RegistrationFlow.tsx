@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { AlertCircle } from 'lucide-react'
 import StepIndicator from '@/components/register/StepIndicator'
 import TrackSelector from '@/components/register/TrackSelector'
 import WeekPicker from '@/components/register/WeekPicker'
@@ -114,6 +115,14 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
     state.vacationDates.length,
     state.discountPercent
   )
+
+  const ALL_BEGINNER_IDS = WEEK_DATA.filter((w) => !w.requiresPrerequisite).map((w) => w.id)
+  const ALL_LEVEL2_IDS = WEEK_DATA.filter((w) => w.requiresPrerequisite).map((w) => w.id)
+
+  const addAllWeeks = () => {
+    const isLevel2 = state.selectedWeekIds.some((id) => ALL_LEVEL2_IDS.includes(id))
+    update({ selectedWeekIds: isLevel2 ? ALL_LEVEL2_IDS : ALL_BEGINNER_IDS })
+  }
 
 
   const canAdvanceFromWeeks = () => {
@@ -268,6 +277,8 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
                 onDiscountCodeChange={(code) => update({ discountCode: code })}
                 discountPercent={state.discountPercent}
                 onDiscountResolved={(pct) => update({ discountPercent: pct })}
+                selectedWeekCount={state.selectedWeekIds.length}
+                onAddAllWeeks={addAllWeeks}
               />
             )}
             {step === 5 && (
@@ -363,7 +374,7 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
             animation: 'toastSlideIn 220ms cubic-bezier(0.16,1,0.3,1)',
           }}
         >
-          <span style={{ fontSize: '18px', flexShrink: 0 }}>📅</span>
+          <AlertCircle size={18} style={{ flexShrink: 0, color: '#FBBF24' }} />
           <span style={{ flex: 1, lineHeight: 1.5 }}>{toast}</span>
           <button
             onClick={() => { setToast(null); if (toastTimer.current) clearTimeout(toastTimer.current) }}
