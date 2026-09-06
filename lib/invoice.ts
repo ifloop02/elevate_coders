@@ -1,4 +1,4 @@
-// lib/invoice.ts — Gusto/Melio structured invoice payload builder
+// lib/invoice.ts — Elevate Coders invoice payload builder (v2)
 
 import type { Registration, Parent, Student, RegistrationWeek, WeekBlock } from '@prisma/client'
 
