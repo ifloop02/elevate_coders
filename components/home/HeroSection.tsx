@@ -54,7 +54,7 @@ export default function HeroSection() {
             }}
           >
             <Zap size={13} fill="currentColor" />
-            Fall 2026 Registration Open — Starts Sept 10th
+            Fall 2026 Registration Open — Starts October 8th
           </div>
 
           {/* Headline */}
@@ -84,7 +84,7 @@ export default function HeroSection() {
               maxWidth: '480px',
             }}
           >
-            7-week Fall coding program for ages 7–12. Every Thursday starting September 10th.
+            7-week Fall coding program for ages 7–12. Every Thursday starting October 8th.
             From Scratch to Python, your child learns real programming skills in a supportive,
             inclusive environment.
           </p>
@@ -95,9 +95,21 @@ export default function HeroSection() {
               Register Your Child
               <ArrowRight size={18} />
             </Link>
-            <Link href="#tracks" className="btn btn-secondary btn-lg">
-              View Camp Tracks
-            </Link>
+            <a
+              href="#tracks"
+              className="btn btn-secondary btn-lg"
+              onClick={(e) => {
+                e.preventDefault()
+                const el = document.getElementById('tracks')
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                } else {
+                  window.location.hash = '#tracks'
+                }
+              }}
+            >
+              View Program Tracks
+            </a>
           </div>
 
           {/* Stats row */}

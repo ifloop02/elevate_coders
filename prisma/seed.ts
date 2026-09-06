@@ -129,7 +129,7 @@ async function main() {
 
     // Beginner session (5pm–6pm)
     fallSessions.push({
-      id: `fall-2026-beginner-session-${sessionNumber}`,
+      id: `fall-2026-beg-${sessionNumber}`,
       weekNumber: sessionNumber,
       season: SeasonType.FALL,
       year: 2026,
@@ -149,7 +149,7 @@ async function main() {
 
     // Level 2 session (7pm–8pm)
     fallSessions.push({
-      id: `fall-2026-advanced-session-${sessionNumber}`,
+      id: `fall-2026-lvl2-${sessionNumber}`,
       weekNumber: sessionNumber,
       season: SeasonType.FALL,
       year: 2026,
@@ -159,7 +159,7 @@ async function main() {
       startTime: '19:00',
       endTime: '20:00',
       curriculumLabel: `Python & Data Logic (Level 2) — Session ${sessionNumber}`,
-      description: 'Thursday Level 2 coding class (7:00 PM - 8:00 PM). Python programming (prerequisite required).',
+      description: 'Thursday Level 2 coding class (7:00 PM - 8:00 PM). Advanced game engines & AI pathfinding.',
       requiresPrerequisite: true,
       level: 'INTERMEDIATE',
       pricePerUnit: 28.57,

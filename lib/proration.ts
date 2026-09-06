@@ -1,8 +1,9 @@
-// lib/proration.ts — Week and vacation day price calculator
+// lib/proration.ts — 7-Week Fall Program Tuition & Proration Calculator
 
-export const PRICE_PER_WEEK = 200.0
-export const DAYS_PER_WEEK = 5
-export const PRICE_PER_DAY = PRICE_PER_WEEK / DAYS_PER_WEEK // $40/day
+export const PROGRAM_TOTAL_TUITION = 200.0 // $200 total for the full 7-week Fall program
+export const TOTAL_PROGRAM_WEEKS = 7
+export const PRICE_PER_SESSION = PROGRAM_TOTAL_TUITION / TOTAL_PROGRAM_WEEKS // ~$28.57 per Thursday session
+export const VACATION_CREDIT_PER_SESSION = PRICE_PER_SESSION
 
 export interface PricingBreakdown {
   selectedWeeks: number
@@ -20,11 +21,15 @@ export function calculatePricing(
   vacationDayCount: number,
   discountPercent: number = 0
 ): PricingBreakdown {
-  const baseTotal = selectedWeekCount * PRICE_PER_WEEK
-  const vacationCredit = vacationDayCount * PRICE_PER_DAY
+  // If all 7 weeks selected, base total is $200. Otherwise proportional at ~$28.57/session
+  const baseTotal = selectedWeekCount === TOTAL_PROGRAM_WEEKS
+    ? PROGRAM_TOTAL_TUITION
+    : Number((selectedWeekCount * PRICE_PER_SESSION).toFixed(2))
+
+  const vacationCredit = Number((vacationDayCount * VACATION_CREDIT_PER_SESSION).toFixed(2))
   const proratedTotal = Math.max(0, baseTotal - vacationCredit)
-  const discountAmount = proratedTotal * (discountPercent / 100)
-  const finalTotal = Math.max(0, proratedTotal - discountAmount)
+  const discountAmount = Number((proratedTotal * (discountPercent / 100)).toFixed(2))
+  const finalTotal = Math.max(0, Number((proratedTotal - discountAmount).toFixed(2)))
 
   return {
     selectedWeeks: selectedWeekCount,

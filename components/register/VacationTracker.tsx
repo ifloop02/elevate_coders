@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { MapPin, X } from 'lucide-react'
-import { formatCurrency } from '@/lib/proration'
+import { MapPin, X, AlertTriangle } from 'lucide-react'
+import { formatCurrency, calculatePricing } from '@/lib/proration'
 
 interface Week {
   id: string
@@ -36,22 +36,36 @@ const WEEK_DATES: Record<number, string[]> = {
 }
 
 const DAY_LABELS = ['Thu']
-const CREDIT_PER_DAY = 30
 
 export default function VacationTracker({ weeks, vacationDates, onChange }: VacationTrackerProps) {
   const [reason, setReason] = useState('')
+  const [blockMessage, setBlockMessage] = useState<string | null>(null)
 
   const toggleDay = (date: string, weekNumber: number) => {
     const exists = vacationDates.find((v) => v.date === date)
     if (exists) {
+      // Un-marking — always allowed, clear any block message
+      setBlockMessage(null)
       onChange(vacationDates.filter((v) => v.date !== date))
     } else {
-      onChange([...vacationDates, { date, weekNumber, reason }])
+      // Would this vacation out every selected week?
+      const afterToggle = [...vacationDates, { date, weekNumber, reason }]
+      const vacationedWeekNums = new Set(afterToggle.map((v) => v.weekNumber))
+      const activeWeeks = weeks.filter((w) => !vacationedWeekNums.has(w.weekNumber))
+      if (activeWeeks.length === 0) {
+        setBlockMessage(
+          weeks.length === 1
+            ? 'You only have 1 week selected. You cannot mark your only class as a vacation day — please add more weeks or remove this vacation.'
+            : 'You cannot mark all of your selected weeks as vacation. At least one week must remain active.'
+        )
+        return
+      }
+      setBlockMessage(null)
+      onChange(afterToggle)
     }
   }
 
-  const totalCredit = vacationDates.length * CREDIT_PER_DAY
-  const adjustedTotal = weeks.length * 200 - totalCredit
+  const pricing = calculatePricing(weeks.length, vacationDates.length, 0)
 
   return (
     <div>
@@ -128,6 +142,29 @@ export default function VacationTracker({ weeks, vacationDates, onChange }: Vaca
         })}
       </div>
 
+      {/* Block message */}
+      {blockMessage && (
+        <div
+          role="alert"
+          style={{
+            marginBottom: '16px',
+            padding: '12px 16px',
+            background: '#FEF2F2',
+            border: '1px solid #FCA5A5',
+            borderRadius: 'var(--radius-md)',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px',
+            fontSize: '13px',
+            color: '#DC2626',
+            lineHeight: 1.5,
+          }}
+        >
+          <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: '1px' }} />
+          <span>{blockMessage}</span>
+        </div>
+      )}
+
       {/* Proration summary */}
       {vacationDates.length > 0 ? (
         <div style={{
@@ -149,12 +186,12 @@ export default function VacationTracker({ weeks, vacationDates, onChange }: Vaca
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10B981' }}>
               <span>Proration credit:</span>
-              <strong>−{formatCurrency(totalCredit)}</strong>
+              <strong>−{formatCurrency(pricing.vacationCredit)}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #FBCFE8', paddingTop: '8px', marginTop: '6px', color: 'var(--text-primary)' }}>
               <span>Adjusted total:</span>
               <strong style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', color: 'var(--brand-purple)' }}>
-                {formatCurrency(adjustedTotal)}
+                {formatCurrency(pricing.finalTotal)}
               </strong>
             </div>
           </div>

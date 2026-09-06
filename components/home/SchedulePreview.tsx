@@ -1,28 +1,89 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { Calendar, Zap, Clock } from 'lucide-react'
 
-const weeks = [
-  { num: 1, dates: 'Oct 8 (Thu)', curriculum: 'Scratch & Coding Foundations', phase: 'scratch' },
-  { num: 2, dates: 'Oct 15 (Thu)', curriculum: 'Interactive Game & Animation', phase: 'scratch' },
-  { num: 3, dates: 'Oct 22 (Thu)', curriculum: 'Logic, Loops & Conditionals', phase: 'scratch' },
-  { num: 4, dates: 'Oct 29 (Thu)', curriculum: 'Custom Blocks & Cloning', phase: 'scratch' },
-  { num: 5, dates: 'Nov 5 (Thu)', curriculum: 'Python IDE & Variables (Level 2)', phase: 'python' },
-  { num: 6, dates: 'Nov 12 (Thu)', curriculum: 'Control Flow & Data Logic (Level 2)', phase: 'python' },
-  { num: 7, dates: 'Nov 19 (Thu)', curriculum: 'Final Portfolio & Showcase (Level 2)', phase: 'python' },
+interface ScheduleWeek {
+  num: number
+  dates: string
+  title: string
+  desc: string
+  moduleName?: string
+}
+
+// 🟢 LEVEL 1 BEGINNER (5:00 PM – 6:00 PM) — ALL 7 WEEKS GREEN
+const LEVEL_1_WEEKS: ScheduleWeek[] = [
+  { num: 1, dates: 'Oct 8 (Thu)', title: 'Scratch & Coding Foundations', desc: 'Introduction to visual block coding, sprites, motion loops, and X/Y coordinates.' },
+  { num: 2, dates: 'Oct 15 (Thu)', title: 'Interactive Game & Animation', desc: 'Sprite collision detection, keypress event triggers, and costume animations.' },
+  { num: 3, dates: 'Oct 22 (Thu)', title: 'Logic, Loops & Scoreboards', desc: 'Conditional logic (if/then statements), score variables, and win/loss states.' },
+  { num: 4, dates: 'Oct 29 (Thu)', title: 'Custom Blocks & Sound FX', desc: 'Reusable My Blocks functions, sound synthesis, and backdrop stage transitions.' },
+  { num: 5, dates: 'Nov 5 (Thu)', title: 'Multi-Level World Design', desc: 'Level switching variables, item collectibles, and health bar mechanics.' },
+  { num: 6, dates: 'Nov 12 (Thu)', title: 'UI Polish & Special Effects', desc: 'Screen particle feedback, victory animations, and custom UI design systems.' },
+  { num: 7, dates: 'Nov 19 (Thu)', title: 'Beginner Capstone Showcase', desc: 'Final code triage, debugging strategies, and peer review presentation.' },
+]
+
+// 🟣 LEVEL 2 ADVANCED (7:00 PM – 8:00 PM) — ALL 7 WEEKS PURPLE
+const LEVEL_2_WEEKS: ScheduleWeek[] = [
+  {
+    num: 1,
+    dates: 'Oct 8 (Thu)',
+    title: 'Advanced Physics & Gravity Engines',
+    moduleName: 'Module 1: System-Driven Game Mechanics',
+    desc: 'The Concept: Moving beyond basic change y loops into velocity-based systems.',
+  },
+  {
+    num: 2,
+    dates: 'Oct 15 (Thu)',
+    title: 'Advanced Event Architecture',
+    moduleName: 'Module 1: System-Driven Game Mechanics',
+    desc: 'The Concept: Decoupling code strings so multiple elements react to global system triggers without polling.',
+  },
+  {
+    num: 3,
+    dates: 'Oct 22 (Thu)',
+    title: 'Data Streams & Scoreboards',
+    moduleName: 'Module 1: System-Driven Game Mechanics',
+    desc: 'The Concept: Local vs global variables, persistent data tracking, and dynamic list arrays.',
+  },
+  {
+    num: 4,
+    dates: 'Oct 29 (Thu)',
+    title: 'Screen Scrolling & Infinite Maps',
+    moduleName: 'Module 2: Complex Game Genres',
+    desc: 'The Concept: Moving the world around the player character instead of moving the player across a static canvas.',
+  },
+  {
+    num: 5,
+    dates: 'Nov 5 (Thu)',
+    title: 'Autonomous AI & Pathfinding',
+    moduleName: 'Module 2: Complex Game Genres',
+    desc: 'The Concept: Coding smart enemies that track player targets without using simple glide blocks.',
+  },
+  {
+    num: 6,
+    dates: 'Nov 12 (Thu)',
+    title: 'Code Polish & UI Design Systems',
+    moduleName: 'Module 3: Polish, Publishing, and Production',
+    desc: 'The Concept: Designing professional game interfaces, particle effect feedback loops, and volume attenuation.',
+  },
+  {
+    num: 7,
+    dates: 'Nov 19 (Thu)',
+    title: 'Capstone Debugging & Playtesting',
+    moduleName: 'Module 3: Polish, Publishing, and Production',
+    desc: 'The Concept: Code triage, optimization strategies, identifying memory leaks, and processing user feedback.',
+  },
 ]
 
 function VerticalLevelDots({ filledCount, color, label }: { filledCount: number; color: string; label: string }) {
-  // 10 vertical dots stacked top to bottom.
-  // Filling starts from the bottom: index >= 10 - filledCount
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '5px',
+        gap: '4px',
         paddingTop: '2px',
         flexShrink: 0,
       }}
@@ -30,8 +91,6 @@ function VerticalLevelDots({ filledCount, color, label }: { filledCount: number;
     >
       <span style={{ fontSize: '9px', fontWeight: 800, color, marginBottom: '2px' }}>{label}</span>
       {Array.from({ length: 10 }).map((_, index) => {
-        // Bottom-up filling: for filledCount=1, index 9 is filled (bottom dot)
-        // For filledCount=2, index 8 and 9 are filled (bottom 2 dots)
         const isFilled = index >= 10 - filledCount
         return (
           <div
@@ -53,6 +112,12 @@ function VerticalLevelDots({ filledCount, color, label }: { filledCount: number;
 }
 
 export default function SchedulePreview() {
+  const [selectedLevel, setSelectedLevel] = useState<'LEVEL_1' | 'LEVEL_2'>('LEVEL_1')
+
+  const isLevel1 = selectedLevel === 'LEVEL_1'
+  const activeWeeks: ScheduleWeek[] = isLevel1 ? LEVEL_1_WEEKS : LEVEL_2_WEEKS
+  const brandColor = isLevel1 ? '#059669' : '#7C3AED'
+
   return (
     <section
       style={{
@@ -87,10 +152,10 @@ export default function SchedulePreview() {
               marginBottom: '12px',
             }}
           >
-            7-Week Thursday Coding Program
+            7-Week Thursday Coding Programs
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '640px', margin: '0 auto' }}>
-            Starts <strong>October 8th</strong>. Every Thursday for 7 weeks. Complete 7-week program tuition is <strong>$200</strong>.
+            Starts <strong>October 8th</strong>. Both Level 1 and Level 2 run for 7 Thursdays. Complete 7-week program tuition is <strong>$200</strong>.
           </p>
         </div>
 
@@ -100,19 +165,23 @@ export default function SchedulePreview() {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '20px',
-            marginBottom: '48px',
+            marginBottom: '40px',
           }}
         >
-          {/* Class 1 — Beginner (Level 1: 1 dot filled from bottom) */}
+          {/* Class 1 — Level 1 Beginner (1 dot filled at bottom) */}
           <div
+            onClick={() => setSelectedLevel('LEVEL_1')}
             style={{
               padding: '28px',
-              background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
-              border: '1px solid #A7F3D0',
+              background: isLevel1 ? 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)' : 'var(--bg-white)',
+              border: `2px solid ${isLevel1 ? '#10B981' : 'var(--border-light)'}`,
               borderRadius: 'var(--radius-lg)',
               display: 'flex',
               gap: '20px',
               alignItems: 'flex-start',
+              cursor: 'pointer',
+              transition: 'all 300ms ease',
+              boxShadow: isLevel1 ? '0 4px 20px rgba(16,185,129,0.15)' : 'none',
             }}
           >
             <VerticalLevelDots filledCount={1} color="#059669" label="LVL 1" />
@@ -123,24 +192,28 @@ export default function SchedulePreview() {
                 <span style={{ fontWeight: 700, fontSize: '15px' }}>5:00 PM – 6:00 PM (Every Thursday)</span>
               </div>
               <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#065F46', marginBottom: '8px' }}>
-                Beginner Coding Class
+                🟢 Level 1: Beginner Coding Class (Full 7 Weeks)
               </h3>
               <p style={{ fontSize: '14px', color: '#047857', lineHeight: 1.6, margin: 0 }}>
-                Designed for new students (ages 7–12). Learn Scratch block coding, computational thinking, and game mechanics in a hands-on environment.
+                Designed for new students (ages 7–12). Complete 7-week foundational track covering Scratch visual block coding, game mechanics, and computational thinking.
               </p>
             </div>
           </div>
 
-          {/* Class 2 — Level 2 (Level 2: 2 dots filled from bottom) */}
+          {/* Class 2 — Level 2 Advanced (2 dots filled at bottom) */}
           <div
+            onClick={() => setSelectedLevel('LEVEL_2')}
             style={{
               padding: '28px',
-              background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)',
-              border: '1px solid #DDD6FE',
+              background: !isLevel1 ? 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)' : 'var(--bg-white)',
+              border: `2px solid ${!isLevel1 ? '#7C3AED' : 'var(--border-light)'}`,
               borderRadius: 'var(--radius-lg)',
               display: 'flex',
               gap: '20px',
               alignItems: 'flex-start',
+              cursor: 'pointer',
+              transition: 'all 300ms ease',
+              boxShadow: !isLevel1 ? '0 4px 20px rgba(124,58,237,0.15)' : 'none',
             }}
           >
             <VerticalLevelDots filledCount={2} color="#7C3AED" label="LVL 2" />
@@ -151,73 +224,111 @@ export default function SchedulePreview() {
                 <span style={{ fontWeight: 700, fontSize: '15px' }}>7:00 PM – 8:00 PM (Every Thursday)</span>
               </div>
               <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#5B21B6', marginBottom: '8px' }}>
-                Level 2 Class (Advanced / Alumni)
+                🟣 Level 2: Advanced Coding Class (Full 7 Weeks)
               </h3>
               <p style={{ fontSize: '14px', color: '#6D28D9', lineHeight: 1.6, margin: 0 }}>
-                For students who completed the Beginners Course or have verified outside experience. Moves into Python syntax, data logic, and independent project creation.
+                For students who completed Level 1 or have verified outside experience. Complete 7-week 3-module track: Physics Engines, AI Pathfinding, and UI Production.
               </p>
             </div>
           </div>
         </div>
 
+        {/* Selected Level Title Banner */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '22px', fontWeight: 800, color: brandColor, margin: 0 }}>
+              {isLevel1 ? '🟢 Level 1 Beginner — Full 7-Week Curriculum Roadmap (5:00 PM – 6:00 PM)' : '🟣 Level 2 Advanced — Full 7-Week Curriculum Roadmap (7:00 PM – 8:00 PM)'}
+            </h3>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
+              Click either class box above to toggle between Level 1 and Level 2 curriculum details.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={() => setSelectedLevel('LEVEL_1')}
+              style={{
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '13px',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                background: isLevel1 ? '#D1FAE5' : '#E5E7EB',
+                color: isLevel1 ? '#065F46' : '#4B5563',
+              }}
+            >
+              🟢 View Level 1
+            </button>
+            <button
+              onClick={() => setSelectedLevel('LEVEL_2')}
+              style={{
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '13px',
+                fontWeight: 700,
+                border: 'none',
+                cursor: 'pointer',
+                background: !isLevel1 ? '#EDE9FE' : '#E5E7EB',
+                color: !isLevel1 ? '#5B21B6' : '#4B5563',
+              }}
+            >
+              🟣 View Level 2
+            </button>
+          </div>
+        </div>
+
         {/* 7 Week Grid */}
         <div
-          className="stagger-children"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: '16px',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '18px',
             marginBottom: '48px',
           }}
         >
-          {weeks.map((week) => {
+          {activeWeeks.map((w) => {
             return (
               <div
-                key={week.num}
+                key={w.num}
                 className="card animate-fade-in"
-                style={{ padding: '20px' }}
+                style={{
+                  padding: '24px',
+                  background: 'var(--bg-white)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                   <span
                     style={{
-                      background: week.phase === 'scratch' ? '#D1FAE5' : '#EDE9FE',
-                      color: week.phase === 'scratch' ? '#065F46' : '#5B21B6',
+                      background: isLevel1 ? '#D1FAE5' : '#EDE9FE',
+                      color: isLevel1 ? '#065F46' : '#5B21B6',
                       fontSize: '11px',
-                      fontWeight: 700,
-                      padding: '4px 10px',
+                      fontWeight: 800,
+                      padding: '3px 10px',
                       borderRadius: 'var(--radius-full)',
-                      letterSpacing: '0.04em',
                     }}
                   >
-                    Week {week.num}
+                    Week {w.num}
                   </span>
-                  <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                    Thursday
+                  <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Calendar size={12} /> {w.dates}
                   </span>
                 </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    color: 'var(--text-secondary)',
-                    fontSize: '13px',
-                    marginBottom: '8px',
-                  }}
-                >
-                  <Calendar size={13} />
-                  {week.dates}
-                </div>
+                {w.moduleName && (
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#7E22CE', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    {w.moduleName}
+                  </div>
+                )}
 
-                <div
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    color: week.phase === 'scratch' ? '#065F46' : '#5B21B6',
-                  }}
-                >
-                  {week.curriculum}
+                <h4 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '17px', fontWeight: 800, color: brandColor, marginBottom: '10px' }}>
+                  {w.title}
+                </h4>
+
+                <div style={{ fontSize: '13px', lineHeight: 1.6, color: 'var(--text-secondary)', whiteSpace: 'pre-line' }}>
+                  {w.desc}
                 </div>
               </div>
             )
@@ -246,7 +357,7 @@ export default function SchedulePreview() {
               $200 <span style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)' }}>flat for all 7 Thursdays</span>
             </div>
             <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>
-              Includes both 5:00 PM Beginner and 7:00 PM Level 2 class tracks.
+              Choose Level 1 (5:00 PM) or Level 2 (7:00 PM). Complete 7-week course program.
             </div>
           </div>
 

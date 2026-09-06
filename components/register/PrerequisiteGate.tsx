@@ -118,8 +118,6 @@ export default function PrerequisiteGate({ onVerified, onDismiss }: Prerequisite
               style={{ maxWidth: '200px', marginBottom: '20px' }}
             >
               <option value="2026">Summer 2026</option>
-              <option value="2025">Summer 2025</option>
-              <option value="2024">Summer 2024</option>
             </select>
             <div style={{ display: 'flex', gap: '10px' }}>
               <button onClick={() => setMode('select')} className="btn btn-secondary btn-sm">← Back</button>
