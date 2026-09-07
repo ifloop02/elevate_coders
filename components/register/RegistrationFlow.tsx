@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, Sparkles } from 'lucide-react'
 import StepIndicator from '@/components/register/StepIndicator'
 import TrackSelector from '@/components/register/TrackSelector'
 import WeekPicker from '@/components/register/WeekPicker'
@@ -46,6 +46,7 @@ export interface RegistrationState {
   olderChildAcknowledged: boolean
   policyAgreed: boolean
   prerequisiteVerified: boolean
+  earnedReferralCredit: number
 }
 
 const STEPS = ['Track', 'Weeks', 'Vacation', 'Your Info', 'Policies', 'Review', 'Payment']
@@ -84,14 +85,25 @@ const emptyState: RegistrationState = {
   olderChildAcknowledged: false,
   policyAgreed: false,
   prerequisiteVerified: false,
+  earnedReferralCredit: 0,
 }
 
-export default function RegistrationFlow({ initialTrack }: { initialTrack: string | null }) {
+export default function RegistrationFlow({
+  initialTrack,
+  initialReferralCode = null,
+}: {
+  initialTrack: string | null
+  initialReferralCode?: string | null
+}) {
   const router = useRouter()
   const [step, setStep] = useState(initialTrack ? 1 : 0) // skip to week picker if track pre-selected
   const [state, setState] = useState<RegistrationState>({
     ...emptyState,
     track: initialTrack === 'all-girls' ? 'ALL_GIRLS' : initialTrack === 'coed' ? 'COED' : null,
+    parent: {
+      ...emptyState.parent,
+      referralCode: initialReferralCode || '',
+    },
   })
   const [showPrereqGate, setShowPrereqGate] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -108,12 +120,43 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
   const update = (partial: Partial<RegistrationState>) =>
     setState((s) => ({ ...s, ...partial }))
 
+  // Check for pending earned referral credits when parent email is entered
+  useEffect(() => {
+    const email = state.parent.email?.trim()
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      if (state.earnedReferralCredit > 0) {
+        update({ earnedReferralCredit: 0 })
+      }
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/parent/referral-credit?email=${encodeURIComponent(email)}`)
+        if (res.ok) {
+          const data = await res.json()
+          if (data.availableCredit > 0 && data.availableCredit !== state.earnedReferralCredit) {
+            update({ earnedReferralCredit: data.availableCredit })
+            showToast(`🎉 Referral credit found! $${data.availableCredit.toFixed(2)} applied to your tuition.`)
+          } else if (!data.availableCredit && state.earnedReferralCredit > 0) {
+            update({ earnedReferralCredit: 0 })
+          }
+        }
+      } catch (err) {
+        console.error('Failed to check referral credit:', err)
+      }
+    }, 400)
+
+    return () => clearTimeout(timer)
+  }, [state.parent.email])
+
   const selectedWeeks = WEEK_DATA.filter((w) => state.selectedWeekIds.includes(w.id))
   const hasAdvancedWeeks = selectedWeeks.some((w) => w.requiresPrerequisite)
   const pricing = calculatePricing(
     state.selectedWeekIds.length,
     state.vacationDates.length,
-    state.discountPercent
+    state.discountPercent,
+    state.earnedReferralCredit
   )
 
   const ALL_BEGINNER_IDS = WEEK_DATA.filter((w) => !w.requiresPrerequisite).map((w) => w.id)
@@ -224,6 +267,27 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
         <div style={{ display: 'grid', gridTemplateColumns: step >= 1 ? '1fr 320px' : '1fr', gap: '32px', alignItems: 'start' }}>
           {/* Main content */}
           <div>
+            {pricing.referralCreditApplied > 0 && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '12px 16px',
+                background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)',
+                border: '1.5px solid #C4B5FD',
+                borderRadius: 'var(--radius-md)',
+                marginBottom: '24px',
+                fontSize: '13px',
+                color: '#5B21B6',
+                fontWeight: 600,
+                boxShadow: '0 2px 8px rgba(124, 58, 237, 0.08)',
+              }}>
+                <Sparkles size={18} color="#7C3AED" style={{ flexShrink: 0 }} />
+                <span>
+                  🎉 Welcome back! You have <strong>${pricing.referralCreditApplied.toFixed(2)}</strong> in earned referral credits automatically applied to this registration.
+                </span>
+              </div>
+            )}
             {step === 0 && (
               <TrackSelector
                 selectedTrack={state.track}
@@ -253,7 +317,15 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <ParentInfoForm
                   data={state.parent}
-                  onChange={(parent) => update({ parent })}
+                  onChange={(parent) => {
+                    const hasReferral = !!parent.referralCode?.trim()
+                    update({
+                      parent,
+                      ...(hasReferral && (state.discountCode || state.discountPercent > 0)
+                        ? { discountCode: '', discountPercent: 0 }
+                        : {}),
+                    })
+                  }}
                 />
                 <StudentInfoForm
                   data={state.student}
@@ -278,6 +350,11 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
                 discountPercent={state.discountPercent}
                 onDiscountResolved={(pct) => update({ discountPercent: pct })}
                 selectedWeekCount={state.selectedWeekIds.length}
+                referralCode={state.parent.referralCode}
+                onClearReferralCode={() => {
+                  update({ parent: { ...state.parent, referralCode: '' } })
+                  showToast('Referral code removed. You can now apply a discount code.')
+                }}
                 onAddAllWeeks={addAllWeeks}
               />
             )}
@@ -490,6 +567,15 @@ function ReviewStep({
           </div>
         )}
       </ReviewCard>
+
+      {pricing.referralCreditApplied > 0 && (
+        <ReviewCard title="Referral Reward">
+          <div style={{ fontSize: '14px', color: '#059669', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Sparkles size={16} color="#059669" />
+            <span>${pricing.referralCreditApplied.toFixed(2)} in earned referral credits automatically deducted from your total.</span>
+          </div>
+        </ReviewCard>
+      )}
 
       <ReviewCard title="Parent / Billing">
         <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 2 }}>

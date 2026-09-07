@@ -81,8 +81,8 @@ export default function ParentInfoForm({ data, onChange }: ParentInfoFormProps) 
             value={data.referralCode}
             onChange={(e) => set('referralCode', e.target.value)}
           />
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            Your friend gets a $25 credit when you enroll. You&apos;re welcome!
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.4 }}>
+            Your friend gets a $25 credit when you enroll. (Note: Referral codes cannot be combined with discount codes).
           </div>
         </div>
 

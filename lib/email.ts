@@ -13,6 +13,9 @@ export interface RegistrationAlertDetails {
   paymentMethod: string
   vacationDaysCount: number
   discountCode?: string
+  referralCode?: string
+  referrerName?: string
+  referralCreditDeducted?: number
 }
 
 export async function sendRegistrationAlert(data: RegistrationAlertDetails) {
@@ -81,6 +84,20 @@ export async function sendRegistrationAlert(data: RegistrationAlertDetails) {
           <tr>
             <td style="padding: 6px 0; color: #6B7280;">Discount Code:</td>
             <td style="color: #059669; font-weight: bold;">${data.discountCode}</td>
+          </tr>
+          ` : ''}
+          ${data.referralCode ? `
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">Referral Code:</td>
+            <td style="color: #7C3AED; font-weight: bold;">
+              ${data.referralCode} ${data.referrerName ? `(Referrer: ${data.referrerName} — $25 future program / sibling credit logged)` : ''}
+            </td>
+          </tr>
+          ` : ''}
+          ${data.referralCreditDeducted && data.referralCreditDeducted > 0 ? `
+          <tr>
+            <td style="padding: 6px 0; color: #6B7280;">Earned Referral Credit Applied:</td>
+            <td style="color: #7C3AED; font-weight: bold;">-$${data.referralCreditDeducted.toFixed(2)} (auto-redeemed from balance)</td>
           </tr>
           ` : ''}
           <tr>

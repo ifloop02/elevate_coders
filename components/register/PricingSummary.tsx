@@ -74,6 +74,13 @@ export default function PricingSummary({ pricing, selectedWeeks, track }: Pricin
         </div>
       )}
 
+      {pricing.referralCreditApplied > 0 && (
+        <div className="pricing-line">
+          <span style={{ color: '#C4B5FD', fontWeight: 600 }}>Referral Credit Earned</span>
+          <span className="credit" style={{ color: '#C4B5FD' }}>−{formatCurrency(pricing.referralCreditApplied)}</span>
+        </div>
+      )}
+
       <div className="pricing-line">
         <span>Sales Tax</span>
         <span style={{ color: '#34D399' }}>$0.00</span>

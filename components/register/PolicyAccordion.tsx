@@ -14,6 +14,8 @@ interface PolicyAccordionProps {
   discountPercent: number
   onDiscountResolved: (pct: number) => void
   selectedWeekCount: number
+  referralCode?: string
+  onClearReferralCode?: () => void
   onAddAllWeeks: () => void
 }
 
@@ -23,9 +25,12 @@ export default function PolicyAccordion({
   discountCode, onDiscountCodeChange,
   discountPercent, onDiscountResolved,
   selectedWeekCount,
+  referralCode,
+  onClearReferralCode,
   onAddAllWeeks,
 }: PolicyAccordionProps) {
   const isFullProgram = selectedWeekCount >= 7
+  const hasReferralCode = !!(referralCode && referralCode.trim().length > 0)
   const [checkingCode, setCheckingCode] = useState(false)
   const [codeError, setCodeError] = useState<string | null>(null)
   const [codeValid, setCodeValid] = useState(false)
@@ -159,13 +164,36 @@ export default function PolicyAccordion({
         </div>
       </div>
 
-      {/* Discount code — only available for full 7-week enrollment */}
+      {/* Discount code — only available for full 7-week enrollment and cannot be combined with referral */}
       <div style={{ marginBottom: '28px' }}>
         <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Tag size={15} color={isFullProgram ? 'var(--brand-purple)' : 'var(--text-muted)'} />
+          <Tag size={15} color={!hasReferralCode && isFullProgram ? 'var(--brand-purple)' : 'var(--text-muted)'} />
           Discount / Partner Code
         </div>
-        {isFullProgram ? (
+        {hasReferralCode ? (
+          <div style={{
+            padding: '12px 16px',
+            background: '#F9FAFB',
+            border: '1.5px solid var(--border-light)',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '13px',
+            color: 'var(--text-secondary)',
+            maxWidth: '440px',
+            lineHeight: 1.6,
+          }}>
+            Referral codes and discount codes cannot be combined. You currently have referral code <strong>{referralCode}</strong> applied.{' '}
+            {onClearReferralCode && (
+              <a
+                href="#"
+                onClick={(e) => { e.preventDefault(); onClearReferralCode() }}
+                style={{ color: 'var(--brand-purple)', fontWeight: 600, textDecoration: 'none' }}
+              >
+                Remove referral code
+              </a>
+            )}
+            {onClearReferralCode && ' to use a discount code instead.'}
+          </div>
+        ) : isFullProgram ? (
           <>
             <div style={{ display: 'flex', gap: '10px', maxWidth: '400px' }}>
               <input

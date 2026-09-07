@@ -13,13 +13,15 @@ export interface PricingBreakdown {
   proratedTotal: number
   discountPercent: number
   discountAmount: number
+  referralCreditApplied: number
   finalTotal: number
 }
 
 export function calculatePricing(
   selectedWeekCount: number,
   vacationDayCount: number,
-  discountPercent: number = 0
+  discountPercent: number = 0,
+  referralCredit: number = 0
 ): PricingBreakdown {
   // If all 7 weeks selected, base total is $200. Otherwise proportional at ~$28.57/session
   const baseTotal = selectedWeekCount === TOTAL_PROGRAM_WEEKS
@@ -29,7 +31,9 @@ export function calculatePricing(
   const vacationCredit = Number((vacationDayCount * VACATION_CREDIT_PER_SESSION).toFixed(2))
   const proratedTotal = Math.max(0, baseTotal - vacationCredit)
   const discountAmount = Number((proratedTotal * (discountPercent / 100)).toFixed(2))
-  const finalTotal = Math.max(0, Number((proratedTotal - discountAmount).toFixed(2)))
+  const afterDiscount = Math.max(0, Number((proratedTotal - discountAmount).toFixed(2)))
+  const referralCreditApplied = Math.min(afterDiscount, Number(referralCredit.toFixed(2)))
+  const finalTotal = Math.max(0, Number((afterDiscount - referralCreditApplied).toFixed(2)))
 
   return {
     selectedWeeks: selectedWeekCount,
@@ -39,6 +43,7 @@ export function calculatePricing(
     proratedTotal,
     discountPercent,
     discountAmount,
+    referralCreditApplied,
     finalTotal,
   }
 }
