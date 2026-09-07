@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckCircle, Loader2, Tag } from 'lucide-react'
+import Link from 'next/link'
+import { CheckCircle, Loader2, Tag, ShieldCheck } from 'lucide-react'
 
 interface PolicyAccordionProps {
   agreed: boolean
@@ -12,6 +13,10 @@ interface PolicyAccordionProps {
   onDiscountCodeChange: (code: string) => void
   discountPercent: number
   onDiscountResolved: (pct: number) => void
+  selectedWeekCount: number
+  referralCode?: string
+  onClearReferralCode?: () => void
+  onAddAllWeeks: () => void
 }
 
 export default function PolicyAccordion({
@@ -19,7 +24,13 @@ export default function PolicyAccordion({
   paymentMethod, onPaymentMethodChange,
   discountCode, onDiscountCodeChange,
   discountPercent, onDiscountResolved,
+  selectedWeekCount,
+  referralCode,
+  onClearReferralCode,
+  onAddAllWeeks,
 }: PolicyAccordionProps) {
+  const isFullProgram = selectedWeekCount >= 7
+  const hasReferralCode = !!(referralCode && referralCode.trim().length > 0)
   const [checkingCode, setCheckingCode] = useState(false)
   const [codeError, setCodeError] = useState<string | null>(null)
   const [codeValid, setCodeValid] = useState(false)
@@ -49,75 +60,68 @@ export default function PolicyAccordion({
   return (
     <div>
       <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '22px', fontWeight: 700, marginBottom: '8px' }}>
-        Camp Policies & Agreement
+        Terms of Use, Camp Policies & Agreement
       </h2>
       <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
-        Please read the TeamCoders Camp Policies carefully before agreeing.
+        Please review our legal terms, physical liability waiver, and refund policies below.
       </p>
 
-      {/* Policy scrollbox */}
-      <div className="policy-scroll" style={{ marginBottom: '28px' }}>
-        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 700, marginBottom: '16px' }}>
-          TeamCoders Camp Policies & Guidelines — Summer 2026
+      {/* Scrollable read-only policy box */}
+      <div
+        style={{
+          maxHeight: '220px',
+          overflowY: 'scroll',
+          padding: '20px',
+          background: 'var(--bg-subtle)',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--border-light)',
+          fontSize: '13px',
+          lineHeight: 1.7,
+          color: 'var(--text-secondary)',
+          marginBottom: '24px',
+        }}
+      >
+        <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px' }}>
+          Terms of Use &amp; Camp Policies — Effective August 22, 2026
         </h3>
 
-        <PolicySection title="1. Cumulative Attendance">
-          The Elevate Coders summer curriculum is designed as a cumulative, week-over-week program. Each week
-          builds directly upon the prior week&apos;s content in Scratch and Python programming. While families may
-          register for any combination of weeks, we strongly encourage continuous attendance for the most
-          effective learning experience. Students who miss consecutive weeks may experience gaps in foundational
-          knowledge. In cases of travel, a learning packet will be prepared and arranged for pickup or digital
-          delivery.
+        <PolicySection title="1. Registration & Enrollment Prerequisites">
+          Registration for upper-level or continuing tracks requires the student to have successfully completed the baseline Beginners Course or possess verified outside coding experience. Elevate Coders reserves the right to review registrations against internal student data.
         </PolicySection>
 
-        <PolicySection title="2. California Educational Services — 0% Sales Tax">
-          Elevate Coders / TeamCoders is operated as an educational services provider under California Revenue
-          and Taxation Code §6361. Charges for educational instruction are exempt from California state sales
-          tax. Your invoice will reflect a $0.00 tax line with this notation. This exemption applies to all
-          standard weekly camp tuition. Merchandise or non-instructional add-ons, if offered in the future,
-          may be subject to standard rates.
+        <PolicySection title="2. Attendance & Multi-Track Cohorts">
+          Parents choose between Track A (Co-Ed) and Track B (All-Girls). Programming is structured week-by-week; regular attendance is strongly encouraged to reach core technical milestones.
         </PolicySection>
 
-        <PolicySection title="3. Photo & Media Opt-Out Policy">
-          Elevate Coders may photograph or record students during camp sessions for use in marketing materials,
-          social media, and website content. By default, enrollment constitutes consent to this use. Parents
-          who do NOT wish their child to be photographed or recorded must (a) deselect the photo consent
-          checkbox during registration, or (b) notify the coaching team in writing on or before the first day
-          of the enrolled week. Opt-out requests will be honored immediately and applied to all future sessions.
-          No images of opted-out students will be published retroactively.
+        <PolicySection title="3. Dynamic Vacation Tracking & Prorated Billing">
+          Parents may log planned travel dates during checkout. The application computes a prorated balance that modifies the invoice payload. Adjustments cannot be made retroactively once locked.
         </PolicySection>
 
-        <PolicySection title="4. Classroom Boundaries & Conduct">
-          Elevate Coders classrooms are safe, inclusive, and focused learning environments. All students are
-          expected to (a) treat peers and coaches with respect at all times, (b) remain at their assigned
-          workstation unless instructed otherwise, (c) use provided devices strictly for curriculum-related
-          activities, and (d) refrain from sharing personal information online. Any student whose behavior
-          disrupts the classroom environment may be asked to take a break, and in repeated or severe cases,
-          parents will be contacted. Elevate Coders reserves the right to remove a student from the program
-          without refund in cases of ongoing misconduct.
+        <PolicySection title="4. Invoicing, Payments & Discounts">
+          Invoices are issued via Gusto/Melio set to &quot;Due Immediately.&quot; Payment options follow your selection (ACH Only or ACH + Credit Card). Unpaid invoices may forfeit student seat placement.
         </PolicySection>
 
-        <PolicySection title="5. Refund & Cancellation Policy">
-          Cancellations made more than 7 days prior to the enrolled week&apos;s start date are eligible for a full
-          refund minus a $25 processing fee. Cancellations within 7 days of the enrolled week are non-refundable.
-          Vacation proration credits are applied at the time of registration and are not subject to additional
-          refund after the session begins. Elevate Coders reserves the right to cancel or reschedule sessions
-          due to emergencies; in such cases, a full credit will be issued for the affected week(s).
+        <PolicySection title="5. Bring-a-Friend Referral Program">
+          Unique referral tracking links generate partial account credits when new families register. Credits hold no cash value and are non-transferable.
         </PolicySection>
 
-        <PolicySection title="6. Emergency Contact & Medical">
-          A parent or guardian must be reachable via the phone number on file at all times during camp hours.
-          In the event of a medical emergency, we will attempt to reach the primary contact immediately and
-          call 911 if the situation warrants. Parents are responsible for disclosing all known allergies and
-          medical conditions during registration. Elevate Coders staff are not licensed medical professionals
-          and are not authorized to administer medication.
+        <PolicySection title="6. Physical Liability Waiver & Hold Harmless Agreement">
+          <strong>Assumption of Risk:</strong> Enrolling in in-person programs acknowledges that minor physical mishaps (slipping, tripping, falling) are inherent risks of group activities.<br />
+          <strong>Release of Liability:</strong> You agree to release, waive, discharge, and hold harmless Elevate Coders, owners, instructors, and staff from any claims, demands, or liabilities for personal accidental injury or property damage sustained while participating.
         </PolicySection>
 
-        <PolicySection title="7. Payment Terms">
-          All invoices are issued via Gusto and processed through Melio. Invoices are due immediately upon
-          issuance. Payment may be made via ACH bank transfer, or ACH + Credit Card depending on the option
-          selected during registration. Late payments may result in the student&apos;s spot being released.
-          Elevate Coders does not store any credit card or bank account information on its own servers.
+        <PolicySection title="7. Refund, Cancellation & Week-Change Policy">
+          <strong>7+ Days Prior:</strong> Cancellations made 7 or more full days before camp start receive a full refund.<br />
+          <strong>Under 7 Days:</strong> Cancellations under 7 days are non-refundable.<br />
+          <strong>Credit Alternatives:</strong> Late cancellations receive no cash/card refund, but Elevate Coders may issue internal account credit toward future tracks at its sole discretion.
+        </PolicySection>
+
+        <PolicySection title="8. Legal, Liability & Tax Compliance">
+          0% service tax under Cal. Rev. &amp; Tax. Code §6361. Classroom safety rules must be followed; severe misconduct may result in removal. Media release opt-out requests can be submitted prior to start.
+        </PolicySection>
+
+        <PolicySection title="9. Privacy Policy & COPPA Compliance">
+          We strictly comply with COPPA. We collect parent/guardian contact info, student name/age, and health/allergy notes solely for internal camp safety and operations. Financial data is never stored on our servers.
         </PolicySection>
       </div>
 
@@ -160,40 +164,88 @@ export default function PolicyAccordion({
         </div>
       </div>
 
-      {/* Discount code */}
+      {/* Discount code — only available for full 7-week enrollment and cannot be combined with referral */}
       <div style={{ marginBottom: '28px' }}>
         <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Tag size={15} color="var(--brand-purple)" />
+          <Tag size={15} color={!hasReferralCode && isFullProgram ? 'var(--brand-purple)' : 'var(--text-muted)'} />
           Discount / Partner Code
         </div>
-        <div style={{ display: 'flex', gap: '10px', maxWidth: '400px' }}>
-          <input
-            id="discount-code"
-            className={`form-input ${codeError ? 'error' : ''}`}
-            type="text"
-            placeholder="e.g. PARTNER75"
-            value={discountCode}
-            onChange={(e) => { onDiscountCodeChange(e.target.value.toUpperCase()); setCodeValid(false); setCodeError(null); onDiscountResolved(0) }}
-            style={{ flex: 1 }}
-          />
-          <button
-            onClick={applyDiscount}
-            className="btn btn-secondary btn-sm"
-            disabled={!discountCode.trim() || checkingCode}
-          >
-            {checkingCode ? <Loader2 size={14} className="animate-spin" /> : 'Apply'}
-          </button>
-        </div>
-        {codeError && <div className="form-error">{codeError}</div>}
-        {codeValid && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '13px', color: '#10B981' }}>
-            <CheckCircle size={14} />
-            {discountPercent}% discount applied!
+        {hasReferralCode ? (
+          <div style={{
+            padding: '12px 16px',
+            background: '#F9FAFB',
+            border: '1.5px solid var(--border-light)',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '13px',
+            color: 'var(--text-secondary)',
+            maxWidth: '440px',
+            lineHeight: 1.6,
+          }}>
+            Referral codes and discount codes cannot be combined. You currently have referral code <strong>{referralCode}</strong> applied.{' '}
+            {onClearReferralCode && (
+              <a
+                href="#"
+                onClick={(e) => { e.preventDefault(); onClearReferralCode() }}
+                style={{ color: 'var(--brand-purple)', fontWeight: 600, textDecoration: 'none' }}
+              >
+                Remove referral code
+              </a>
+            )}
+            {onClearReferralCode && ' to use a discount code instead.'}
+          </div>
+        ) : isFullProgram ? (
+          <>
+            <div style={{ display: 'flex', gap: '10px', maxWidth: '400px' }}>
+              <input
+                id="discount-code"
+                className={`form-input ${codeError ? 'error' : ''}`}
+                type="text"
+                placeholder="e.g. PARTNER75"
+                value={discountCode}
+                onChange={(e) => { onDiscountCodeChange(e.target.value.toUpperCase()); setCodeValid(false); setCodeError(null); onDiscountResolved(0) }}
+                style={{ flex: 1 }}
+              />
+              <button
+                onClick={applyDiscount}
+                className="btn btn-secondary btn-sm"
+                disabled={!discountCode.trim() || checkingCode}
+              >
+                {checkingCode ? <Loader2 size={14} className="animate-spin" /> : 'Apply'}
+              </button>
+            </div>
+            {codeError && <div className="form-error">{codeError}</div>}
+            {codeValid && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontSize: '13px', color: '#10B981' }}>
+                <CheckCircle size={14} />
+                {discountPercent}% discount applied!
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{
+            padding: '12px 16px',
+            background: '#F9FAFB',
+            border: '1.5px solid var(--border-light)',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '13px',
+            color: 'var(--text-muted)',
+            maxWidth: '400px',
+            lineHeight: 1.6,
+          }}>
+            Discount and partner codes are only available for the full 7-week program.{' '}
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); onAddAllWeeks() }}
+              style={{ color: 'var(--brand-purple)', fontWeight: 600, textDecoration: 'none' }}
+            >
+              Add all 7 weeks
+            </a>
+            {' '}to unlock this field.
           </div>
         )}
       </div>
 
-      {/* Policy agreement checkbox */}
+      {/* Mandatory policy agreement checkbox */}
       <label
         style={{
           display: 'flex',
@@ -212,13 +264,17 @@ export default function PolicyAccordion({
           type="checkbox"
           checked={agreed}
           onChange={(e) => onAgree(e.target.checked)}
-          style={{ marginTop: '2px', accentColor: 'var(--brand-purple)', width: '18px', height: '18px' }}
+          style={{ marginTop: '3px', accentColor: 'var(--brand-purple)', width: '18px', height: '18px', cursor: 'pointer' }}
         />
-        <span style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-          I have read and agree to the <strong>TeamCoders Camp Policies & Guidelines</strong> listed above,
-          including the cumulative attendance policy, 0% sales tax compliance, photo/media opt-out terms,
-          classroom conduct boundaries, cancellation terms, and payment obligations.
-          I confirm that the information provided is accurate to the best of my knowledge.
+        <span style={{ fontSize: '14px', lineHeight: 1.6, color: 'var(--text-primary)' }}>
+          I certify that I am the parent or legal guardian, and I explicitly agree to the{' '}
+          <Link href="/terms" target="_blank" style={{ color: 'var(--brand-purple)', fontWeight: 700, textDecoration: 'underline' }}>
+            Terms of Use &amp; Camp Policies
+          </Link>{' '}
+          (including the Physical Liability Waiver and Refund Policy) and{' '}
+          <Link href="/privacy" target="_blank" style={{ color: 'var(--brand-purple)', fontWeight: 700, textDecoration: 'underline' }}>
+            Privacy Policy
+          </Link>.
         </span>
       </label>
     </div>
@@ -227,11 +283,11 @@ export default function PolicyAccordion({
 
 function PolicySection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ marginBottom: '20px' }}>
-      <h4 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', fontWeight: 700, marginBottom: '6px', color: 'var(--text-primary)' }}>
+    <div style={{ marginBottom: '16px' }}>
+      <h4 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '13px', fontWeight: 700, marginBottom: '4px', color: 'var(--text-primary)' }}>
         {title}
       </h4>
-      <p style={{ fontSize: '13px', lineHeight: 1.75, color: 'var(--text-secondary)' }}>
+      <p style={{ fontSize: '12px', lineHeight: 1.6, color: 'var(--text-secondary)', margin: 0 }}>
         {children}
       </p>
     </div>

@@ -1,14 +1,15 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Navbar from '@/components/nav/Navbar'
+import Footer from '@/components/nav/Footer'
 
 export const metadata: Metadata = {
-  title: 'Elevate Coders — Summer Coding Camps for Ages 9–12',
+  title: 'Elevate Coders — Fall 2026 Coding Program for Ages 7–12',
   description:
-    'Week-by-week summer and fall coding camps for children ages 9–12. From Scratch to Python, your child builds real programming skills in a supportive, inclusive environment. California Educational Services — 0% Sales Tax.',
+    '7-week Thursday coding program for children ages 7–12. Beginner to Level 2 Scratch & Python curriculum in a supportive, inclusive environment. California Educational Services — 0% Sales Tax.',
   keywords: [
     'kids coding camp',
-    'summer coding camp',
+    'fall coding program',
     'learn to code for kids',
     'Scratch programming',
     'Python for kids',
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Elevate Coders — Where Young Coders Build the Future',
     description:
-      'Week-by-week coding camps for ages 9–12. Co-Ed and All-Girls tracks. Scratch to Python curriculum.',
+      '7-week Thursday coding program for ages 7–12. Co-Ed & All-Girls tracks. Beginner Scratch to Level 2 Python.',
     type: 'website',
   },
 }
@@ -31,9 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Navbar />
-        <main>{children}</main>
+        <main style={{ flex: 1 }}>{children}</main>
+        <Footer />
       </body>
     </html>
   )

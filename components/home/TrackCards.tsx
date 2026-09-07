@@ -1,20 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { Users, Sparkles, CheckCircle, Star } from 'lucide-react'
+import { Users, Sparkles, CheckCircle, Clock } from 'lucide-react'
 
 const tracks = [
   {
     id: 'coed',
     label: 'TRACK A',
-    name: 'Co-Ed Coding Camp',
+    name: 'Co-Ed Fall Coding Program',
     description:
-      'All students ages 9–12 learn together in a collaborative environment. Cumulative curriculum builds week-over-week from visual block coding to text-based Python programming.',
+      'All students ages 7–12 learn together in a collaborative environment. 7-week program running every Thursday starting October 8th.',
     features: [
-      'Scratch block-based projects',
-      'Python fundamentals with Thonny',
-      'Team collaboration exercises',
-      'End-of-week showcases',
+      'Beginner Class: 5:00 PM – 6:00 PM',
+      'Level 2 Class: 7:00 PM – 8:00 PM',
+      'Scratch & Python project building',
+      'End-of-program portfolio showcase',
     ],
     icon: Users,
     iconBg: '#D1FAE5',
@@ -24,14 +24,14 @@ const tracks = [
     ctaLabel: 'Register for Co-Ed Track',
     ctaBg: '#D1FAE5',
     ctaColor: '#065F46',
-    featured: false,
+    isAvailable: true,
   },
   {
     id: 'all-girls',
     label: 'TRACK B',
-    name: 'All-Girls Coding Camp',
+    name: 'All-Girls Coding Program',
     description:
-      'A dedicated cohort designed to empower girls in technology. Same rigorous curriculum, separate roster to foster confidence and build a diverse tech community.',
+      'A dedicated cohort designed to empower girls in technology. Same hands-on curriculum, separate roster to foster confidence.',
     features: [
       'Supportive all-girls environment',
       'Women-in-tech mentorship moments',
@@ -39,14 +39,14 @@ const tracks = [
       'Community showcase events',
     ],
     icon: Sparkles,
-    iconBg: '#EDE9FE',
+    iconBg: '#F3E8FF',
     iconColor: 'var(--brand-purple)',
     badgeColor: 'badge-purple',
-    ctaHref: '/register?track=all-girls',
-    ctaLabel: 'Register for All-Girls Track',
-    ctaBg: '#EDE9FE',
-    ctaColor: 'var(--brand-purple)',
-    featured: true,
+    ctaHref: '#',
+    ctaLabel: 'Coming Soon',
+    ctaBg: '#F3F4F6',
+    ctaColor: '#9CA3AF',
+    isAvailable: false,
   },
 ]
 
@@ -70,11 +70,10 @@ export default function TrackCards() {
               marginBottom: '14px',
             }}
           >
-            Coding Camp Tracks
+            Fall Program Tracks
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '480px', margin: '0 auto' }}>
-            Choose the track that's right for your child. Both tracks follow the
-            same rigorous curriculum.
+          <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '520px', margin: '0 auto' }}>
+            Choose your child&apos;s program track. Both Beginner and Level 2 sessions run every Thursday starting October 8th.
           </p>
         </div>
 
@@ -97,9 +96,10 @@ export default function TrackCards() {
                   padding: '0',
                   overflow: 'hidden',
                   position: 'relative',
+                  opacity: track.isAvailable ? 1 : 0.85,
                 }}
               >
-                {track.featured && (
+                {!track.isAvailable && (
                   <div
                     style={{
                       position: 'absolute',
@@ -108,16 +108,16 @@ export default function TrackCards() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
-                      background: '#FEF3C7',
-                      color: '#92400E',
+                      background: '#F3E8FF',
+                      color: '#7E22CE',
                       fontSize: '11px',
                       fontWeight: 700,
                       padding: '4px 10px',
                       borderRadius: 'var(--radius-full)',
                     }}
                   >
-                    <Star size={10} fill="currentColor" />
-                    Featured
+                    <Clock size={11} />
+                    Coming Soon
                   </div>
                 )}
 
@@ -180,25 +180,41 @@ export default function TrackCards() {
                 </div>
 
                 {/* CTA footer */}
-                <Link
-                  href={track.ctaHref}
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    padding: '16px',
-                    background: track.ctaBg,
-                    color: track.ctaColor,
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    transition: 'opacity var(--transition-fast)',
-                    borderTop: '1px solid var(--border-light)',
-                  }}
-                  onMouseEnter={(e) => ((e.target as HTMLElement).style.opacity = '0.85')}
-                  onMouseLeave={(e) => ((e.target as HTMLElement).style.opacity = '1')}
-                >
-                  {track.ctaLabel}
-                </Link>
+                {track.isAvailable ? (
+                  <Link
+                    href={track.ctaHref}
+                    style={{
+                      display: 'block',
+                      textAlign: 'center',
+                      padding: '16px',
+                      background: track.ctaBg,
+                      color: track.ctaColor,
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'opacity var(--transition-fast)',
+                      borderTop: '1px solid var(--border-light)',
+                    }}
+                  >
+                    {track.ctaLabel}
+                  </Link>
+                ) : (
+                  <div
+                    style={{
+                      display: 'block',
+                      textAlign: 'center',
+                      padding: '16px',
+                      background: '#F9FAFB',
+                      color: '#9CA3AF',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      borderTop: '1px solid var(--border-light)',
+                      cursor: 'not-allowed',
+                    }}
+                  >
+                    Coming Soon
+                  </div>
+                )}
               </div>
             )
           })}

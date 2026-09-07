@@ -5,9 +5,9 @@ import { Zap, ArrowRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const stats = [
-  { value: '9–12', label: 'Age Range' },
-  { value: '$200', label: 'Per Week' },
-  { value: '8', label: 'Summer Weeks' },
+  { value: '7–12', label: 'Age Range' },
+  { value: '$200', label: 'Per Camp' },
+  { value: '7', label: 'Fall Weeks' },
 ]
 
 export default function HeroSection() {
@@ -54,7 +54,7 @@ export default function HeroSection() {
             }}
           >
             <Zap size={13} fill="currentColor" />
-            Summer 2026 Registration Open
+            Fall 2026 Registration Open — Starts October 8th
           </div>
 
           {/* Headline */}
@@ -84,8 +84,8 @@ export default function HeroSection() {
               maxWidth: '480px',
             }}
           >
-            Week-by-week summer coding camps for ages 9–12. From Scratch to
-            Python, your child learns real programming skills in a supportive,
+            7-week Fall coding program for ages 7–12. Every Thursday starting October 8th.
+            From Scratch to Python, your child learns real programming skills in a supportive,
             inclusive environment.
           </p>
 
@@ -95,9 +95,21 @@ export default function HeroSection() {
               Register Your Child
               <ArrowRight size={18} />
             </Link>
-            <Link href="#tracks" className="btn btn-secondary btn-lg">
-              View Camp Tracks
-            </Link>
+            <a
+              href="#tracks"
+              className="btn btn-secondary btn-lg"
+              onClick={(e) => {
+                e.preventDefault()
+                const el = document.getElementById('tracks')
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                } else {
+                  window.location.hash = '#tracks'
+                }
+              }}
+            >
+              View Program Tracks
+            </a>
           </div>
 
           {/* Stats row */}

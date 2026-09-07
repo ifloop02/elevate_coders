@@ -34,7 +34,7 @@ export default function PricingSummary({ pricing, selectedWeeks, track }: Pricin
           fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em',
           padding: '4px 10px', borderRadius: 'var(--radius-full)', marginBottom: '16px',
         }}>
-          {track === 'COED' ? '👥 Co-Ed Track' : '✨ All-Girls Track'}
+          {track === 'COED' ? '👥 Co-Ed Track' : '✨ All-Girls Track (Coming Soon)'}
         </div>
       )}
 
@@ -43,26 +43,26 @@ export default function PricingSummary({ pricing, selectedWeeks, track }: Pricin
         <div style={{ marginBottom: '12px' }}>
           {selectedWeeks.map((w) => (
             <div key={w.weekNumber} className="pricing-line">
-              <span>Week {w.weekNumber}</span>
-              <span>$200</span>
+              <span>Week {w.weekNumber} ({w.dates})</span>
+              <span>Included</span>
             </div>
           ))}
         </div>
       ) : (
         <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', marginBottom: '12px', fontStyle: 'italic' }}>
-          No weeks selected yet
+          No sessions selected yet
         </div>
       )}
 
       {/* Price breakdown */}
       <div className="pricing-line">
-        <span>Subtotal ({pricing.selectedWeeks} weeks)</span>
+        <span>7-Week Program Tuition</span>
         <span>{formatCurrency(pricing.baseTotal)}</span>
       </div>
 
       {pricing.vacationCredit > 0 && (
         <div className="pricing-line">
-          <span>Vacation credit ({pricing.totalVacationDays} days)</span>
+          <span>Proration credit ({pricing.totalVacationDays} days)</span>
           <span className="credit">−{formatCurrency(pricing.vacationCredit)}</span>
         </div>
       )}
@@ -71,6 +71,13 @@ export default function PricingSummary({ pricing, selectedWeeks, track }: Pricin
         <div className="pricing-line">
           <span>Discount ({pricing.discountPercent}% off)</span>
           <span className="credit">−{formatCurrency(pricing.discountAmount)}</span>
+        </div>
+      )}
+
+      {pricing.referralCreditApplied > 0 && (
+        <div className="pricing-line">
+          <span style={{ color: '#C4B5FD', fontWeight: 600 }}>Referral Credit Earned</span>
+          <span className="credit" style={{ color: '#C4B5FD' }}>−{formatCurrency(pricing.referralCreditApplied)}</span>
         </div>
       )}
 

@@ -7,8 +7,9 @@ import RegistrationFlow from '@/components/register/RegistrationFlow'
 function RegisterPageInner() {
   const searchParams = useSearchParams()
   const track = searchParams.get('track') // 'coed' | 'all-girls' | null
+  const refCode = searchParams.get('ref') || null
 
-  return <RegistrationFlow initialTrack={track} />
+  return <RegistrationFlow initialTrack={track} initialReferralCode={refCode} />
 }
 
 export default function RegisterPage() {

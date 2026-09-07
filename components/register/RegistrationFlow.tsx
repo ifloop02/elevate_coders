@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { AlertCircle, Sparkles } from 'lucide-react'
 import StepIndicator from '@/components/register/StepIndicator'
 import TrackSelector from '@/components/register/TrackSelector'
 import WeekPicker from '@/components/register/WeekPicker'
@@ -11,6 +12,7 @@ import StudentInfoForm from '@/components/register/StudentInfoForm'
 import PolicyAccordion from '@/components/register/PolicyAccordion'
 import PricingSummary from '@/components/register/PricingSummary'
 import PrerequisiteGate from '@/components/register/PrerequisiteGate'
+import PaymentStep from '@/components/register/PaymentStep'
 import { calculatePricing } from '@/lib/proration'
 
 export interface RegistrationState {
@@ -39,21 +41,34 @@ export interface RegistrationState {
     hasVerifiedOutsideExp: boolean
     outsideExpDescription: string
   }
+  ageStatus: 'in_range' | 'too_young' | 'too_old' | null
+  youngChildOption: 'waitlist' | 'contact' | null
+  olderChildAcknowledged: boolean
   policyAgreed: boolean
   prerequisiteVerified: boolean
+  earnedReferralCredit: number
 }
 
-const STEPS = ['Track', 'Weeks', 'Vacation', 'Your Info', 'Policies', 'Review']
+const STEPS = ['Track', 'Weeks', 'Vacation', 'Your Info', 'Policies', 'Review', 'Payment']
 
 const WEEK_DATA = [
-  { id: 'summer-2026-week-1', weekNumber: 1, dates: 'Jun 15 – Jun 19', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-2', weekNumber: 2, dates: 'Jun 22 – Jun 26', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-3', weekNumber: 3, dates: 'Jun 29 – Jul 3', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-4', weekNumber: 4, dates: 'Jul 6 – Jul 10', curriculum: 'Scratch Foundations', requiresPrerequisite: false },
-  { id: 'summer-2026-week-5', weekNumber: 5, dates: 'Jul 13 – Jul 17', curriculum: 'Python Exploration', requiresPrerequisite: true },
-  { id: 'summer-2026-week-6', weekNumber: 6, dates: 'Jul 20 – Jul 24', curriculum: 'Python Exploration', requiresPrerequisite: true },
-  { id: 'summer-2026-week-7', weekNumber: 7, dates: 'Jul 27 – Jul 31', curriculum: 'Python Exploration', requiresPrerequisite: true },
-  { id: 'summer-2026-week-8', weekNumber: 8, dates: 'Aug 3 – Aug 7', curriculum: 'Python Exploration', requiresPrerequisite: true },
+  // 🟢 Level 1 Beginner (5:00 PM – 6:00 PM) — All 7 Weeks
+  { id: 'fall-2026-beg-1', weekNumber: 1, dates: 'Oct 8 (Thu)', curriculum: 'Scratch & Coding Foundations', requiresPrerequisite: false },
+  { id: 'fall-2026-beg-2', weekNumber: 2, dates: 'Oct 15 (Thu)', curriculum: 'Interactive Game & Animation', requiresPrerequisite: false },
+  { id: 'fall-2026-beg-3', weekNumber: 3, dates: 'Oct 22 (Thu)', curriculum: 'Logic, Loops & Scoreboards', requiresPrerequisite: false },
+  { id: 'fall-2026-beg-4', weekNumber: 4, dates: 'Oct 29 (Thu)', curriculum: 'Custom Blocks & Sound FX', requiresPrerequisite: false },
+  { id: 'fall-2026-beg-5', weekNumber: 5, dates: 'Nov 5 (Thu)', curriculum: 'Multi-Level World Design', requiresPrerequisite: false },
+  { id: 'fall-2026-beg-6', weekNumber: 6, dates: 'Nov 12 (Thu)', curriculum: 'UI Polish & Special Effects', requiresPrerequisite: false },
+  { id: 'fall-2026-beg-7', weekNumber: 7, dates: 'Nov 19 (Thu)', curriculum: 'Beginner Capstone Showcase', requiresPrerequisite: false },
+
+  // 🟣 Level 2 Advanced (7:00 PM – 8:00 PM) — All 7 Weeks
+  { id: 'fall-2026-lvl2-1', weekNumber: 1, dates: 'Oct 8 (Thu)', curriculum: 'Module 1: Advanced Physics & Gravity Engines', requiresPrerequisite: true },
+  { id: 'fall-2026-lvl2-2', weekNumber: 2, dates: 'Oct 15 (Thu)', curriculum: 'Module 1: Advanced Event Architecture', requiresPrerequisite: true },
+  { id: 'fall-2026-lvl2-3', weekNumber: 3, dates: 'Oct 22 (Thu)', curriculum: 'Module 1: Data Streams & Scoreboards', requiresPrerequisite: true },
+  { id: 'fall-2026-lvl2-4', weekNumber: 4, dates: 'Oct 29 (Thu)', curriculum: 'Module 2: Screen Scrolling & Infinite Maps', requiresPrerequisite: true },
+  { id: 'fall-2026-lvl2-5', weekNumber: 5, dates: 'Nov 5 (Thu)', curriculum: 'Module 2: Autonomous AI & Pathfinding', requiresPrerequisite: true },
+  { id: 'fall-2026-lvl2-6', weekNumber: 6, dates: 'Nov 12 (Thu)', curriculum: 'Module 3: Code Polish & UI Design Systems', requiresPrerequisite: true },
+  { id: 'fall-2026-lvl2-7', weekNumber: 7, dates: 'Nov 19 (Thu)', curriculum: 'Module 3: Capstone Debugging & Group Playtesting', requiresPrerequisite: true },
 ]
 
 const emptyState: RegistrationState = {
@@ -65,34 +80,99 @@ const emptyState: RegistrationState = {
   paymentMethod: 'ACH_ONLY',
   parent: { legalName: '', email: '', phone: '', referralCode: '', marketingOptIn: true, photoMediaOptIn: true },
   student: { firstName: '', lastName: '', dateOfBirth: '', allergies: '', medicalNotes: '', completedBeginnerCourse: false, hasVerifiedOutsideExp: false, outsideExpDescription: '' },
+  ageStatus: null,
+  youngChildOption: null,
+  olderChildAcknowledged: false,
   policyAgreed: false,
   prerequisiteVerified: false,
+  earnedReferralCredit: 0,
 }
 
-export default function RegistrationFlow({ initialTrack }: { initialTrack: string | null }) {
+export default function RegistrationFlow({
+  initialTrack,
+  initialReferralCode = null,
+}: {
+  initialTrack: string | null
+  initialReferralCode?: string | null
+}) {
   const router = useRouter()
   const [step, setStep] = useState(initialTrack ? 1 : 0) // skip to week picker if track pre-selected
   const [state, setState] = useState<RegistrationState>({
     ...emptyState,
     track: initialTrack === 'all-girls' ? 'ALL_GIRLS' : initialTrack === 'coed' ? 'COED' : null,
+    parent: {
+      ...emptyState.parent,
+      referralCode: initialReferralCode || '',
+    },
   })
   const [showPrereqGate, setShowPrereqGate] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const showToast = (message: string) => {
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    setToast(message)
+    toastTimer.current = setTimeout(() => setToast(null), 3500)
+  }
 
   const update = (partial: Partial<RegistrationState>) =>
     setState((s) => ({ ...s, ...partial }))
+
+  // Check for pending earned referral credits when parent email is entered
+  useEffect(() => {
+    const email = state.parent.email?.trim()
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      if (state.earnedReferralCredit > 0) {
+        update({ earnedReferralCredit: 0 })
+      }
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/parent/referral-credit?email=${encodeURIComponent(email)}`)
+        if (res.ok) {
+          const data = await res.json()
+          if (data.availableCredit > 0 && data.availableCredit !== state.earnedReferralCredit) {
+            update({ earnedReferralCredit: data.availableCredit })
+            showToast(`🎉 Referral credit found! $${data.availableCredit.toFixed(2)} applied to your tuition.`)
+          } else if (!data.availableCredit && state.earnedReferralCredit > 0) {
+            update({ earnedReferralCredit: 0 })
+          }
+        }
+      } catch (err) {
+        console.error('Failed to check referral credit:', err)
+      }
+    }, 400)
+
+    return () => clearTimeout(timer)
+  }, [state.parent.email])
 
   const selectedWeeks = WEEK_DATA.filter((w) => state.selectedWeekIds.includes(w.id))
   const hasAdvancedWeeks = selectedWeeks.some((w) => w.requiresPrerequisite)
   const pricing = calculatePricing(
     state.selectedWeekIds.length,
     state.vacationDates.length,
-    state.discountPercent
+    state.discountPercent,
+    state.earnedReferralCredit
   )
 
+  const ALL_BEGINNER_IDS = WEEK_DATA.filter((w) => !w.requiresPrerequisite).map((w) => w.id)
+  const ALL_LEVEL2_IDS = WEEK_DATA.filter((w) => w.requiresPrerequisite).map((w) => w.id)
+
+  const addAllWeeks = () => {
+    const isLevel2 = state.selectedWeekIds.some((id) => ALL_LEVEL2_IDS.includes(id))
+    update({ selectedWeekIds: isLevel2 ? ALL_LEVEL2_IDS : ALL_BEGINNER_IDS })
+  }
+
+
   const canAdvanceFromWeeks = () => {
-    if (state.selectedWeekIds.length === 0) return false
+    if (state.selectedWeekIds.length === 0) {
+      showToast('Select at least one week to continue')
+      return false
+    }
     if (hasAdvancedWeeks && !state.prerequisiteVerified) {
       setShowPrereqGate(true)
       return false
@@ -100,14 +180,41 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
     return true
   }
 
+  const canAdvanceFromInfo = () => {
+    const { legalName, email, phone } = state.parent
+    if (!legalName.trim()) {
+      showToast('Please enter your legal billing name to continue')
+      return false
+    }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('Please enter a valid email address to continue')
+      return false
+    }
+    if (!phone.trim()) {
+      showToast('Please enter your billing phone number to continue')
+      return false
+    }
+    if (
+      state.ageStatus === null ||
+      (state.ageStatus === 'too_young' && state.youngChildOption === null) ||
+      (state.ageStatus === 'too_old' && !state.olderChildAcknowledged)
+    ) {
+      showToast("Please complete your child's information to continue")
+      return false
+    }
+    return true
+  }
+
   const handleNext = () => {
     if (step === 1 && !canAdvanceFromWeeks()) return
+    if (step === 3 && !canAdvanceFromInfo()) return
     setStep((s) => Math.min(s + 1, STEPS.length - 1))
   }
 
   const handleBack = () => setStep((s) => Math.max(s - 1, 0))
 
-  const handleSubmit = async () => {
+  // Called by PaymentStep after Stripe confirms payment — then writes DB record
+  const handlePaymentSuccess = async () => {
     setSubmitting(true)
     setSubmitError(null)
     try {
@@ -160,6 +267,27 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
         <div style={{ display: 'grid', gridTemplateColumns: step >= 1 ? '1fr 320px' : '1fr', gap: '32px', alignItems: 'start' }}>
           {/* Main content */}
           <div>
+            {pricing.referralCreditApplied > 0 && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '12px 16px',
+                background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)',
+                border: '1.5px solid #C4B5FD',
+                borderRadius: 'var(--radius-md)',
+                marginBottom: '24px',
+                fontSize: '13px',
+                color: '#5B21B6',
+                fontWeight: 600,
+                boxShadow: '0 2px 8px rgba(124, 58, 237, 0.08)',
+              }}>
+                <Sparkles size={18} color="#7C3AED" style={{ flexShrink: 0 }} />
+                <span>
+                  🎉 Welcome back! You have <strong>${pricing.referralCreditApplied.toFixed(2)}</strong> in earned referral credits automatically applied to this registration.
+                </span>
+              </div>
+            )}
             {step === 0 && (
               <TrackSelector
                 selectedTrack={state.track}
@@ -168,10 +296,14 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
             )}
             {step === 1 && (
               <WeekPicker
-                weeks={WEEK_DATA}
                 selectedIds={state.selectedWeekIds}
                 prerequisiteVerified={state.prerequisiteVerified}
-                onChange={(ids) => update({ selectedWeekIds: ids })}
+                onChange={(ids, level) => {
+                  update({ selectedWeekIds: ids })
+                  if (level === 'LEVEL_2' && !state.prerequisiteVerified) {
+                    setShowPrereqGate(true)
+                  }
+                }}
               />
             )}
             {step === 2 && (
@@ -185,11 +317,25 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <ParentInfoForm
                   data={state.parent}
-                  onChange={(parent) => update({ parent })}
+                  onChange={(parent) => {
+                    const hasReferral = !!parent.referralCode?.trim()
+                    update({
+                      parent,
+                      ...(hasReferral && (state.discountCode || state.discountPercent > 0)
+                        ? { discountCode: '', discountPercent: 0 }
+                        : {}),
+                    })
+                  }}
                 />
                 <StudentInfoForm
                   data={state.student}
                   onChange={(student) => update({ student })}
+                  ageStatus={state.ageStatus}
+                  youngChildOption={state.youngChildOption}
+                  olderChildAcknowledged={state.olderChildAcknowledged}
+                  onAgeStatusChange={(ageStatus) => update({ ageStatus })}
+                  onYoungChildOptionChange={(youngChildOption) => update({ youngChildOption })}
+                  onOlderChildAcknowledgedChange={(olderChildAcknowledged) => update({ olderChildAcknowledged })}
                 />
               </div>
             )}
@@ -203,10 +349,25 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
                 onDiscountCodeChange={(code) => update({ discountCode: code })}
                 discountPercent={state.discountPercent}
                 onDiscountResolved={(pct) => update({ discountPercent: pct })}
+                selectedWeekCount={state.selectedWeekIds.length}
+                referralCode={state.parent.referralCode}
+                onClearReferralCode={() => {
+                  update({ parent: { ...state.parent, referralCode: '' } })
+                  showToast('Referral code removed. You can now apply a discount code.')
+                }}
+                onAddAllWeeks={addAllWeeks}
               />
             )}
             {step === 5 && (
               <ReviewStep state={state} pricing={pricing} weekData={WEEK_DATA} />
+            )}
+            {step === 6 && (
+              <PaymentStep
+                finalTotal={pricing.finalTotal}
+                parentEmail={state.parent.email}
+                parentName={state.parent.legalName}
+                onSuccess={handlePaymentSuccess}
+              />
             )}
 
             {/* Error message */}
@@ -224,39 +385,35 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
               </div>
             )}
 
-            {/* Navigation buttons */}
-            <div style={{ display: 'flex', gap: '12px', marginTop: '32px', justifyContent: 'space-between' }}>
-              {step > 0 && (
-                <button onClick={handleBack} className="btn btn-secondary">
-                  ← Back
-                </button>
-              )}
-              <div style={{ marginLeft: 'auto' }}>
-                {step < STEPS.length - 1 ? (
-                  <button
-                    onClick={handleNext}
-                    className="btn btn-primary"
-                    disabled={
-                      (step === 0 && !state.track) ||
-                      (step === 1 && state.selectedWeekIds.length === 0) ||
-                      (step === 4 && !state.policyAgreed)
-                    }
-                    style={{ opacity: (step === 4 && !state.policyAgreed) ? 0.5 : 1 }}
-                  >
-                    Continue →
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleSubmit}
-                    className="btn btn-primary"
-                    disabled={submitting}
-                    style={{ opacity: submitting ? 0.7 : 1 }}
-                  >
-                    {submitting ? 'Submitting...' : '🚀 Complete Registration'}
+            {/* Navigation buttons — hidden on Payment step (PaymentStep owns its submit) */}
+            {step < 6 && (
+              <div style={{ display: 'flex', gap: '12px', marginTop: '32px', justifyContent: 'space-between' }}>
+                {step > 0 && (
+                  <button onClick={handleBack} className="btn btn-secondary">
+                    ← Back
                   </button>
                 )}
+                <div style={{ marginLeft: 'auto' }}>
+                  {step < STEPS.length - 1 ? (
+                    <button
+                      onClick={handleNext}
+                      className="btn btn-primary"
+                      disabled={
+                        (step === 0 && !state.track) ||
+                        (step === 4 && !state.policyAgreed)
+                      }
+                      style={{
+                        opacity: (
+                          (step === 4 && !state.policyAgreed)
+                        ) ? 0.5 : 1
+                      }}
+                    >
+                      {step === 5 ? 'Proceed to Payment →' : 'Continue →'}
+                    </button>
+                  ) : null}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Pricing sidebar */}
@@ -269,6 +426,84 @@ export default function RegistrationFlow({ initialTrack }: { initialTrack: strin
           )}
         </div>
       </div>
+
+      {/* ── Validation Toast ── */}
+      {toast && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          style={{
+            position: 'fixed',
+            bottom: '32px',
+            right: '32px',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            padding: '14px 18px',
+            background: '#111827',
+            color: '#F9FAFB',
+            borderRadius: 'var(--radius-md)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.30)',
+            fontSize: '14px',
+            fontWeight: 500,
+            maxWidth: '360px',
+            animation: 'toastSlideIn 220ms cubic-bezier(0.16,1,0.3,1)',
+          }}
+        >
+          <AlertCircle size={18} style={{ flexShrink: 0, color: '#FBBF24' }} />
+          <span style={{ flex: 1, lineHeight: 1.5 }}>{toast}</span>
+          <button
+            onClick={() => { setToast(null); if (toastTimer.current) clearTimeout(toastTimer.current) }}
+            aria-label="Dismiss"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#9CA3AF',
+              cursor: 'pointer',
+              padding: '0 0 0 8px',
+              fontSize: '16px',
+              lineHeight: 1,
+              flexShrink: 0,
+            }}
+          >
+            ✕
+          </button>
+          {/* Auto-drain progress bar */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              height: '3px',
+              width: '100%',
+              borderRadius: '0 0 var(--radius-md) var(--radius-md)',
+              background: 'rgba(255,255,255,0.15)',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                height: '100%',
+                background: 'var(--brand-purple)',
+                animation: 'toastProgress 3.5s linear forwards',
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Keyframe styles for toast */}
+      <style>{`
+        @keyframes toastSlideIn {
+          from { opacity: 0; transform: translateX(24px) scale(0.97); }
+          to   { opacity: 1; transform: translateX(0)  scale(1); }
+        }
+        @keyframes toastProgress {
+          from { width: 100%; }
+          to   { width: 0%; }
+        }
+      `}</style>
 
       {/* Prerequisite Gate Modal */}
       {showPrereqGate && (
@@ -333,6 +568,15 @@ function ReviewStep({
         )}
       </ReviewCard>
 
+      {pricing.referralCreditApplied > 0 && (
+        <ReviewCard title="Referral Reward">
+          <div style={{ fontSize: '14px', color: '#059669', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Sparkles size={16} color="#059669" />
+            <span>${pricing.referralCreditApplied.toFixed(2)} in earned referral credits automatically deducted from your total.</span>
+          </div>
+        </ReviewCard>
+      )}
+
       <ReviewCard title="Parent / Billing">
         <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 2 }}>
           <div><strong>Name:</strong> {state.parent.legalName}</div>
@@ -346,6 +590,19 @@ function ReviewStep({
         <div style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 2 }}>
           <div><strong>Name:</strong> {state.student.firstName} {state.student.lastName}</div>
           {state.student.allergies && <div><strong>Allergies:</strong> {state.student.allergies}</div>}
+          {state.ageStatus === 'too_young' && (
+            <div style={{ color: '#DC2626' }}>
+              <strong>Age Note:</strong>{' '}
+              {state.youngChildOption === 'waitlist'
+                ? '⚠️ Under 7 — added to waitlist for a future younger-learner session.'
+                : '⚠️ Under 7 — team will contact parent to discuss suitability before finalizing.'}
+            </div>
+          )}
+          {state.ageStatus === 'too_old' && (
+            <div style={{ color: '#92400E' }}>
+              <strong>Age Note:</strong> 🟡 Over 12 — parent acknowledged curriculum is designed for ages 7–12.
+            </div>
+          )}
         </div>
       </ReviewCard>
     </div>

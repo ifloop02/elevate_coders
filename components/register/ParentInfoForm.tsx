@@ -17,7 +17,7 @@ export default function ParentInfoForm({ data, onChange }: ParentInfoFormProps) 
         Parent / Guardian Information
       </h2>
       <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '28px' }}>
-        This information is used for billing and communications. Your legal name will appear on the Gusto invoice.
+        This information is used for billing and communications. Your legal name will appear on your invoice.
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '18px', maxWidth: '560px' }}>
@@ -50,7 +50,7 @@ export default function ParentInfoForm({ data, onChange }: ParentInfoFormProps) 
             autoComplete="email"
           />
           <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            Your Gusto invoice will be sent to this address.
+            Your payment receipt will be sent to this address.
           </div>
         </div>
 
@@ -81,8 +81,8 @@ export default function ParentInfoForm({ data, onChange }: ParentInfoFormProps) 
             value={data.referralCode}
             onChange={(e) => set('referralCode', e.target.value)}
           />
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-            Your friend gets a $25 credit when you enroll. You&apos;re welcome!
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.4 }}>
+            Your friend gets a $25 credit when you enroll. (Note: Referral codes cannot be combined with discount codes).
           </div>
         </div>
 

@@ -4,6 +4,8 @@ import { RegistrationSubmitSchema } from '@/lib/validation'
 import { calculatePricing } from '@/lib/proration'
 import { buildInvoicePayload } from '@/lib/invoice'
 import { sendRegistrationAlert } from '@/lib/email'
+import { getSessionById } from '@/lib/curriculum'
+import type { WeekBlock } from '@prisma/client'
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,13 +22,42 @@ export async function POST(request: NextRequest) {
 
     const { parent, student, weekSelection, paymentMethod, discountCode, policyAgreed } = parsed.data
 
-    // ─── 2. Resolve week blocks ───────────────────────────────────
-    const weekBlocks = await prisma.weekBlock.findMany({
-      where: { id: { in: weekSelection.weekBlockIds } },
-    })
+    // ─── 2. Resolve and ensure week blocks ─────────────────────────
+    const weekBlocks: WeekBlock[] = []
+    for (const id of weekSelection.weekBlockIds) {
+      const session = getSessionById(id)
+      const isLevel2 = id.includes('lvl2') || id.includes('advanced')
+      const weekNum = session?.weekNumber ?? (parseInt(id.split('-').pop() || '1') || 1)
+      const title = session?.title ?? (isLevel2 ? `Level 2 Session ${weekNum}` : `Beginner Session ${weekNum}`)
+      const date = session ? new Date(session.date) : new Date('2026-10-08')
 
-    if (weekBlocks.length !== weekSelection.weekBlockIds.length) {
-      return NextResponse.json({ error: 'One or more selected weeks are invalid.' }, { status: 400 })
+      const block = await prisma.weekBlock.upsert({
+        where: { id },
+        create: {
+          id,
+          weekNumber: weekNum,
+          season: 'FALL',
+          year: 2026,
+          startDate: date,
+          endDate: date,
+          dayOfWeek: 'Thursday',
+          startTime: session?.startTime ?? (isLevel2 ? '19:00' : '17:00'),
+          endTime: session?.endTime ?? (isLevel2 ? '20:00' : '18:00'),
+          curriculumLabel: title,
+          description: session?.project ?? session?.concept ?? '',
+          requiresPrerequisite: isLevel2,
+          level: isLevel2 ? 'INTERMEDIATE' : 'BEGINNER',
+          pricePerUnit: session?.pricePerUnit ?? 28.57,
+          isActive: true,
+          track: null,
+        },
+        update: {
+          curriculumLabel: title,
+          weekNumber: weekNum,
+          description: session?.project ?? session?.concept ?? '',
+        },
+      })
+      weekBlocks.push(block)
     }
 
     // ─── 3. Prerequisite check ────────────────────────────────────
@@ -45,6 +76,13 @@ export async function POST(request: NextRequest) {
     let discountCodeRecord = null
 
     if (discountCode) {
+      if (parent.referralCode && parent.referralCode.trim().length > 0) {
+        return NextResponse.json(
+          { error: 'Referral codes and discount codes cannot be combined. Please choose either the referral code or the discount code.' },
+          { status: 400 }
+        )
+      }
+
       discountCodeRecord = await prisma.discountCode.findFirst({
         where: {
           code: discountCode.toUpperCase(),
@@ -73,17 +111,30 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ─── 5. Calculate pricing ─────────────────────────────────────
+    // ─── 5. Calculate pricing (with automated referral credit check) ─
+    const pendingReferralCredits = await prisma.referralLedger.findMany({
+      where: {
+        referrer: { email: parent.email.toLowerCase().trim() },
+        status: 'PENDING',
+      },
+    })
+    const totalPendingCredit = pendingReferralCredits.reduce((acc, c) => acc + c.creditAmount, 0)
+
     const vacationDayCount = weekSelection.vacationDates?.length ?? 0
-    const pricing = calculatePricing(weekBlocks.length, vacationDayCount, discountPercent)
+    const pricing = calculatePricing(weekBlocks.length, vacationDayCount, discountPercent, totalPendingCredit)
 
     // ─── 6. Upsert parent ─────────────────────────────────────────
     let referredById: string | null = null
+    let referrerRecord: { id: string; legalName: string; email: string } | null = null
     if (parent.referralCode) {
       const referrer = await prisma.parent.findFirst({
         where: { referralCode: parent.referralCode },
+        select: { id: true, legalName: true, email: true },
       })
-      if (referrer) referredById = referrer.id
+      if (referrer) {
+        referredById = referrer.id
+        referrerRecord = referrer
+      }
     }
 
     const parentRecord = await prisma.parent.upsert({
@@ -188,8 +239,28 @@ export async function POST(request: NextRequest) {
           referredId: parentRecord.id,
           creditAmount: 25,
           status: 'PENDING',
+          notes: `Future program / sibling credit ($25.00) earned for referring ${studentRecord.firstName} ${studentRecord.lastName}`,
         },
       })
+    }
+
+    // ─── 10b. Settle redeemed referral credits ────────────────────
+    if (pricing.referralCreditApplied > 0 && pendingReferralCredits.length > 0) {
+      let remainingToDeduct = pricing.referralCreditApplied
+      for (const credit of pendingReferralCredits) {
+        if (remainingToDeduct <= 0) break
+        const amountUsed = Math.min(remainingToDeduct, credit.creditAmount)
+        remainingToDeduct -= amountUsed
+
+        await prisma.referralLedger.update({
+          where: { id: credit.id },
+          data: {
+            status: 'APPLIED',
+            appliedAt: new Date(),
+            notes: `${credit.notes ? credit.notes + ' | ' : ''}Auto-redeemed $${amountUsed.toFixed(2)} toward registration for ${studentRecord.firstName} ${studentRecord.lastName}`,
+          },
+        })
+      }
     }
 
     // ─── 11. Build & store invoice payload ────────────────────────
@@ -240,6 +311,9 @@ export async function POST(request: NextRequest) {
       paymentMethod: registration.paymentMethod,
       vacationDaysCount: vacationDayCount,
       discountCode: discountCodeRecord?.code,
+      referralCode: parent.referralCode || undefined,
+      referrerName: referrerRecord?.legalName,
+      referralCreditDeducted: pricing.referralCreditApplied > 0 ? pricing.referralCreditApplied : undefined,
     }).catch((err) => console.error('Failed to send business alert email:', err))
 
     return NextResponse.json({
@@ -249,9 +323,14 @@ export async function POST(request: NextRequest) {
       confirmationUrl: `${process.env.NEXT_PUBLIC_APP_URL}/register/confirmation?id=${registration.id}`,
     })
   } catch (error) {
+    const isDev = process.env.NODE_ENV === 'development'
     console.error('Registration error:', error)
     return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again or contact support.' },
+      {
+        error: isDev
+          ? `Registration failed: ${error instanceof Error ? error.message : String(error)}`
+          : 'An unexpected error occurred. Please try again or contact support.',
+      },
       { status: 500 }
     )
   }

@@ -4,7 +4,12 @@ import { prisma } from '@/lib/prisma'
 // so Next.js will never try to bundle @react-pdf/renderer for the browser.
 import { renderToBuffer } from '@react-pdf/renderer'
 import React from 'react'
-import WelcomePacketPDF from '@/lib/pdf/WelcomePacket'
+import WelcomePacketPDF, { PDFWeekItem } from '@/lib/pdf/WelcomePacket'
+import {
+  getSessionById,
+  getSessionByWeekAndLevel,
+  FALL_BEGINNER_SESSIONS,
+} from '@/lib/curriculum'
 
 export const runtime = 'nodejs' // Ensure this route always runs on Node.js, never Edge
 
@@ -15,7 +20,9 @@ export async function GET(request: NextRequest) {
 
     let studentName = 'Coder'
     let track = 'Co-Ed'
-    let weeks: { weekNumber: number; dates: string; curriculum: string }[] = []
+    let levelName: string | undefined
+    let isLevel2 = false
+    let weeks: PDFWeekItem[] = []
 
     if (registrationId) {
       const registration = await prisma.registration.findUnique({
@@ -27,10 +34,14 @@ export async function GET(request: NextRequest) {
             select: {
               weekBlock: {
                 select: {
+                  id: true,
                   weekNumber: true,
                   startDate: true,
                   endDate: true,
                   curriculumLabel: true,
+                  level: true,
+                  startTime: true,
+                  endTime: true,
                 },
               },
             },
@@ -41,23 +52,58 @@ export async function GET(request: NextRequest) {
       if (registration) {
         studentName = registration.student.firstName
         track = registration.track === 'ALL_GIRLS' ? 'All-Girls' : 'Co-Ed'
-        weeks = registration.selectedWeeks.map((sw: {
-          weekBlock: {
-            weekNumber: number
-            startDate: Date
-            endDate: Date
-            curriculumLabel: string
-          }
-        }) => ({
-          weekNumber: sw.weekBlock.weekNumber,
-          dates: `${formatDate(sw.weekBlock.startDate)} – ${formatDate(sw.weekBlock.endDate)}`,
-          curriculum: sw.weekBlock.curriculumLabel,
-        }))
+
+        isLevel2 = registration.selectedWeeks.some(
+          (sw) => sw.weekBlock.level === 'INTERMEDIATE' || sw.weekBlock.id.includes('lvl2')
+        )
+        levelName = isLevel2
+          ? 'Level 2 Class • 7:00 PM – 8:00 PM'
+          : 'Beginner Class • 5:00 PM – 6:00 PM'
+
+        weeks = registration.selectedWeeks
+          .map((sw) => {
+            const wb = sw.weekBlock
+            const session =
+              getSessionById(wb.id) ||
+              getSessionByWeekAndLevel(wb.weekNumber, isLevel2)
+
+            const curriculumTitle =
+              session?.title ||
+              wb.curriculumLabel.replace(/ — Session \d+/, '').trim()
+
+            const datesStr = session?.dateFormatted || formatDate(wb.startDate)
+            const timeStr =
+              session?.timeLabel ||
+              (wb.startTime && wb.endTime ? `${wb.startTime} – ${wb.endTime}` : undefined)
+
+            return {
+              weekNumber: wb.weekNumber,
+              dates: datesStr,
+              curriculum: curriculumTitle,
+            }
+          })
+          .sort((a, b) => a.weekNumber - b.weekNumber)
       }
     }
 
+    // If no weeks (or direct preview without registration ID), use default 7 beginner sessions
+    if (weeks.length === 0) {
+      levelName = 'Beginner Class • 5:00 PM – 6:00 PM'
+      weeks = FALL_BEGINNER_SESSIONS.map((s) => ({
+        weekNumber: s.weekNumber,
+        dates: s.dateFormatted,
+        curriculum: s.title,
+      }))
+    }
+
     // Build the PDF document element
-    const element = React.createElement(WelcomePacketPDF, { studentName, track, weeks })
+    const element = React.createElement(WelcomePacketPDF, {
+      studentName,
+      track,
+      levelName,
+      isLevel2,
+      weeks,
+    })
 
     // renderToBuffer returns a Node.js Buffer
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -86,7 +132,10 @@ export async function GET(request: NextRequest) {
 }
 
 function formatDate(date: Date | string): string {
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(
-    new Date(date)
-  )
+  const d = new Date(date)
+  const monthDay = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+  }).format(d)
+  return `${monthDay} (Thu)`
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { Users, Sparkles, CheckCircle } from 'lucide-react'
+import { Users, Sparkles, CheckCircle, Clock } from 'lucide-react'
 
 interface TrackSelectorProps {
   selectedTrack: 'COED' | 'ALL_GIRLS' | null
@@ -10,27 +10,29 @@ interface TrackSelectorProps {
 const tracks = [
   {
     id: 'COED' as const,
-    name: 'Co-Ed Coding Camp',
+    name: 'Co-Ed Fall Coding Program',
     label: 'TRACK A',
-    description: 'All students ages 9–12 learn together in a collaborative, supportive environment.',
+    description: 'All students ages 7–12 learn together in a collaborative, supportive environment.',
     icon: Users,
     iconBg: '#D1FAE5',
     iconColor: '#065F46',
     accentColor: '#10B981',
     badgeBg: '#D1FAE5',
     badgeColor: '#065F46',
+    isAvailable: true,
   },
   {
     id: 'ALL_GIRLS' as const,
-    name: 'All-Girls Coding Camp',
-    label: 'TRACK B',
-    description: 'A dedicated cohort designed to empower girls in technology. Same curriculum, separate roster.',
+    name: 'All-Girls Coding Program',
+    label: 'TRACK B — COMING SOON',
+    description: 'A dedicated cohort designed to empower girls in technology. Launching in an upcoming session.',
     icon: Sparkles,
-    iconBg: '#EDE9FE',
+    iconBg: '#F3E8FF',
     iconColor: 'var(--brand-purple)',
     accentColor: 'var(--brand-purple)',
-    badgeBg: '#EDE9FE',
-    badgeColor: '#5B21B6',
+    badgeBg: '#F3E8FF',
+    badgeColor: '#7E22CE',
+    isAvailable: false,
   },
 ]
 
@@ -38,10 +40,10 @@ export default function TrackSelector({ selectedTrack, onSelect }: TrackSelector
   return (
     <div>
       <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '22px', fontWeight: 700, marginBottom: '8px' }}>
-        Choose Your Camp Track
+        Choose Your Program Track
       </h2>
       <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '28px' }}>
-        Both tracks follow the exact same curriculum and pricing. The difference is roster composition.
+        Select your cohort track below. Registration is currently open for the Co-Ed Fall Program.
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
@@ -52,22 +54,35 @@ export default function TrackSelector({ selectedTrack, onSelect }: TrackSelector
             <button
               key={track.id}
               id={`track-${track.id.toLowerCase()}`}
-              onClick={() => onSelect(track.id)}
+              onClick={() => track.isAvailable && onSelect(track.id)}
+              disabled={!track.isAvailable}
               style={{
                 border: `2px solid ${isSelected ? track.accentColor : 'var(--border-light)'}`,
                 borderRadius: 'var(--radius-lg)',
                 padding: '24px',
-                background: isSelected ? (track.id === 'COED' ? '#F0FDF4' : 'var(--bg-subtle)') : 'var(--bg-white)',
-                cursor: 'pointer',
+                background: !track.isAvailable ? '#F9FAFB' : isSelected ? '#F0FDF4' : 'var(--bg-white)',
+                cursor: track.isAvailable ? 'pointer' : 'not-allowed',
                 textAlign: 'left',
                 transition: 'all var(--transition-fast)',
                 position: 'relative',
-                boxShadow: isSelected ? `0 0 0 3px ${track.id === 'COED' ? 'rgba(16,185,129,0.15)' : 'var(--brand-purple-glow)'}` : 'none',
+                opacity: track.isAvailable ? 1 : 0.75,
+                boxShadow: isSelected ? '0 0 0 3px rgba(16,185,129,0.15)' : 'none',
               }}
             >
               {isSelected && (
                 <div style={{ position: 'absolute', top: '14px', right: '14px', color: track.accentColor }}>
                   <CheckCircle size={20} />
+                </div>
+              )}
+
+              {!track.isAvailable && (
+                <div style={{
+                  position: 'absolute', top: '14px', right: '14px',
+                  background: '#F3E8FF', color: '#7E22CE',
+                  fontSize: '10px', fontWeight: 700, padding: '3px 8px',
+                  borderRadius: 'var(--radius-full)', display: 'flex', alignItems: 'center', gap: '4px'
+                }}>
+                  <Clock size={10} /> Coming Soon
                 </div>
               )}
 
