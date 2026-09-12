@@ -183,13 +183,13 @@ export default function PolicyAccordion({
           }}>
             Referral codes and discount codes cannot be combined. You currently have referral code <strong>{referralCode}</strong> applied.{' '}
             {onClearReferralCode && (
-              <a
-                href="#"
-                onClick={(e) => { e.preventDefault(); onClearReferralCode() }}
-                style={{ color: 'var(--brand-purple)', fontWeight: 600, textDecoration: 'none' }}
+              <button
+                type="button"
+                onClick={onClearReferralCode}
+                style={{ background: 'none', border: 'none', padding: 0, color: 'var(--brand-purple)', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
               >
                 Remove referral code
-              </a>
+              </button>
             )}
             {onClearReferralCode && ' to use a discount code instead.'}
           </div>
@@ -233,13 +233,13 @@ export default function PolicyAccordion({
             lineHeight: 1.6,
           }}>
             Discount and partner codes are only available for the full 7-week program.{' '}
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); onAddAllWeeks() }}
-              style={{ color: 'var(--brand-purple)', fontWeight: 600, textDecoration: 'none' }}
+            <button
+              type="button"
+              onClick={onAddAllWeeks}
+              style={{ background: 'none', border: 'none', padding: 0, color: 'var(--brand-purple)', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
             >
               Add all 7 weeks
-            </a>
+            </button>
             {' '}to unlock this field.
           </div>
         )}

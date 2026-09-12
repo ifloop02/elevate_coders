@@ -120,9 +120,11 @@ export default function SchedulePreview() {
 
   return (
     <section
+      id="schedule"
       style={{
         padding: '96px 0',
         background: 'var(--bg-base)',
+        scrollMarginTop: '80px',
       }}
     >
       <div className="container-app">

@@ -57,6 +57,7 @@ export default function TrackCards() {
       style={{
         padding: '96px 0',
         background: 'var(--bg-white)',
+        scrollMarginTop: '80px',
       }}
     >
       <div className="container-app">
