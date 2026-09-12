@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Lock, CheckCircle2, Clock, Lightbulb } from 'lucide-react'
-import { PROGRAM_TOTAL_TUITION, PRICE_PER_SESSION, formatCurrency } from '@/lib/proration'
+import { PROGRAM_TOTAL_TUITION, PRICE_PER_SESSION, TOTAL_PROGRAM_WEEKS, formatCurrency } from '@/lib/proration'
 
 export interface WeekData {
   id: string
@@ -235,7 +235,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
               🟢 Beginner Coding Class
             </div>
             <div style={{ fontSize: '12px', color: '#047857', marginTop: '2px' }}>
-              All 7 Weeks Green — Ages 7–12
+              All {TOTAL_PROGRAM_WEEKS} Weeks Green — Ages 7–12
             </div>
           </button>
 
@@ -264,7 +264,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
               🟣 Level 2 Class (Advanced)
             </div>
             <div style={{ fontSize: '12px', color: '#6D28D9', marginTop: '2px' }}>
-              All 7 Weeks Purple — 3 Modules
+              All {TOTAL_PROGRAM_WEEKS} Weeks Purple — 3 Modules
             </div>
           </button>
         </div>
@@ -274,10 +274,10 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
         <div>
           <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 700, margin: 0 }}>
-            {activeLevel === 'BEGINNER' ? '🟢 Beginner Class 7-Week Sessions (5:00 PM – 6:00 PM)' : '🟣 Level 2 Class 7-Week Sessions (7:00 PM – 8:00 PM)'}
+            {activeLevel === 'BEGINNER' ? `🟢 Beginner Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (5:00 PM – 6:00 PM)` : `🟣 Level 2 Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (7:00 PM – 8:00 PM)`}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '4px', margin: 0 }}>
-            Full 7-week program tuition is <strong>$200</strong> flat for all 7 Thursdays starting October 8th.
+            Full {TOTAL_PROGRAM_WEEKS}-week program tuition is <strong>$200</strong> flat for all {TOTAL_PROGRAM_WEEKS} Thursdays starting October 8th.
           </p>
         </div>
 
@@ -288,7 +288,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
           style={{ fontSize: '12px', padding: '6px 12px' }}
         >
           <CheckCircle2 size={14} color={activeLevel === 'BEGINNER' ? '#10B981' : '#7C3AED'} />
-          {isAllSelected ? 'All 7 Sessions Enrolled' : 'Select Full 7-Session Package ($200)'}
+          {isAllSelected ? `All ${TOTAL_PROGRAM_WEEKS} Sessions Enrolled` : `Select Full ${TOTAL_PROGRAM_WEEKS}-Session Package ($200)`}
         </button>
       </div>
 
@@ -309,11 +309,11 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
           <Lightbulb size={18} color="#D97706" style={{ flexShrink: 0, marginTop: '1px' }} />
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: 700, fontSize: '14px', color: '#92400E', marginBottom: '4px' }}>
-              We recommend enrolling in all 7 weeks for the best results
+              We recommend enrolling in all {TOTAL_PROGRAM_WEEKS} weeks for the best results
             </div>
             <div style={{ fontSize: '13px', color: '#78350F', lineHeight: 1.6 }}>
               Each week in this program builds directly on the last — the concepts, code patterns, and
-              projects are designed as a progressive sequence. Students who attend the full 7-week track
+              projects are designed as a progressive sequence. Students who attend the full {TOTAL_PROGRAM_WEEKS}-week track
               leave with a <strong>complete, portfolio-ready game project</strong> and a strong foundation
               for continued learning. Partial attendance may result in gaps that make later sessions
               harder to follow.
@@ -337,7 +337,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
               }}
             >
               <CheckCircle2 size={13} />
-              Add all 7 weeks — $200 flat
+              Add all {TOTAL_PROGRAM_WEEKS} weeks — $200 flat
             </button>
           </div>
         </div>
@@ -429,11 +429,11 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
         }}>
           <div>
             <span style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600 }}>
-              {activeLevel === 'BEGINNER' ? '🟢 Beginner Class' : '🟣 Level 2 Class'} — {selectedIds.length} of 7 sessions selected
+              {activeLevel === 'BEGINNER' ? '🟢 Beginner Class' : '🟣 Level 2 Class'} — {selectedIds.length} of {TOTAL_PROGRAM_WEEKS} sessions selected
             </span>
             {!isAllSelected && (
               <div style={{ fontSize: '12px', color: activeLevel === 'BEGINNER' ? '#047857' : '#6D28D9', marginTop: '2px' }}>
-                💡 {7 - selectedIds.length} session{7 - selectedIds.length !== 1 ? 's' : ''} remaining — full 7-week track recommended
+                💡 {TOTAL_PROGRAM_WEEKS - selectedIds.length} session{TOTAL_PROGRAM_WEEKS - selectedIds.length !== 1 ? 's' : ''} remaining — full {TOTAL_PROGRAM_WEEKS}-week track recommended
               </div>
             )}
           </div>

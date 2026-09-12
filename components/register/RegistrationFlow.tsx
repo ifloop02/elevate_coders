@@ -52,7 +52,7 @@ export interface RegistrationState {
 const STEPS = ['Track', 'Weeks', 'Vacation', 'Your Info', 'Policies', 'Review', 'Payment']
 
 const WEEK_DATA = [
-  // 🟢 Level 1 Beginner (5:00 PM – 6:00 PM) — All 7 Weeks
+  // 🟢 Level 1 Beginner (5:00 PM – 6:00 PM) — All 8 Weeks
   { id: 'fall-2026-beg-1', weekNumber: 1, dates: 'Oct 8 (Thu)', curriculum: 'Scratch & Coding Foundations', requiresPrerequisite: false },
   { id: 'fall-2026-beg-2', weekNumber: 2, dates: 'Oct 15 (Thu)', curriculum: 'Interactive Game & Animation', requiresPrerequisite: false },
   { id: 'fall-2026-beg-3', weekNumber: 3, dates: 'Oct 22 (Thu)', curriculum: 'Logic, Loops & Scoreboards', requiresPrerequisite: false },
@@ -60,8 +60,9 @@ const WEEK_DATA = [
   { id: 'fall-2026-beg-5', weekNumber: 5, dates: 'Nov 5 (Thu)', curriculum: 'Multi-Level World Design', requiresPrerequisite: false },
   { id: 'fall-2026-beg-6', weekNumber: 6, dates: 'Nov 12 (Thu)', curriculum: 'UI Polish & Special Effects', requiresPrerequisite: false },
   { id: 'fall-2026-beg-7', weekNumber: 7, dates: 'Nov 19 (Thu)', curriculum: 'Beginner Capstone Showcase', requiresPrerequisite: false },
+  { id: 'fall-2026-beg-8', weekNumber: 8, dates: 'Dec 3 (Thu)', curriculum: 'Grand Finale & Project Exhibition', requiresPrerequisite: false },
 
-  // 🟣 Level 2 Advanced (7:00 PM – 8:00 PM) — All 7 Weeks
+  // 🟣 Level 2 Advanced (7:00 PM – 8:00 PM) — All 8 Weeks
   { id: 'fall-2026-lvl2-1', weekNumber: 1, dates: 'Oct 8 (Thu)', curriculum: 'Module 1: Advanced Physics & Gravity Engines', requiresPrerequisite: true },
   { id: 'fall-2026-lvl2-2', weekNumber: 2, dates: 'Oct 15 (Thu)', curriculum: 'Module 1: Advanced Event Architecture', requiresPrerequisite: true },
   { id: 'fall-2026-lvl2-3', weekNumber: 3, dates: 'Oct 22 (Thu)', curriculum: 'Module 1: Data Streams & Scoreboards', requiresPrerequisite: true },
@@ -69,6 +70,7 @@ const WEEK_DATA = [
   { id: 'fall-2026-lvl2-5', weekNumber: 5, dates: 'Nov 5 (Thu)', curriculum: 'Module 2: Autonomous AI & Pathfinding', requiresPrerequisite: true },
   { id: 'fall-2026-lvl2-6', weekNumber: 6, dates: 'Nov 12 (Thu)', curriculum: 'Module 3: Code Polish & UI Design Systems', requiresPrerequisite: true },
   { id: 'fall-2026-lvl2-7', weekNumber: 7, dates: 'Nov 19 (Thu)', curriculum: 'Module 3: Capstone Debugging & Group Playtesting', requiresPrerequisite: true },
+  { id: 'fall-2026-lvl2-8', weekNumber: 8, dates: 'Dec 3 (Thu)', curriculum: 'Module 3: Level 2 Studio Showcase & Graduation', requiresPrerequisite: true },
 ]
 
 const emptyState: RegistrationState = {
