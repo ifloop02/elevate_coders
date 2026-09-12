@@ -1,12 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkRateLimit, getClientIP } from '@/lib/ratelimit'
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const pin = (searchParams.get('pin') || request.headers.get('x-coach-pin') || '').trim()
-  const expectedPin = (process.env.COACH_PIN || 'professort2710').trim()
+  // ─── PIN from header only (never from URL query param) ────────────
+  const pin = (request.headers.get('x-coach-pin') || '').trim()
 
-  if (pin !== expectedPin && pin !== 'professort2710') {
+  // ─── Env var check ────────────────────────────────────────────────
+  const expectedPin = process.env.COACH_PIN?.trim()
+  if (!expectedPin) {
+    console.error('[SECURITY] COACH_PIN env var is not configured. Coach access is disabled.')
+    return NextResponse.json(
+      { error: 'Coach access is not configured. Please set COACH_PIN in your environment variables.' },
+      { status: 503 }
+    )
+  }
+
+  // ─── Rate limiting: 5 PIN attempts per IP per 10 minutes ─────────
+  const ip = getClientIP(request)
+  const rl = checkRateLimit(`coach-pin:${ip}`, 5, 10 * 60 * 1000)
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Too many access attempts. Please wait 10 minutes and try again.' },
+      { status: 429 }
+    )
+  }
+
+  if (pin !== expectedPin) {
     return NextResponse.json({ error: 'Unauthorized. Invalid coach PIN.' }, { status: 401 })
   }
 

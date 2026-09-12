@@ -278,6 +278,12 @@ export default function PaymentStep({
           />
         </Elements>
       )}
+
+      {payError && (
+        <div style={{ marginTop: '16px', padding: '12px 16px', background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '8px', color: '#DC2626', fontSize: '14px' }}>
+          {payError}
+        </div>
+      )}
     </div>
   )
 }

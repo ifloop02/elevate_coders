@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { AlertCircle, Sparkles } from 'lucide-react'
+import { AlertCircle, Sparkles, Loader2 } from 'lucide-react'
 import StepIndicator from '@/components/register/StepIndicator'
 import TrackSelector from '@/components/register/TrackSelector'
 import WeekPicker from '@/components/register/WeekPicker'
@@ -123,14 +123,14 @@ export default function RegistrationFlow({
   // Check for pending earned referral credits when parent email is entered
   useEffect(() => {
     const email = state.parent.email?.trim()
-    if (!email || !email.includes('@') || !email.includes('.')) {
-      if (state.earnedReferralCredit > 0) {
-        update({ earnedReferralCredit: 0 })
-      }
-      return
-    }
-
     const timer = setTimeout(async () => {
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        if (state.earnedReferralCredit > 0) {
+          update({ earnedReferralCredit: 0 })
+        }
+        return
+      }
+
       try {
         const res = await fetch(`/api/parent/referral-credit?email=${encodeURIComponent(email)}`)
         if (res.ok) {
@@ -148,7 +148,7 @@ export default function RegistrationFlow({
     }, 400)
 
     return () => clearTimeout(timer)
-  }, [state.parent.email])
+  }, [state.parent.email, state.earnedReferralCredit])
 
   const selectedWeeks = WEEK_DATA.filter((w) => state.selectedWeekIds.includes(w.id))
   const hasAdvancedWeeks = selectedWeeks.some((w) => w.requiresPrerequisite)
@@ -368,6 +368,25 @@ export default function RegistrationFlow({
                 parentName={state.parent.legalName}
                 onSuccess={handlePaymentSuccess}
               />
+            )}
+
+            {submitting && (
+              <div style={{
+                marginTop: '16px',
+                padding: '14px 18px',
+                background: '#F5F3FF',
+                border: '1px solid #DDD6FE',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--brand-purple)',
+                fontSize: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                fontWeight: 600,
+              }}>
+                <Loader2 size={16} className="animate-spin" />
+                Payment confirmed! Finalizing enrollment and preparing your Welcome Packet...
+              </div>
             )}
 
             {/* Error message */}

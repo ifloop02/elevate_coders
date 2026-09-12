@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { CheckCircle, Download, Zap, Mail } from 'lucide-react'
 
@@ -10,15 +10,7 @@ function ConfirmationInner() {
   const registrationId = searchParams.get('id')
   const [downloaded, setDownloaded] = useState(false)
 
-  useEffect(() => {
-    // Auto-trigger PDF download after a short delay
-    const timer = setTimeout(() => {
-      if (registrationId) triggerDownload()
-    }, 1500)
-    return () => clearTimeout(timer)
-  }, [registrationId])
-
-  const triggerDownload = () => {
+  const triggerDownload = useCallback(() => {
     const url = registrationId
       ? `/api/pdf/welcome?id=${registrationId}`
       : '/api/pdf/welcome'
@@ -29,7 +21,15 @@ function ConfirmationInner() {
     link.click()
     document.body.removeChild(link)
     setDownloaded(true)
-  }
+  }, [registrationId])
+
+  useEffect(() => {
+    // Auto-trigger PDF download after a short delay
+    const timer = setTimeout(() => {
+      if (registrationId) triggerDownload()
+    }, 1500)
+    return () => clearTimeout(timer)
+  }, [registrationId, triggerDownload])
 
   return (
     <div style={{

@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Printer, RefreshCw, ShieldCheck, LogOut } from 'lucide-react'
 import RosterTable from '@/components/coach/RosterTable'
 
@@ -41,7 +40,6 @@ interface RosterEntry {
 export const dynamic = 'force-dynamic'
 
 export default function CoachPage() {
-  const router = useRouter()
   const [pin, setPin] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -58,8 +56,11 @@ export default function CoachPage() {
     setError('')
 
     try {
-      const res = await fetch(`/api/coach/roster?pin=${encodeURIComponent(clean)}`)
-      if (res.status === 401) {
+      // PIN via header — never in URL (avoids leaking to browser history and server logs)
+      const res = await fetch('/api/coach/roster', {
+        headers: { 'x-coach-pin': clean },
+      })
+      if (res.status === 401 || res.status === 503) {
         setError('Incorrect PIN. Please try again.')
       } else if (res.ok) {
         const data = await res.json()
@@ -79,7 +80,9 @@ export default function CoachPage() {
   const refreshRoster = async () => {
     setRosterLoading(true)
     try {
-      const res = await fetch(`/api/coach/roster?pin=${encodeURIComponent(pin)}`)
+      const res = await fetch('/api/coach/roster', {
+        headers: { 'x-coach-pin': pin },
+      })
       if (res.ok) {
         const data = await res.json()
         setRoster(data.roster)

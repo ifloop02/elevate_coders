@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, Lock, CheckCircle2, Clock, Lightbulb } from 'lucide-react'
+import { Lock, CheckCircle2, Clock, Lightbulb } from 'lucide-react'
 import { PROGRAM_TOTAL_TUITION, PRICE_PER_SESSION, formatCurrency } from '@/lib/proration'
 
 export interface WeekData {

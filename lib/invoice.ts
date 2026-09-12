@@ -85,10 +85,10 @@ export function buildInvoicePayload(
       taxNote: 'California Educational Services — 0% Sales Tax (Cal. Rev. & Tax. Code §6361)',
       total: registration.finalTotal,
       paymentOptions,
-      notes: `Elevate Coders Summer 2026 — ${registration.track === 'COED' ? 'Co-Ed Coding Camp' : 'All-Girls Coding Camp'}. Curriculum is cumulative; attendance in all selected weeks is strongly encouraged.`,
+      notes: `Elevate Coders Fall 2026 — ${registration.track === 'COED' ? 'Co-Ed Coding Camp' : 'All-Girls Coding Camp'}. Curriculum is cumulative; attendance in all selected weeks is strongly encouraged.`,
       metadata: {
         track: registration.track,
-        campSeason: 'SUMMER_2026',
+        campSeason: 'FALL_2026',
         studentName: `${student.firstName} ${student.lastName}`,
         registrationId: registration.id,
         policyAgreedAt: registration.policyAgreedAt?.toISOString() ?? null,

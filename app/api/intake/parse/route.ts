@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkRateLimit, getClientIP } from '@/lib/ratelimit'
 
 // RegEx patterns for email intake parsing
 const PATTERNS = {
@@ -32,6 +33,25 @@ function parseTrack(raw: string): 'COED' | 'ALL_GIRLS' | null {
 }
 
 export async function POST(request: NextRequest) {
+  // ─── Admin PIN required ───────────────────────────────────
+  // This endpoint is an internal admin tool. Without auth, anyone on the
+  // internet can POST arbitrary text and receive parsed results.
+  const pin = (request.headers.get('x-admin-pin') || '').trim()
+  const expectedPin = process.env.ADMIN_PIN?.trim()
+  if (!expectedPin || pin !== expectedPin) {
+    return NextResponse.json({ error: 'Unauthorized.' }, { status: 401 })
+  }
+
+  // ─── Rate limiting: 10 parses per IP per minute ───────────────
+  const ip = getClientIP(request)
+  const rl = checkRateLimit(`intake:${ip}`, 10, 60 * 1000)
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Too many parse attempts. Please wait a moment.' },
+      { status: 429 }
+    )
+  }
+
   const body = await request.json()
   const { rawText } = body
 
