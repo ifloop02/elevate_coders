@@ -12,7 +12,7 @@ interface ScheduleWeek {
   moduleName?: string
 }
 
-// 🟢 LEVEL 1 BEGINNER (5:00 PM – 6:00 PM) — ALL 7 WEEKS GREEN
+// 🟢 LEVEL 1 BEGINNER (5:00 PM – 6:00 PM) — ALL 8 WEEKS GREEN
 const LEVEL_1_WEEKS: ScheduleWeek[] = [
   { num: 1, dates: 'Oct 8 (Thu)', title: 'Scratch & Coding Foundations', desc: 'Introduction to visual block coding, sprites, motion loops, and X/Y coordinates.' },
   { num: 2, dates: 'Oct 15 (Thu)', title: 'Interactive Game & Animation', desc: 'Sprite collision detection, keypress event triggers, and costume animations.' },
@@ -21,9 +21,10 @@ const LEVEL_1_WEEKS: ScheduleWeek[] = [
   { num: 5, dates: 'Nov 5 (Thu)', title: 'Multi-Level World Design', desc: 'Level switching variables, item collectibles, and health bar mechanics.' },
   { num: 6, dates: 'Nov 12 (Thu)', title: 'UI Polish & Special Effects', desc: 'Screen particle feedback, victory animations, and custom UI design systems.' },
   { num: 7, dates: 'Nov 19 (Thu)', title: 'Beginner Capstone Showcase', desc: 'Final code triage, debugging strategies, and peer review presentation.' },
+  { num: 8, dates: 'Dec 3 (Thu)', title: 'Grand Finale & Project Exhibition', desc: 'Final project polish, code compilation, studio demonstration, and graduation certificates.' },
 ]
 
-// 🟣 LEVEL 2 ADVANCED (7:00 PM – 8:00 PM) — ALL 7 WEEKS PURPLE
+// 🟣 LEVEL 2 ADVANCED (7:00 PM – 8:00 PM) — ALL 8 WEEKS PURPLE
 const LEVEL_2_WEEKS: ScheduleWeek[] = [
   {
     num: 1,
@@ -73,6 +74,13 @@ const LEVEL_2_WEEKS: ScheduleWeek[] = [
     title: 'Capstone Debugging & Playtesting',
     moduleName: 'Module 3: Polish, Publishing, and Production',
     desc: 'The Concept: Code triage, optimization strategies, identifying memory leaks, and processing user feedback.',
+  },
+  {
+    num: 8,
+    dates: 'Dec 3 (Thu)',
+    title: 'Level 2 Studio Showcase & Graduation',
+    moduleName: 'Module 3: Polish, Publishing, and Production',
+    desc: 'The Concept: Final system showcase, project demonstration, and advanced developer certificate presentation.',
   },
 ]
 

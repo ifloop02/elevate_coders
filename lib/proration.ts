@@ -1,8 +1,8 @@
-// lib/proration.ts — 7-Week Fall Program Tuition & Proration Calculator
+// lib/proration.ts — 8-Week Fall Program Tuition & Proration Calculator
 
-export const PROGRAM_TOTAL_TUITION = 200.0 // $200 total for the full 7-week Fall program
-export const TOTAL_PROGRAM_WEEKS = 7
-export const PRICE_PER_SESSION = PROGRAM_TOTAL_TUITION / TOTAL_PROGRAM_WEEKS // ~$28.57 per Thursday session
+export const PROGRAM_TOTAL_TUITION = 200.0 // $200 total for the full 8-week Fall program
+export const TOTAL_PROGRAM_WEEKS = 8
+export const PRICE_PER_SESSION = PROGRAM_TOTAL_TUITION / TOTAL_PROGRAM_WEEKS // $25.00 per Thursday session
 export const VACATION_CREDIT_PER_SESSION = PRICE_PER_SESSION
 
 export interface PricingBreakdown {

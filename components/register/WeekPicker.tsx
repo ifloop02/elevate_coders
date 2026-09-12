@@ -86,6 +86,15 @@ const BEGINNER_WEEKS: WeekData[] = [
     project: 'Present your completed game at the Studio Showcase & Peer Review Session.',
     requiresPrerequisite: false,
   },
+  {
+    id: 'fall-2026-beg-8',
+    weekNumber: 8,
+    dates: 'Dec 3 (Thu)',
+    title: 'Grand Finale & Project Exhibition',
+    concept: 'Final project polish, code compilation, studio demonstration, and graduation certificates.',
+    project: 'Present your completed studio game project at the Grand Showcase & Graduation Ceremony.',
+    requiresPrerequisite: false,
+  },
 ]
 
 // 🟣 LEVEL 2 CLASS (7:00 PM – 8:00 PM) — ALL PURPLE
@@ -142,7 +151,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
     project: 'Build a classic Pac-Man style maze game featuring automated enemy ghost mobs that calculate real-time distance formulas to stalk the player through narrow hallways.',
     requiresPrerequisite: true,
   },
-  // Module 3: Polish, Publishing, and Production (Weeks 6–7)
+  // Module 3: Polish, Publishing, and Production (Weeks 6–8)
   {
     id: 'fall-2026-lvl2-6',
     weekNumber: 6,
@@ -161,6 +170,16 @@ const LEVEL_2_WEEKS: WeekData[] = [
     moduleName: 'Module 3: Polish, Publishing, and Production',
     concept: 'Code triage, optimization strategies, identifying memory leaks, and processing constructive user feedback.',
     project: 'Run a professional Studio Showcase & Peer Review Session where students pitch custom creations, trade laptops to fish for optimization bugs, and document revisions.',
+    requiresPrerequisite: true,
+  },
+  {
+    id: 'fall-2026-lvl2-8',
+    weekNumber: 8,
+    dates: 'Dec 3 (Thu)',
+    title: 'Level 2 Studio Showcase & Graduation',
+    moduleName: 'Module 3: Polish, Publishing, and Production',
+    concept: 'Final system showcase, project demonstration, and advanced developer certificate presentation.',
+    project: 'Demonstrate your completed Level 2 system project at the Grand Showcase.',
     requiresPrerequisite: true,
   },
 ]
