@@ -7,9 +7,9 @@ import { Zap, Menu, X } from 'lucide-react'
 
 const navLinks = [
   { href: '/', label: 'Home' },
+  { href: '/#schedule', label: 'Schedule' },
+  { href: '/#tracks', label: 'Tracks' },
   { href: '/register', label: 'Register' },
-  { href: '/coach', label: 'Coach View' },
-  { href: '/admin', label: 'Admin' },
 ]
 
 export default function Navbar() {

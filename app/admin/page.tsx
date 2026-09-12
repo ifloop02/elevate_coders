@@ -35,15 +35,24 @@ export default function AdminIntakePage() {
   const [error, setError] = useState<string | null>(null)
   const [adminPin, setAdminPin] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
+  const [pinLoading, setPinLoading] = useState(false)
   const [pinError, setPinError] = useState('')
 
-  const handlePinSubmit = (e: React.FormEvent) => {
+  const handlePinSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Client-side PIN check — in production, validate server-side
-    if (adminPin === process.env.NEXT_PUBLIC_ADMIN_PIN || adminPin === 'admin5678') {
-      setAuthenticated(true)
-    } else {
-      setPinError('Incorrect admin PIN.')
+    setPinLoading(true)
+    setPinError('')
+    try {
+      const res = await fetch(`/api/admin/export-marketing?pin=${encodeURIComponent(adminPin)}&limit=1`)
+      if (res.ok) {
+        setAuthenticated(true)
+      } else {
+        setPinError('Incorrect admin PIN.')
+      }
+    } catch {
+      setPinError('Connection error. Please try again.')
+    } finally {
+      setPinLoading(false)
     }
   }
 
@@ -93,8 +102,8 @@ export default function AdminIntakePage() {
               autoFocus
             />
             {pinError && <div style={{ color: '#EF4444', fontSize: '13px', marginBottom: '12px' }}>{pinError}</div>}
-            <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-              Access Admin →
+            <button type="submit" className="btn btn-primary" disabled={pinLoading} style={{ width: '100%', justifyContent: 'center' }}>
+              {pinLoading ? <Loader2 size={16} className="animate-spin" /> : 'Access Admin →'}
             </button>
           </form>
         </div>
