@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Send, CheckCircle, AlertCircle, Loader2, ClipboardCopy } from 'lucide-react'
+import { Send, CheckCircle, AlertCircle, Loader2, ClipboardCopy, Download } from 'lucide-react'
 
 interface ParsedResult {
   parsed: Record<string, string | number[] | null>
@@ -105,13 +105,26 @@ export default function AdminIntakePage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
       <div style={{ background: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 100%)', padding: '24px 0', color: 'white' }}>
-        <div className="container-app">
-          <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '24px', fontWeight: 800 }}>
-            Admin — Email Intake Parser
-          </h1>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', marginTop: '4px' }}>
-            Paste raw email text below to extract registration data with AI-assisted RegEx parsing.
-          </p>
+        <div className="container-app" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          <div>
+            <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '24px', fontWeight: 800 }}>
+              Admin Portal
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', marginTop: '4px' }}>
+              Intake parsing and parent marketing contact exports.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <a
+              href={`/api/admin/export-marketing?pin=${encodeURIComponent(adminPin)}&format=csv`}
+              download
+              className="btn btn-secondary btn-sm"
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', color: '#1E1B4B', textDecoration: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 600 }}
+            >
+              <Download size={15} />
+              Export Marketing Contacts (CSV)
+            </a>
+          </div>
         </div>
       </div>
 
