@@ -38,6 +38,8 @@ interface RosterEntry {
   }[]
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function CoachPage() {
   const router = useRouter()
   const [pin, setPin] = useState('')
@@ -50,11 +52,13 @@ export default function CoachPage() {
 
   const handlePinSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    const clean = pin.trim()
+    if (!clean) return
     setLoading(true)
     setError('')
 
     try {
-      const res = await fetch(`/api/coach/roster?pin=${encodeURIComponent(pin)}`)
+      const res = await fetch(`/api/coach/roster?pin=${encodeURIComponent(clean)}`)
       if (res.ok) {
         const data = await res.json()
         setRoster(data.roster)

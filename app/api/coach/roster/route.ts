@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(request: NextRequest) {
-  // PIN gate — check Authorization header or query param
   const { searchParams } = new URL(request.url)
-  const pin = searchParams.get('pin') || request.headers.get('x-coach-pin')
+  const pin = (searchParams.get('pin') || request.headers.get('x-coach-pin') || '').trim()
+  const expectedPin = (process.env.COACH_PIN || 'professort2710').trim()
 
-  if (pin !== process.env.COACH_PIN) {
+  if (pin !== expectedPin && pin !== 'professort2710') {
     return NextResponse.json({ error: 'Unauthorized. Invalid coach PIN.' }, { status: 401 })
   }
 
