@@ -5,10 +5,23 @@ import { calculatePricing } from '@/lib/proration'
 import { buildInvoicePayload } from '@/lib/invoice'
 import { sendRegistrationAlert } from '@/lib/email'
 import { getSessionById } from '@/lib/curriculum'
+import { checkRateLimit, getClientIP } from '@/lib/ratelimit'
 import type { WeekBlock } from '@prisma/client'
 
 export async function POST(request: NextRequest) {
   try {
+    // ─── 0. Rate limiting ─────────────────────────────────────────
+    // 3 registrations per IP per 10 minutes — blocks spam without
+    // affecting any legitimate family (who would register at most once).
+    const ip = getClientIP(request)
+    const rl = checkRateLimit(`register:${ip}`, 3, 10 * 60 * 1000)
+    if (!rl.success) {
+      return NextResponse.json(
+        { error: 'Too many registration attempts. Please wait a few minutes and try again.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
 
     // ─── 1. Zod validation ───────────────────────────────────────
@@ -319,7 +332,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       registrationId: registration.id,
-      invoicePayload: payload,
       confirmationUrl: `${process.env.NEXT_PUBLIC_APP_URL}/register/confirmation?id=${registration.id}`,
     })
   } catch (error) {

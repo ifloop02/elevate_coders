@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient, SeasonType, CampTrack } from '@prisma/client'
+import { PrismaClient, SeasonType } from '@prisma/client'
 
 dotenv.config({ path: '.env.local' })
 dotenv.config()

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkRateLimit, getClientIP } from '@/lib/ratelimit'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -7,6 +8,16 @@ export async function GET(request: NextRequest) {
 
   if (!code) {
     return NextResponse.json({ error: 'Code is required.' }, { status: 400 })
+  }
+
+  // 15 attempts per IP per minute — allows trial-and-error but blocks enumeration attacks
+  const ip = getClientIP(request)
+  const rl = checkRateLimit(`discount:${ip}`, 15, 60 * 1000)
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: 'Too many code attempts. Please wait a moment and try again.' },
+      { status: 429 }
+    )
   }
 
   const discount = await prisma.discountCode.findFirst({

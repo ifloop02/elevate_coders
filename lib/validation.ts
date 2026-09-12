@@ -20,8 +20,8 @@ export const StudentInfoSchema = z.object({
     const dob = new Date(val)
     const today = new Date()
     const age = today.getFullYear() - dob.getFullYear()
-    return age >= 9 && age <= 12
-  }, 'Student must be between 9–12 years old'),
+    return age >= 7 && age <= 12
+  }, 'Student must be between 7–12 years old'),
   allergies: z.string().max(500).optional(),
   medicalNotes: z.string().max(500).optional(),
   track: z.enum(['COED', 'ALL_GIRLS']),

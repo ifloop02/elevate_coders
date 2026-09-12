@@ -10,24 +10,6 @@ interface ParsedResult {
   completeness: number
 }
 
-const SAMPLE_EMAIL = `Hi TeamCoders,
-
-I'd like to register my daughter for the summer camp.
-
-Parent Name: Sarah Johnson
-Email: sarah.johnson@email.com
-Phone: (555) 234-5678
-
-Child's Name: Mia Johnson
-Age: 10
-Allergies: None
-
-We'd like to enroll in Week 1, Week 2, Week 3 and Week 5.
-Track: All-Girls
-Referral: ALUMNI10
-
-Thank you!`
-
 export const dynamic = 'force-dynamic'
 
 export default function AdminIntakePage() {
@@ -47,19 +29,18 @@ export default function AdminIntakePage() {
     setPinLoading(true)
     setPinError('')
     try {
-      const res = await fetch(`/api/admin/export-marketing?pin=${encodeURIComponent(clean)}&limit=1`)
-      if (res.status === 401) {
-        setPinError('Incorrect admin PIN.')
+      // PIN is sent via header — never via URL query param (which leaks to browser history and server logs)
+      const res = await fetch('/api/admin/export-marketing?limit=1', {
+        headers: { 'x-admin-pin': clean },
+      })
+      if (res.status === 401 || res.status === 503) {
+        const data = await res.json().catch(() => ({}))
+        setPinError(data.error || 'Incorrect admin PIN.')
       } else {
-        // PIN was accepted by server!
         setAuthenticated(true)
       }
     } catch {
-      if (clean === 'admin1027' || clean === 'admin5678') {
-        setAuthenticated(true)
-      } else {
-        setPinError('Connection error. Please try again.')
-      }
+      setPinError('Connection error. Please try again.')
     } finally {
       setPinLoading(false)
     }
@@ -74,7 +55,8 @@ export default function AdminIntakePage() {
     try {
       const res = await fetch('/api/intake/parse', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        // PIN is now required on the intake parser (it was previously unauthenticated)
+        headers: { 'Content-Type': 'application/json', 'x-admin-pin': adminPin },
         body: JSON.stringify({ rawText }),
       })
       const data = await res.json()
@@ -84,6 +66,31 @@ export default function AdminIntakePage() {
       setError('Connection error. Please try again.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleCsvDownload = async () => {
+    try {
+      // Fetch with header — PIN never appears in the URL, browser history, or server logs
+      const res = await fetch('/api/admin/export-marketing?format=csv', {
+        headers: { 'x-admin-pin': adminPin },
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        alert(data.error || 'Export failed. Please try again.')
+        return
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `elevate_coders_contacts_${new Date().toISOString().slice(0, 10)}.csv`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch {
+      alert('Connection error. Please try again.')
     }
   }
 
@@ -133,15 +140,14 @@ export default function AdminIntakePage() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: '12px' }}>
-            <a
-              href={`/api/admin/export-marketing?pin=${encodeURIComponent(adminPin)}&format=csv`}
-              download
+            <button
+              onClick={handleCsvDownload}
               className="btn btn-secondary btn-sm"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', color: '#1E1B4B', textDecoration: 'none', padding: '8px 16px', borderRadius: '8px', fontWeight: 600 }}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', color: '#1E1B4B', padding: '8px 16px', borderRadius: '8px', fontWeight: 600 }}
             >
               <Download size={15} />
               Export Marketing Contacts (CSV)
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -150,17 +156,10 @@ export default function AdminIntakePage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', alignItems: 'start' }}>
           {/* Input side */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div style={{ marginBottom: '10px' }}>
               <label className="form-label" style={{ margin: 0 }}>
                 Raw Email Text
               </label>
-              <button
-                onClick={() => setRawText(SAMPLE_EMAIL)}
-                className="btn btn-ghost btn-sm"
-                style={{ fontSize: '12px', color: 'var(--brand-purple)', padding: '4px 10px' }}
-              >
-                Load Sample
-              </button>
             </div>
             <textarea
               id="intake-raw-text"

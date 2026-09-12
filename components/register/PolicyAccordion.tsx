@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { CheckCircle, Loader2, Tag, ShieldCheck } from 'lucide-react'
+import { CheckCircle, Loader2, Tag } from 'lucide-react'
 
 interface PolicyAccordionProps {
   agreed: boolean

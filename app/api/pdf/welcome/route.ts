@@ -72,9 +72,6 @@ export async function GET(request: NextRequest) {
               wb.curriculumLabel.replace(/ — Session \d+/, '').trim()
 
             const datesStr = session?.dateFormatted || formatDate(wb.startDate)
-            const timeStr =
-              session?.timeLabel ||
-              (wb.startTime && wb.endTime ? `${wb.startTime} – ${wb.endTime}` : undefined)
 
             return {
               weekNumber: wb.weekNumber,
