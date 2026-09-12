@@ -59,13 +59,15 @@ export default function CoachPage() {
 
     try {
       const res = await fetch(`/api/coach/roster?pin=${encodeURIComponent(clean)}`)
-      if (res.ok) {
+      if (res.status === 401) {
+        setError('Incorrect PIN. Please try again.')
+      } else if (res.ok) {
         const data = await res.json()
         setRoster(data.roster)
         setGeneratedAt(data.generatedAt)
         setAuthenticated(true)
       } else {
-        setError('Incorrect PIN. Please try again.')
+        setError('PIN accepted, but database failed to connect. Check DATABASE_URL pooler in Vercel.')
       }
     } catch {
       setError('Connection error. Please try again.')

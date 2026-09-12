@@ -48,10 +48,11 @@ export default function AdminIntakePage() {
     setPinError('')
     try {
       const res = await fetch(`/api/admin/export-marketing?pin=${encodeURIComponent(clean)}&limit=1`)
-      if (res.ok || clean === 'admin1027' || clean === 'admin5678') {
-        setAuthenticated(true)
-      } else {
+      if (res.status === 401) {
         setPinError('Incorrect admin PIN.')
+      } else {
+        // PIN was accepted by server!
+        setAuthenticated(true)
       }
     } catch {
       if (clean === 'admin1027' || clean === 'admin5678') {
