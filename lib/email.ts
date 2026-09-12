@@ -28,7 +28,7 @@ export async function sendRegistrationAlert(data: RegistrationAlertDetails) {
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden;">
       <div style="background-color: #7C3AED; color: #ffffff; padding: 20px; text-align: center;">
         <h1 style="margin: 0; font-size: 22px;">New Camp Registration! ⚡</h1>
-        <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">Elevate Coders — Summer 2026</p>
+        <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">Elevate Coders — Fall 2026</p>
       </div>
 
       <div style="padding: 24px; color: #1F2937;">
