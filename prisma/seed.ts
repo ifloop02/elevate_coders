@@ -216,6 +216,16 @@ async function main() {
       usedCount: 0,
       isActive: true,
     },
+    {
+      id: 'discount-fallback25',
+      code: 'FALLBACK25',
+      description: 'Fall Special — $25 off ($175 tuition)',
+      sponsorName: 'Fall Special',
+      discountPercent: 12.5,
+      usageLimit: 5,
+      usedCount: 0,
+      isActive: true,
+    },
   ]
 
   for (const code of discountCodes) {
