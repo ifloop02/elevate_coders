@@ -166,7 +166,7 @@ export default function PolicyAccordion({
         </div>
       </div>
 
-      {/* Discount code — only available for full 7-week enrollment and cannot be combined with referral */}
+      {/* Discount code — only available for full 8-week enrollment and cannot be combined with referral */}
       <div style={{ marginBottom: '28px' }}>
         <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Tag size={15} color={!hasReferralCode && isFullProgram ? 'var(--brand-purple)' : 'var(--text-muted)'} />

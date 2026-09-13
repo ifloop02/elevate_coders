@@ -162,10 +162,10 @@ export default function SchedulePreview() {
               marginBottom: '12px',
             }}
           >
-            7-Week Thursday Coding Programs
+            8-Week Thursday Coding Programs
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '640px', margin: '0 auto' }}>
-            Starts <strong>October 8th</strong>. Both Level 1 and Level 2 run for 7 Thursdays. Complete 7-week program tuition is <strong>$200</strong>.
+            Starts <strong>October 8th</strong> (skipping Thanksgiving week). Both Level 1 and Level 2 run for 8 Thursdays. Complete 8-week program tuition is <strong>$200</strong>.
           </p>
         </div>
 
@@ -361,13 +361,13 @@ export default function SchedulePreview() {
         >
           <div>
             <div style={{ fontSize: '13px', color: '#A78BFA', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
-              Full 7-Week Program Tuition
+              Full 8-Week Program Tuition
             </div>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '32px', fontWeight: 900 }}>
-              $200 <span style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)' }}>flat for all 7 Thursdays</span>
+              $200 <span style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)' }}>flat for all 8 Thursdays</span>
             </div>
             <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>
-              Choose Level 1 (5:00 PM) or Level 2 (7:00 PM). Complete 7-week course program.
+              Choose Level 1 (5:00 PM) or Level 2 (7:00 PM). Complete 8-week course program.
             </div>
           </div>
 
