@@ -56,7 +56,7 @@ export default function PricingSummary({ pricing, selectedWeeks, track }: Pricin
 
       {/* Price breakdown */}
       <div className="pricing-line">
-        <span>7-Week Program Tuition</span>
+        <span>8-Week Program Tuition</span>
         <span>{formatCurrency(pricing.baseTotal)}</span>
       </div>
 

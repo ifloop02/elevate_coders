@@ -24,7 +24,7 @@ interface VacationTrackerProps {
   onChange: (dates: VacationDate[]) => void
 }
 
-// Fall 2026 — Thursdays for 7 weeks starting Oct 8
+// Fall 2026 — Thursdays for 8 weeks starting Oct 8 (skipping Thanksgiving Nov 26)
 const WEEK_DATES: Record<number, string[]> = {
   1: ['2026-10-08'],
   2: ['2026-10-15'],
@@ -33,6 +33,7 @@ const WEEK_DATES: Record<number, string[]> = {
   5: ['2026-11-05'],
   6: ['2026-11-12'],
   7: ['2026-11-19'],
+  8: ['2026-12-03'],
 }
 
 const DAY_LABELS = ['Thu']

@@ -23,7 +23,7 @@ export function calculatePricing(
   discountPercent: number = 0,
   referralCredit: number = 0
 ): PricingBreakdown {
-  // If all 7 weeks selected, base total is $200. Otherwise proportional at ~$28.57/session
+  // If all 8 weeks selected, base total is $200. Otherwise proportional at $25.00/session
   const baseTotal = selectedWeekCount === TOTAL_PROGRAM_WEEKS
     ? PROGRAM_TOTAL_TUITION
     : Number((selectedWeekCount * PRICE_PER_SESSION).toFixed(2))

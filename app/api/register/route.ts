@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
           description: session?.project ?? session?.concept ?? '',
           requiresPrerequisite: isLevel2,
           level: isLevel2 ? 'INTERMEDIATE' : 'BEGINNER',
-          pricePerUnit: session?.pricePerUnit ?? 28.57,
+          pricePerUnit: session?.pricePerUnit ?? 25.0,
           isActive: true,
           track: null,
         },

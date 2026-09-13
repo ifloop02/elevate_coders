@@ -234,13 +234,13 @@ export default function PolicyAccordion({
             maxWidth: '400px',
             lineHeight: 1.6,
           }}>
-            Discount and partner codes are only available for the full 7-week program.{' '}
+            Discount and partner codes are only available for the full {TOTAL_PROGRAM_WEEKS}-week program.{' '}
             <button
               type="button"
               onClick={onAddAllWeeks}
               style={{ background: 'none', border: 'none', padding: 0, color: 'var(--brand-purple)', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
             >
-              Add all 7 weeks
+              Add all {TOTAL_PROGRAM_WEEKS} weeks
             </button>
             {' '}to unlock this field.
           </div>

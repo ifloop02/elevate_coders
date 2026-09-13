@@ -202,10 +202,10 @@ export default function SchedulePreview() {
                 <span style={{ fontWeight: 700, fontSize: '15px' }}>5:00 PM – 6:00 PM (Every Thursday)</span>
               </div>
               <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#065F46', marginBottom: '8px' }}>
-                🟢 Level 1: Beginner Coding Class (Full 7 Weeks)
+                🟢 Level 1: Beginner Coding Class (Full 8 Weeks)
               </h3>
               <p style={{ fontSize: '14px', color: '#047857', lineHeight: 1.6, margin: 0 }}>
-                Designed for new students (ages 7–12). Complete 7-week foundational track covering Scratch visual block coding, game mechanics, and computational thinking.
+                Designed for new students (ages 7–12). Complete 8-week foundational track covering Scratch visual block coding, game mechanics, and computational thinking.
               </p>
             </div>
           </div>
@@ -234,10 +234,10 @@ export default function SchedulePreview() {
                 <span style={{ fontWeight: 700, fontSize: '15px' }}>7:00 PM – 8:00 PM (Every Thursday)</span>
               </div>
               <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#5B21B6', marginBottom: '8px' }}>
-                🟣 Level 2: Advanced Coding Class (Full 7 Weeks)
+                🟣 Level 2: Advanced Coding Class (Full 8 Weeks)
               </h3>
               <p style={{ fontSize: '14px', color: '#6D28D9', lineHeight: 1.6, margin: 0 }}>
-                For students who completed Level 1 or have verified outside experience. Complete 7-week 3-module track: Physics Engines, AI Pathfinding, and UI Production.
+                For students who completed Level 1 or have verified outside experience. Complete 8-week 3-module track: Physics Engines, AI Pathfinding, and UI Production.
               </p>
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function SchedulePreview() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
             <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '22px', fontWeight: 800, color: brandColor, margin: 0 }}>
-              {isLevel1 ? '🟢 Level 1 Beginner — Full 7-Week Curriculum Roadmap (5:00 PM – 6:00 PM)' : '🟣 Level 2 Advanced — Full 7-Week Curriculum Roadmap (7:00 PM – 8:00 PM)'}
+              {isLevel1 ? '🟢 Level 1 Beginner — Full 8-Week Curriculum Roadmap (5:00 PM – 6:00 PM)' : '🟣 Level 2 Advanced — Full 8-Week Curriculum Roadmap (7:00 PM – 8:00 PM)'}
             </h3>
             <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
               Click either class box above to toggle between Level 1 and Level 2 curriculum details.
