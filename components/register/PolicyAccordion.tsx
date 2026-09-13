@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { CheckCircle, Loader2, Tag } from 'lucide-react'
 
+import { TOTAL_PROGRAM_WEEKS } from '@/lib/proration'
+
 interface PolicyAccordionProps {
   agreed: boolean
   onAgree: (v: boolean) => void
@@ -29,7 +31,7 @@ export default function PolicyAccordion({
   onClearReferralCode,
   onAddAllWeeks,
 }: PolicyAccordionProps) {
-  const isFullProgram = selectedWeekCount >= 7
+  const isFullProgram = selectedWeekCount >= TOTAL_PROGRAM_WEEKS
   const hasReferralCode = !!(referralCode && referralCode.trim().length > 0)
   const [checkingCode, setCheckingCode] = useState(false)
   const [codeError, setCodeError] = useState<string | null>(null)

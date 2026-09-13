@@ -9,11 +9,11 @@ const tracks = [
     label: 'TRACK A',
     name: 'Co-Ed Fall Coding Program',
     description:
-      'All students ages 7–12 learn together in a collaborative environment. 7-week program running every Thursday starting October 8th.',
+      'All students ages 7–12 learn together in a collaborative environment. 8-week program running every Thursday starting October 8th.',
     features: [
       'Beginner Class: 5:00 PM – 6:00 PM',
       'Level 2 Class: 7:00 PM – 8:00 PM',
-      'Scratch & Python project building',
+      'Scratch & Advanced Game Mechanics',
       'End-of-program portfolio showcase',
     ],
     icon: Users,
@@ -35,7 +35,7 @@ const tracks = [
     features: [
       'Supportive all-girls environment',
       'Women-in-tech mentorship moments',
-      'Same Scratch + Python curriculum',
+      'Same Scratch + Advanced Mechanics curriculum',
       'Community showcase events',
     ],
     icon: Sparkles,

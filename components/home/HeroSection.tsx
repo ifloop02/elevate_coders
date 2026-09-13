@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 const stats = [
   { value: '7–12', label: 'Age Range' },
   { value: '$200', label: 'Per Camp' },
-  { value: '7', label: 'Fall Weeks' },
+  { value: '8', label: 'Fall Weeks' },
 ]
 
 export default function HeroSection() {
@@ -84,8 +84,8 @@ export default function HeroSection() {
               maxWidth: '480px',
             }}
           >
-            7-week Fall coding program for ages 7–12. Every Thursday starting October 8th.
-            From Scratch to Python, your child learns real programming skills in a supportive,
+            8-week Fall coding program for ages 7–12. Every Thursday starting October 8th (skipping Thanksgiving week).
+            From Scratch foundations to Advanced Game Mechanics, your child learns real programming skills in a supportive,
             inclusive environment.
           </p>
 
