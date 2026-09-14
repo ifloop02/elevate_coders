@@ -167,6 +167,16 @@ async function main() {
 
   const discountCodes = [
     {
+      id: 'discount-elevateallstars',
+      code: 'ELEVATEALLSTARS',
+      description: 'Elevate All-Stars Group Special — 25% off',
+      sponsorName: 'All-Stars Group',
+      discountPercent: 25.0,
+      usageLimit: 4,
+      usedCount: 0,
+      isActive: true,
+    },
+    {
       id: 'discount-fallfirst2',
       code: 'FALLFIRST2',
       description: 'Early Bird Registers — 20% off',
@@ -234,7 +244,7 @@ async function main() {
     })
   }
 
-  console.log('✅ 4 new discount codes created (FALLFIRST2, FALL50, ALUMNI10, GSCS15).')
+  console.log(`✅ ${discountCodes.length} discount codes created (${discountCodes.map((c) => c.code).join(', ')}).`)
   console.log('🎉 Database seeding complete!')
 }
 
