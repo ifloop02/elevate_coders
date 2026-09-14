@@ -199,9 +199,9 @@ async function main() {
     {
       id: 'discount-alumni10',
       code: 'ALUMNI10',
-      description: 'Returning Alumni Family — 10% loyalty discount',
+      description: 'Returning Alumni Family — 16% loyalty discount',
       sponsorName: null,
-      discountPercent: 10.0,
+      discountPercent: 16.0,
       usageLimit: 5,
       usedCount: 0,
       isActive: true,
