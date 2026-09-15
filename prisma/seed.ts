@@ -167,6 +167,16 @@ async function main() {
 
   const discountCodes = [
     {
+      id: 'discount-falleasypass',
+      code: 'FALLEASYPASS',
+      description: 'Fall Easy Pass — 37.5% off ($125 final tuition)',
+      sponsorName: 'Fall Easy Pass',
+      discountPercent: 37.5,
+      usageLimit: 5,
+      usedCount: 0,
+      isActive: true,
+    },
+    {
       id: 'discount-elevateallstars',
       code: 'ELEVATEALLSTARS',
       description: 'Elevate All-Stars Group Special — 25% off',
