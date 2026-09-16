@@ -37,13 +37,14 @@ export default function PolicyAccordion({
   const [codeError, setCodeError] = useState<string | null>(null)
   const [codeValid, setCodeValid] = useState(false)
 
-  const applyDiscount = async () => {
-    if (!discountCode.trim()) return
+  const applyDiscount = async (codeToTest?: string) => {
+    const code = (codeToTest ?? discountCode).trim()
+    if (!code) return
     setCheckingCode(true)
     setCodeError(null)
     setCodeValid(false)
     try {
-      const res = await fetch(`/api/discount?code=${encodeURIComponent(discountCode.trim())}`)
+      const res = await fetch(`/api/discount?code=${encodeURIComponent(code)}`)
       const data = await res.json()
       if (res.ok && data.discountPercent !== undefined) {
         onDiscountResolved(data.discountPercent)
@@ -202,13 +203,31 @@ export default function PolicyAccordion({
                 id="discount-code"
                 className={`form-input ${codeError ? 'error' : ''}`}
                 type="text"
-                placeholder="e.g. PARTNER75"
+                placeholder="e.g. GSCS15"
                 value={discountCode}
-                onChange={(e) => { onDiscountCodeChange(e.target.value.toUpperCase()); setCodeValid(false); setCodeError(null); onDiscountResolved(0) }}
+                onChange={(e) => {
+                  const val = e.target.value.toUpperCase()
+                  onDiscountCodeChange(val)
+                  setCodeValid(false)
+                  setCodeError(null)
+                  if (!val.trim()) onDiscountResolved(0)
+                }}
+                onBlur={() => {
+                  if (discountCode.trim() && !codeValid && discountPercent === 0) {
+                    applyDiscount()
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    applyDiscount()
+                  }
+                }}
                 style={{ flex: 1 }}
               />
               <button
-                onClick={applyDiscount}
+                type="button"
+                onClick={() => applyDiscount()}
                 className="btn btn-secondary btn-sm"
                 disabled={!discountCode.trim() || checkingCode}
               >

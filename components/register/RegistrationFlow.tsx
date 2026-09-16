@@ -207,9 +207,49 @@ export default function RegistrationFlow({
     return true
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 1 && !canAdvanceFromWeeks()) return
-    if (step === 3 && !canAdvanceFromInfo()) return
+    if (step === 3) {
+      if (!canAdvanceFromInfo()) return
+      // Auto-check if referralCode is actually a discount code (e.g. GSCS15)
+      const refCode = state.parent.referralCode?.trim().toUpperCase()
+      if (refCode && !state.discountCode) {
+        try {
+          const res = await fetch(`/api/discount?code=${encodeURIComponent(refCode)}`)
+          if (res.ok) {
+            const data = await res.json()
+            if (data.discountPercent !== undefined) {
+              update({
+                discountCode: data.code,
+                discountPercent: data.discountPercent,
+                parent: { ...state.parent, referralCode: '' },
+              })
+              showToast(`🎉 "${data.code}" recognized as a discount code! ${data.discountPercent}% discount applied.`)
+            }
+          }
+        } catch {
+          // Ignore fetch error
+        }
+      }
+    }
+    if (step === 4) {
+      // If discountCode is set but discountPercent is still 0, auto-resolve it
+      const code = state.discountCode?.trim().toUpperCase()
+      if (code && state.discountPercent === 0) {
+        try {
+          const res = await fetch(`/api/discount?code=${encodeURIComponent(code)}`)
+          if (res.ok) {
+            const data = await res.json()
+            if (data.discountPercent !== undefined) {
+              update({ discountPercent: data.discountPercent })
+              showToast(`🎉 "${data.code}" applied! ${data.discountPercent}% discount active.`)
+            }
+          }
+        } catch {
+          // Ignore fetch error
+        }
+      }
+    }
     setStep((s) => Math.min(s + 1, STEPS.length - 1))
   }
 
@@ -319,14 +359,27 @@ export default function RegistrationFlow({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <ParentInfoForm
                   data={state.parent}
-                  onChange={(parent) => {
-                    const hasReferral = !!parent.referralCode?.trim()
-                    update({
-                      parent,
-                      ...(hasReferral && (state.discountCode || state.discountPercent > 0)
-                        ? { discountCode: '', discountPercent: 0 }
-                        : {}),
-                    })
+                  onChange={async (parent) => {
+                    update({ parent })
+                    const refCode = parent.referralCode?.trim().toUpperCase()
+                    if (refCode && refCode.length >= 3 && !state.discountCode) {
+                      try {
+                        const res = await fetch(`/api/discount?code=${encodeURIComponent(refCode)}`)
+                        if (res.ok) {
+                          const data = await res.json()
+                          if (data.discountPercent !== undefined) {
+                            update({
+                              discountCode: data.code,
+                              discountPercent: data.discountPercent,
+                              parent: { ...parent, referralCode: '' },
+                            })
+                            showToast(`🎉 "${data.code}" recognized as a discount code! ${data.discountPercent}% discount applied.`)
+                          }
+                        }
+                      } catch {
+                        // ignore error
+                      }
+                    }
                   }}
                 />
                 <StudentInfoForm

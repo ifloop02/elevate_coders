@@ -88,7 +88,22 @@ export async function POST(request: NextRequest) {
     let discountPercent = 0
     let discountCodeRecord = null
 
-    if (discountCode) {
+    // Fallback: If no discountCode provided, but parent.referralCode matches an active discount code, convert it
+    let effectiveDiscountCode = discountCode
+    if (!effectiveDiscountCode && parent.referralCode) {
+      const match = await prisma.discountCode.findFirst({
+        where: {
+          code: parent.referralCode.trim().toUpperCase(),
+          isActive: true,
+        },
+      })
+      if (match) {
+        effectiveDiscountCode = match.code
+        parent.referralCode = '' // Clear referral code since it was a discount code
+      }
+    }
+
+    if (effectiveDiscountCode) {
       if (parent.referralCode && parent.referralCode.trim().length > 0) {
         return NextResponse.json(
           { error: 'Referral codes and discount codes cannot be combined. Please choose either the referral code or the discount code.' },
@@ -98,15 +113,7 @@ export async function POST(request: NextRequest) {
 
       discountCodeRecord = await prisma.discountCode.findFirst({
         where: {
-          code: discountCode.toUpperCase(),
-          isActive: true,
-        },
-      })
-
-      // Simplified check without self-referential OR
-      discountCodeRecord = await prisma.discountCode.findFirst({
-        where: {
-          code: discountCode.toUpperCase(),
+          code: effectiveDiscountCode.toUpperCase(),
           isActive: true,
         },
       })

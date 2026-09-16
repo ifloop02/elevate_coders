@@ -71,18 +71,18 @@ export default function ParentInfoForm({ data, onChange }: ParentInfoFormProps) 
 
         <div>
           <label className="form-label" htmlFor="parent-referral">
-            Referral Code (optional)
+            Referral Code or Discount Code (optional)
           </label>
           <input
             id="parent-referral"
             className="form-input"
             type="text"
-            placeholder="Enter a friend's referral code"
+            placeholder="e.g. GSCS15 or friend's referral code"
             value={data.referralCode}
-            onChange={(e) => set('referralCode', e.target.value)}
+            onChange={(e) => set('referralCode', e.target.value.toUpperCase())}
           />
           <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.4 }}>
-            Your friend gets a $25 credit when you enroll. (Note: Referral codes cannot be combined with discount codes).
+            Enter a discount code (like GSCS15) or a friend&apos;s referral code here.
           </div>
         </div>
 
