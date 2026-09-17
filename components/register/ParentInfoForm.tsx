@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { RegistrationState } from './RegistrationFlow'
 
 interface ParentInfoFormProps {
@@ -8,6 +9,34 @@ interface ParentInfoFormProps {
 }
 
 export default function ParentInfoForm({ data, onChange }: ParentInfoFormProps) {
+  const [detectedDiscountMsg, setDetectedDiscountMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    const code = data.referralCode?.trim().toUpperCase()
+    if (!code || code.length < 3) {
+      setDetectedDiscountMsg(null)
+      return
+    }
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/discount?code=${encodeURIComponent(code)}`)
+        if (res.ok) {
+          const d = await res.json()
+          if (d.discountPercent !== undefined) {
+            setDetectedDiscountMsg(`💡 "${d.code}" is a discount code! It will be pre-filled & applied on Step 4 (Policies) for your ${d.discountPercent}% discount.`)
+          } else {
+            setDetectedDiscountMsg(null)
+          }
+        } else {
+          setDetectedDiscountMsg(null)
+        }
+      } catch {
+        setDetectedDiscountMsg(null)
+      }
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [data.referralCode])
+
   const set = (key: keyof RegistrationState['parent'], value: string | boolean) =>
     onChange({ ...data, [key]: value })
 
@@ -84,6 +113,21 @@ export default function ParentInfoForm({ data, onChange }: ParentInfoFormProps) 
           <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.4 }}>
             Enter a discount code (like GSCS15) or a friend&apos;s referral code here.
           </div>
+          {detectedDiscountMsg && (
+            <div style={{
+              marginTop: '8px',
+              padding: '10px 12px',
+              background: '#F5F3FF',
+              border: '1px solid #DDD6FE',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '13px',
+              color: '#5B21B6',
+              fontWeight: 500,
+              lineHeight: 1.5,
+            }}>
+              {detectedDiscountMsg}
+            </div>
+          )}
         </div>
 
         {/* Consent checkboxes */}
