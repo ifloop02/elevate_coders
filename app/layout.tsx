@@ -17,6 +17,11 @@ export const metadata: Metadata = {
     'STEM camp',
     'children tech education',
   ],
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     title: 'Elevate Coders — Where Young Coders Build the Future',
     description:
