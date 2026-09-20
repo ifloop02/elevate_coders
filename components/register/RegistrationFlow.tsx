@@ -74,7 +74,7 @@ const WEEK_DATA = [
 ]
 
 const emptyState: RegistrationState = {
-  track: null,
+  track: 'COED',
   selectedWeekIds: [],
   vacationDates: [],
   discountCode: '',
@@ -101,7 +101,7 @@ export default function RegistrationFlow({
   const [step, setStep] = useState(initialTrack ? 1 : 0) // skip to week picker if track pre-selected
   const [state, setState] = useState<RegistrationState>({
     ...emptyState,
-    track: initialTrack === 'all-girls' ? 'ALL_GIRLS' : initialTrack === 'coed' ? 'COED' : null,
+    track: initialTrack === 'all-girls' ? 'ALL_GIRLS' : 'COED',
     parent: {
       ...emptyState.parent,
       referralCode: initialReferralCode || '',
