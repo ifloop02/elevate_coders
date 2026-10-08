@@ -155,6 +155,8 @@ export default function PaymentStep({
   const [payError, setPayError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (finalTotal <= 0) return
+
     const amountCents = Math.round(finalTotal * 100)
     fetch('/api/stripe/payment-intent', {
       method: 'POST',
@@ -176,6 +178,73 @@ export default function PaymentStep({
       })
       .catch(() => setFetchError('Network error. Please check your connection and try again.'))
   }, [finalTotal, parentEmail, parentName])
+
+  if (finalTotal <= 0) {
+    return (
+      <div>
+        <h2
+          style={{
+            fontFamily: 'Outfit, sans-serif',
+            fontSize: '22px',
+            fontWeight: 700,
+            marginBottom: '8px',
+          }}
+        >
+          Complete Registration
+        </h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
+          A 100% discount has been applied to your registration. No payment is required!
+        </p>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '16px 20px',
+            background: 'linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)',
+            border: '1.5px solid #6EE7B7',
+            borderRadius: 'var(--radius-md)',
+            marginBottom: '24px',
+          }}
+        >
+          <div>
+            <span style={{ fontSize: '15px', fontWeight: 700, color: '#065F46', display: 'block' }}>
+              🎉 100% Discount Applied
+            </span>
+            <span style={{ fontSize: '13px', color: '#047857' }}>
+              Full tuition covered by discount code.
+            </span>
+          </div>
+          <span
+            style={{
+              fontFamily: 'Outfit, sans-serif',
+              fontSize: '28px',
+              fontWeight: 900,
+              color: '#047857',
+            }}
+          >
+            $0.00
+          </span>
+        </div>
+
+        <button
+          onClick={onSuccess}
+          className="btn btn-primary"
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            fontSize: '16px',
+            padding: '14px',
+            background: '#10B981',
+            borderColor: '#059669',
+          }}
+        >
+          ✨ Complete Free Registration →
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div>

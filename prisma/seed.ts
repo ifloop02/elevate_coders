@@ -246,6 +246,16 @@ async function main() {
       usedCount: 0,
       isActive: true,
     },
+    {
+      id: 'discount-elevatecoders100',
+      code: 'ELEVATECODERS100',
+      description: 'Full Scholarship — 100% off ($0 final tuition)',
+      sponsorName: 'Full Scholarship',
+      discountPercent: 100.0,
+      usageLimit: null,
+      usedCount: 0,
+      isActive: true,
+    },
   ]
 
   for (const code of discountCodes) {
