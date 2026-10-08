@@ -252,7 +252,7 @@ async function main() {
       description: 'Full Scholarship — 100% off ($0 final tuition)',
       sponsorName: 'Full Scholarship',
       discountPercent: 100.0,
-      usageLimit: null,
+      usageLimit: 1,
       usedCount: 0,
       isActive: true,
     },
