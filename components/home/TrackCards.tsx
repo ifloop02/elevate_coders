@@ -12,7 +12,7 @@ const tracks = [
       'All students ages 7–12 learn together in a collaborative environment. 8-week program running every Thursday starting October 8th.',
     features: [
       'Beginner Class: 5:00 PM – 6:00 PM',
-      'Level 2 Class: 7:00 PM – 8:00 PM',
+      'Level 2 Class: 6:00 PM – 7:00 PM',
       'Scratch & Advanced Game Mechanics',
       'End-of-program portfolio showcase',
     ],

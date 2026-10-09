@@ -97,7 +97,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   },
 ]
 
-// 🟣 LEVEL 2 CLASS (7:00 PM – 8:00 PM) — ALL PURPLE
+// 🟣 LEVEL 2 CLASS (6:00 PM – 7:00 PM) — ALL PURPLE
 const LEVEL_2_WEEKS: WeekData[] = [
   // Module 1: System-Driven Game Mechanics (Weeks 1–3)
   {
@@ -258,7 +258,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#5B21B6', fontSize: '12px', fontWeight: 700, marginBottom: '4px' }}>
-              <Clock size={14} /> 7:00 PM – 8:00 PM (Every Thu)
+              <Clock size={14} /> 6:00 PM – 7:00 PM (Every Thu)
             </div>
             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '16px', fontWeight: 800, color: '#5B21B6' }}>
               🟣 Level 2 Class (Advanced)
@@ -274,7 +274,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
         <div>
           <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 700, margin: 0 }}>
-            {activeLevel === 'BEGINNER' ? `🟢 Beginner Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (5:00 PM – 6:00 PM)` : `🟣 Level 2 Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (7:00 PM – 8:00 PM)`}
+            {activeLevel === 'BEGINNER' ? `🟢 Beginner Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (5:00 PM – 6:00 PM)` : `🟣 Level 2 Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (6:00 PM – 7:00 PM)`}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '4px', margin: 0 }}>
             Full {TOTAL_PROGRAM_WEEKS}-week program tuition is <strong>$200</strong> flat for all {TOTAL_PROGRAM_WEEKS} Thursdays starting October 8th.

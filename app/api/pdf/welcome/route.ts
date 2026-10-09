@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
           (sw) => sw.weekBlock.level === 'INTERMEDIATE' || sw.weekBlock.id.includes('lvl2')
         )
         levelName = isLevel2
-          ? 'Level 2 Class • 7:00 PM – 8:00 PM'
+          ? 'Level 2 Class • 6:00 PM – 7:00 PM'
           : 'Beginner Class • 5:00 PM – 6:00 PM'
 
         weeks = registration.selectedWeeks

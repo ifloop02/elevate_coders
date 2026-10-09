@@ -24,7 +24,7 @@ const LEVEL_1_WEEKS: ScheduleWeek[] = [
   { num: 8, dates: 'Dec 3 (Thu)', title: 'Grand Finale & Project Exhibition', desc: 'Final project polish, code compilation, studio demonstration, and graduation certificates.' },
 ]
 
-// 🟣 LEVEL 2 ADVANCED (7:00 PM – 8:00 PM) — ALL 8 WEEKS PURPLE
+// 🟣 LEVEL 2 ADVANCED (6:00 PM – 7:00 PM) — ALL 8 WEEKS PURPLE
 const LEVEL_2_WEEKS: ScheduleWeek[] = [
   {
     num: 1,
@@ -231,7 +231,7 @@ export default function SchedulePreview() {
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', color: '#5B21B6' }}>
                 <Clock size={18} />
-                <span style={{ fontWeight: 700, fontSize: '15px' }}>7:00 PM – 8:00 PM (Every Thursday)</span>
+                <span style={{ fontWeight: 700, fontSize: '15px' }}>6:00 PM – 7:00 PM (Every Thursday)</span>
               </div>
               <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#5B21B6', marginBottom: '8px' }}>
                 🟣 Level 2: Advanced Coding Class (Full 8 Weeks)
@@ -247,7 +247,7 @@ export default function SchedulePreview() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
             <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '22px', fontWeight: 800, color: brandColor, margin: 0 }}>
-              {isLevel1 ? '🟢 Level 1 Beginner — Full 8-Week Curriculum Roadmap (5:00 PM – 6:00 PM)' : '🟣 Level 2 Advanced — Full 8-Week Curriculum Roadmap (7:00 PM – 8:00 PM)'}
+              {isLevel1 ? '🟢 Level 1 Beginner — Full 8-Week Curriculum Roadmap (5:00 PM – 6:00 PM)' : '🟣 Level 2 Advanced — Full 8-Week Curriculum Roadmap (6:00 PM – 7:00 PM)'}
             </h3>
             <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
               Click either class box above to toggle between Level 1 and Level 2 curriculum details.
@@ -367,7 +367,7 @@ export default function SchedulePreview() {
               $200 <span style={{ fontSize: '16px', fontWeight: 400, color: 'rgba(255,255,255,0.7)' }}>flat for all 8 Thursdays</span>
             </div>
             <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginTop: '4px' }}>
-              Choose Level 1 (5:00 PM) or Level 2 (7:00 PM). Complete 8-week course program.
+              Choose Level 1 (5:00 PM) or Level 2 (6:00 PM). Complete 8-week course program.
             </div>
           </div>
 

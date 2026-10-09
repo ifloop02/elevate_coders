@@ -62,7 +62,7 @@ const WEEK_DATA = [
   { id: 'fall-2026-beg-7', weekNumber: 7, dates: 'Nov 19 (Thu)', curriculum: 'Beginner Capstone Showcase', requiresPrerequisite: false },
   { id: 'fall-2026-beg-8', weekNumber: 8, dates: 'Dec 3 (Thu)', curriculum: 'Grand Finale & Project Exhibition', requiresPrerequisite: false },
 
-  // 🟣 Level 2 Advanced (7:00 PM – 8:00 PM) — All 8 Weeks
+  // 🟣 Level 2 Advanced (6:00 PM – 7:00 PM) — All 8 Weeks
   { id: 'fall-2026-lvl2-1', weekNumber: 1, dates: 'Oct 8 (Thu)', curriculum: 'Module 1: Advanced Physics & Gravity Engines', requiresPrerequisite: true },
   { id: 'fall-2026-lvl2-2', weekNumber: 2, dates: 'Oct 15 (Thu)', curriculum: 'Module 1: Advanced Event Architecture', requiresPrerequisite: true },
   { id: 'fall-2026-lvl2-3', weekNumber: 3, dates: 'Oct 22 (Thu)', curriculum: 'Module 1: Data Streams & Scoreboards', requiresPrerequisite: true },
