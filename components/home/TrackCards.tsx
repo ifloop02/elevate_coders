@@ -9,7 +9,7 @@ const tracks = [
     label: 'TRACK A',
     name: 'Co-Ed Fall Coding Program',
     description:
-      'All students ages 7–12 learn together in a collaborative environment. 8-week program running every Thursday starting October 8th.',
+      'All students ages 7–12 learn together in a collaborative environment. 8-week program running every Thursday starting October 15th.',
     features: [
       'Beginner Class: 5:00 PM – 6:00 PM',
       'Level 2 Class: 6:00 PM – 7:00 PM',
@@ -74,7 +74,7 @@ export default function TrackCards() {
             Fall Program Tracks
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '520px', margin: '0 auto' }}>
-            Choose your child&apos;s program track. Both Beginner and Level 2 sessions run every Thursday starting October 8th.
+            Choose your child&apos;s program track. Both Beginner and Level 2 sessions run every Thursday starting October 15th.
           </p>
         </div>
 

@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       const isLevel2 = id.includes('lvl2') || id.includes('advanced')
       const weekNum = session?.weekNumber ?? (parseInt(id.split('-').pop() || '1') || 1)
       const title = session?.title ?? (isLevel2 ? `Level 2 Session ${weekNum}` : `Beginner Session ${weekNum}`)
-      const date = session ? new Date(session.date) : new Date('2026-10-08')
+      const date = session ? new Date(session.date) : new Date('2026-10-15')
 
       const block = await prisma.weekBlock.upsert({
         where: { id },

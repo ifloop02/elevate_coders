@@ -54,7 +54,7 @@ export default function HeroSection() {
             }}
           >
             <Zap size={13} fill="currentColor" />
-            Fall 2026 Registration Open — Starts October 8th
+            Fall 2026 Registration Open — Starts October 15th
           </div>
 
           {/* Headline */}
@@ -84,7 +84,7 @@ export default function HeroSection() {
               maxWidth: '480px',
             }}
           >
-            8-week Fall coding program for ages 7–12. Every Thursday starting October 8th (skipping Thanksgiving week).
+            8-week Fall coding program for ages 7–12. Every Thursday starting October 15th (skipping Thanksgiving week).
             From Scratch foundations to Advanced Game Mechanics, your child learns real programming skills in a supportive,
             inclusive environment.
           </p>

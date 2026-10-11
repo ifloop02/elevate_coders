@@ -17,7 +17,7 @@ interface StudentInfoFormProps {
 }
 
 // Age is evaluated as of program start date
-const PROGRAM_START = new Date('2026-10-08T12:00:00')
+const PROGRAM_START = new Date('2026-10-15T12:00:00')
 
 function calcAge(dob: string): number | null {
   if (!dob) return null
@@ -109,7 +109,7 @@ export default function StudentInfoForm({
           style={{ maxWidth: '220px' }}
         />
         <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-          Age is calculated as of program start: <strong>October 8, 2026</strong>.
+          Age is calculated as of program start: <strong>October 15, 2026</strong>.
         </div>
 
         {/* ── Zone: In Range ── */}

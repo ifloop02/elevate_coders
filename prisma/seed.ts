@@ -113,7 +113,7 @@ async function main() {
   console.log('✅ Summer 2026 weeks seeded.')
 
   // ─────────────────────────────────────────────────
-  // FALL 2026 — 8 Thursday Sessions starting October 8th (Skipping Thanksgiving Nov 26)
+  // FALL 2026 — 8 Thursday Sessions starting October 15th (Skipping Thanksgiving Nov 26)
   // Class 1 (Beginner): 5:00 PM – 6:00 PM
   // Class 2 (Level 2): 6:00 PM – 7:00 PM (Prerequisite required)
   // ─────────────────────────────────────────────────

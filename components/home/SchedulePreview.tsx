@@ -14,70 +14,70 @@ interface ScheduleWeek {
 
 // 🟢 LEVEL 1 BEGINNER (5:00 PM – 6:00 PM) — ALL 8 WEEKS GREEN
 const LEVEL_1_WEEKS: ScheduleWeek[] = [
-  { num: 1, dates: 'Oct 8 (Thu)', title: 'Scratch & Coding Foundations', desc: 'Introduction to visual block coding, sprites, motion loops, and X/Y coordinates.' },
-  { num: 2, dates: 'Oct 15 (Thu)', title: 'Interactive Game & Animation', desc: 'Sprite collision detection, keypress event triggers, and costume animations.' },
-  { num: 3, dates: 'Oct 22 (Thu)', title: 'Logic, Loops & Scoreboards', desc: 'Conditional logic (if/then statements), score variables, and win/loss states.' },
-  { num: 4, dates: 'Oct 29 (Thu)', title: 'Custom Blocks & Sound FX', desc: 'Reusable My Blocks functions, sound synthesis, and backdrop stage transitions.' },
-  { num: 5, dates: 'Nov 5 (Thu)', title: 'Multi-Level World Design', desc: 'Level switching variables, item collectibles, and health bar mechanics.' },
-  { num: 6, dates: 'Nov 12 (Thu)', title: 'UI Polish & Special Effects', desc: 'Screen particle feedback, victory animations, and custom UI design systems.' },
-  { num: 7, dates: 'Nov 19 (Thu)', title: 'Beginner Capstone Showcase', desc: 'Final code triage, debugging strategies, and peer review presentation.' },
-  { num: 8, dates: 'Dec 3 (Thu)', title: 'Grand Finale & Project Exhibition', desc: 'Final project polish, code compilation, studio demonstration, and graduation certificates.' },
+  { num: 1, dates: 'Oct 15 (Thu)', title: 'Scratch & Coding Foundations', desc: 'Introduction to visual block coding, sprites, motion loops, and X/Y coordinates.' },
+  { num: 2, dates: 'Oct 22 (Thu)', title: 'Interactive Game & Animation', desc: 'Sprite collision detection, keypress event triggers, and costume animations.' },
+  { num: 3, dates: 'Oct 29 (Thu)', title: 'Logic, Loops & Scoreboards', desc: 'Conditional logic (if/then statements), score variables, and win/loss states.' },
+  { num: 4, dates: 'Nov 5 (Thu)', title: 'Custom Blocks & Sound FX', desc: 'Reusable My Blocks functions, sound synthesis, and backdrop stage transitions.' },
+  { num: 5, dates: 'Nov 12 (Thu)', title: 'Multi-Level World Design', desc: 'Level switching variables, item collectibles, and health bar mechanics.' },
+  { num: 6, dates: 'Nov 19 (Thu)', title: 'UI Polish & Special Effects', desc: 'Screen particle feedback, victory animations, and custom UI design systems.' },
+  { num: 7, dates: 'Dec 3 (Thu)', title: 'Beginner Capstone Showcase', desc: 'Final code triage, debugging strategies, and peer review presentation.' },
+  { num: 8, dates: 'Dec 10 (Thu)', title: 'Grand Finale & Project Exhibition', desc: 'Final project polish, code compilation, studio demonstration, and graduation certificates.' },
 ]
 
 // 🟣 LEVEL 2 ADVANCED (6:00 PM – 7:00 PM) — ALL 8 WEEKS PURPLE
 const LEVEL_2_WEEKS: ScheduleWeek[] = [
   {
     num: 1,
-    dates: 'Oct 8 (Thu)',
+    dates: 'Oct 15 (Thu)',
     title: 'Advanced Physics & Gravity Engines',
     moduleName: 'Module 1: System-Driven Game Mechanics',
     desc: 'The Concept: Moving beyond basic change y loops into velocity-based systems.',
   },
   {
     num: 2,
-    dates: 'Oct 15 (Thu)',
+    dates: 'Oct 22 (Thu)',
     title: 'Advanced Event Architecture',
     moduleName: 'Module 1: System-Driven Game Mechanics',
     desc: 'The Concept: Decoupling code strings so multiple elements react to global system triggers without polling.',
   },
   {
     num: 3,
-    dates: 'Oct 22 (Thu)',
+    dates: 'Oct 29 (Thu)',
     title: 'Data Streams & Scoreboards',
     moduleName: 'Module 1: System-Driven Game Mechanics',
     desc: 'The Concept: Local vs global variables, persistent data tracking, and dynamic list arrays.',
   },
   {
     num: 4,
-    dates: 'Oct 29 (Thu)',
+    dates: 'Nov 5 (Thu)',
     title: 'Screen Scrolling & Infinite Maps',
     moduleName: 'Module 2: Complex Game Genres',
     desc: 'The Concept: Moving the world around the player character instead of moving the player across a static canvas.',
   },
   {
     num: 5,
-    dates: 'Nov 5 (Thu)',
+    dates: 'Nov 12 (Thu)',
     title: 'Autonomous AI & Pathfinding',
     moduleName: 'Module 2: Complex Game Genres',
     desc: 'The Concept: Coding smart enemies that track player targets without using simple glide blocks.',
   },
   {
     num: 6,
-    dates: 'Nov 12 (Thu)',
+    dates: 'Nov 19 (Thu)',
     title: 'Code Polish & UI Design Systems',
     moduleName: 'Module 3: Polish, Publishing, and Production',
     desc: 'The Concept: Designing professional game interfaces, particle effect feedback loops, and volume attenuation.',
   },
   {
     num: 7,
-    dates: 'Nov 19 (Thu)',
+    dates: 'Dec 3 (Thu)',
     title: 'Capstone Debugging & Playtesting',
     moduleName: 'Module 3: Polish, Publishing, and Production',
     desc: 'The Concept: Code triage, optimization strategies, identifying memory leaks, and processing user feedback.',
   },
   {
     num: 8,
-    dates: 'Dec 3 (Thu)',
+    dates: 'Dec 10 (Thu)',
     title: 'Level 2 Studio Showcase & Graduation',
     moduleName: 'Module 3: Polish, Publishing, and Production',
     desc: 'The Concept: Final system showcase, project demonstration, and advanced developer certificate presentation.',
@@ -165,7 +165,7 @@ export default function SchedulePreview() {
             8-Week Thursday Coding Programs
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '16px', maxWidth: '640px', margin: '0 auto' }}>
-            Starts <strong>October 8th</strong> (skipping Thanksgiving week). Both Level 1 and Level 2 run for 8 Thursdays. Complete 8-week program tuition is <strong>$200</strong>.
+            Starts <strong>October 15th</strong> (skipping Thanksgiving week). Both Level 1 and Level 2 run for 8 Thursdays. Complete 8-week program tuition is <strong>$200</strong>.
           </p>
         </div>
 

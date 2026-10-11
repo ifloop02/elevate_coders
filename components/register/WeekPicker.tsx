@@ -26,7 +26,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-1',
     weekNumber: 1,
-    dates: 'Oct 8 (Thu)',
+    dates: 'Oct 15 (Thu)',
     title: 'Scratch & Coding Foundations',
     concept: 'Introduction to visual block coding, sprites, motion loops, and X/Y coordinates.',
     project: 'Build an interactive animated maze game.',
@@ -35,7 +35,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-2',
     weekNumber: 2,
-    dates: 'Oct 15 (Thu)',
+    dates: 'Oct 22 (Thu)',
     title: 'Interactive Game & Animation',
     concept: 'Sprite collision detection, keypress event triggers, and costume animations.',
     project: 'Create a multi-character arcade dodge game.',
@@ -44,7 +44,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-3',
     weekNumber: 3,
-    dates: 'Oct 22 (Thu)',
+    dates: 'Oct 29 (Thu)',
     title: 'Logic, Loops & Scoreboards',
     concept: 'Conditional logic (if/then statements), score variables, and win/loss states.',
     project: 'Design a space coin catcher with dynamic scoreboards.',
@@ -53,7 +53,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-4',
     weekNumber: 4,
-    dates: 'Oct 29 (Thu)',
+    dates: 'Nov 5 (Thu)',
     title: 'Custom Blocks & Sound FX',
     concept: 'Reusable My Blocks functions, sound synthesis, and backdrop stage transitions.',
     project: 'Build a multi-level platformer stage with sound effects.',
@@ -62,7 +62,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-5',
     weekNumber: 5,
-    dates: 'Nov 5 (Thu)',
+    dates: 'Nov 12 (Thu)',
     title: 'Multi-Level World Design',
     concept: 'Level switching variables, item collectibles, and health bar mechanics.',
     project: 'Develop a 3-level adventure quest game.',
@@ -71,7 +71,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-6',
     weekNumber: 6,
-    dates: 'Nov 12 (Thu)',
+    dates: 'Nov 19 (Thu)',
     title: 'UI Polish & Special Effects',
     concept: 'Screen particle feedback, victory animations, and custom UI design systems.',
     project: 'Add popping particle counters and animated victory screens to your game.',
@@ -80,7 +80,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-7',
     weekNumber: 7,
-    dates: 'Nov 19 (Thu)',
+    dates: 'Dec 3 (Thu)',
     title: 'Beginner Capstone Showcase',
     concept: 'Final code triage, debugging strategies, and peer review presentation.',
     project: 'Present your completed game at the Studio Showcase & Peer Review Session.',
@@ -89,7 +89,7 @@ const BEGINNER_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-beg-8',
     weekNumber: 8,
-    dates: 'Dec 3 (Thu)',
+    dates: 'Dec 10 (Thu)',
     title: 'Grand Finale & Project Exhibition',
     concept: 'Final project polish, code compilation, studio demonstration, and graduation certificates.',
     project: 'Present your completed studio game project at the Grand Showcase & Graduation Ceremony.',
@@ -103,7 +103,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-1',
     weekNumber: 1,
-    dates: 'Oct 8 (Thu)',
+    dates: 'Oct 15 (Thu)',
     title: 'Advanced Physics & Gravity Engines',
     moduleName: 'Module 1: System-Driven Game Mechanics',
     concept: 'Moving beyond basic change y loops into velocity-based systems.',
@@ -113,7 +113,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-2',
     weekNumber: 2,
-    dates: 'Oct 15 (Thu)',
+    dates: 'Oct 22 (Thu)',
     title: 'Advanced Event Architecture',
     moduleName: 'Module 1: System-Driven Game Mechanics',
     concept: 'Decoupling code strings so multiple elements instantly react to global system triggers without constant polling.',
@@ -123,7 +123,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-3',
     weekNumber: 3,
-    dates: 'Oct 22 (Thu)',
+    dates: 'Oct 29 (Thu)',
     title: 'Data Streams & Scoreboards',
     moduleName: 'Module 1: System-Driven Game Mechanics',
     concept: 'Local vs. global variables, persistent data tracking, and dynamic list arrays.',
@@ -134,7 +134,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-4',
     weekNumber: 4,
-    dates: 'Oct 29 (Thu)',
+    dates: 'Nov 5 (Thu)',
     title: 'Screen Scrolling & Infinite Maps',
     moduleName: 'Module 2: Complex Game Genres',
     concept: 'Moving the world around the player character instead of moving the player across a static canvas.',
@@ -144,7 +144,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-5',
     weekNumber: 5,
-    dates: 'Nov 5 (Thu)',
+    dates: 'Nov 12 (Thu)',
     title: 'Autonomous AI & Pathfinding',
     moduleName: 'Module 2: Complex Game Genres',
     concept: 'Coding smart enemies that track player targets without using simple, basic glide blocks.',
@@ -155,7 +155,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-6',
     weekNumber: 6,
-    dates: 'Nov 12 (Thu)',
+    dates: 'Nov 19 (Thu)',
     title: 'Code Polish & UI Design Systems',
     moduleName: 'Module 3: Polish, Publishing, and Production',
     concept: 'Designing professional game interfaces, particle effect feedback loops, and volume attenuation systems.',
@@ -165,7 +165,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-7',
     weekNumber: 7,
-    dates: 'Nov 19 (Thu)',
+    dates: 'Dec 3 (Thu)',
     title: 'Capstone Debugging & Playtesting',
     moduleName: 'Module 3: Polish, Publishing, and Production',
     concept: 'Code triage, optimization strategies, identifying memory leaks, and processing constructive user feedback.',
@@ -175,7 +175,7 @@ const LEVEL_2_WEEKS: WeekData[] = [
   {
     id: 'fall-2026-lvl2-8',
     weekNumber: 8,
-    dates: 'Dec 3 (Thu)',
+    dates: 'Dec 10 (Thu)',
     title: 'Level 2 Studio Showcase & Graduation',
     moduleName: 'Module 3: Polish, Publishing, and Production',
     concept: 'Final system showcase, project demonstration, and advanced developer certificate presentation.',
@@ -277,7 +277,7 @@ export default function WeekPicker({ selectedIds, prerequisiteVerified, onChange
             {activeLevel === 'BEGINNER' ? `🟢 Beginner Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (5:00 PM – 6:00 PM)` : `🟣 Level 2 Class ${TOTAL_PROGRAM_WEEKS}-Week Sessions (6:00 PM – 7:00 PM)`}
           </h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '4px', margin: 0 }}>
-            Full {TOTAL_PROGRAM_WEEKS}-week program tuition is <strong>$200</strong> flat for all {TOTAL_PROGRAM_WEEKS} Thursdays starting October 8th.
+            Full {TOTAL_PROGRAM_WEEKS}-week program tuition is <strong>$200</strong> flat for all {TOTAL_PROGRAM_WEEKS} Thursdays starting October 15th.
           </p>
         </div>
 
